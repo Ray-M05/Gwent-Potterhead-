@@ -18,8 +18,8 @@ namespace LogicalSide
                 Deck.Add(new Card(P.P, "Dumbledore", 8, P, TypeUnit.Golden, "U", "None", "MRS", Resources.Load<Sprite>("dumbledore"), "No es afectada por ninguna habilidad especial"));
                 Deck.Add(new Card(P.P, "Sirius", 7, P, TypeUnit.Golden, "U", "None", "MRS", Resources.Load<Sprite>("sirius"), "No es afectada por ninguna habilidad especial"));
                 Deck.Add(new Card(P.P, "Lupin", 6, P, TypeUnit.Golden, "U", "None", "MRS", Resources.Load<Sprite>("Lupin"), "No es afectada por ninguna habilidad especial"));
-                Deck.Add(new Card(P.P, "Fred & George", 3, P, TypeUnit.Silver, "U", "ZoneCleaner", "M", Resources.Load<Sprite>("fred"), "Limpia la fila con menor cantidad de unidades del campo"));
-                Deck.Add(new Card(P.P, "Fred & George", 3, P, TypeUnit.Silver, "U", "ZoneCleaner", "M", Resources.Load<Sprite>("fred"), "Limpia la fila con menor cantidad de unidades del campo"));
+                Deck.Add(new Card(P.P, "Fred & George", 3, P, TypeUnit.Silver, "U", "Zone Cleaner", "M", Resources.Load<Sprite>("fred"), "Limpia la fila con menor cantidad de unidades del campo"));
+                Deck.Add(new Card(P.P, "Fred & George", 3, P, TypeUnit.Silver, "U", "Zone Cleaner", "M", Resources.Load<Sprite>("fred"), "Limpia la fila con menor cantidad de unidades del campo"));
                 Deck.Add(new Card(P.P, "Ginny", 3, P, TypeUnit.Silver, "U", "Raise", "S", Resources.Load<Sprite>("ginny"), "Agrega una unidad de aumento a la fila de la carta que posee la habilidad"));
                 Deck.Add(new Card(P.P, "Ginny", 3, P, TypeUnit.Silver, "U", "Raise", "S", Resources.Load<Sprite>("ginny"), "Agrega una unidad de aumento a la fila de la carta que posee la habilidad"));
                 Deck.Add(new Card(P.P, "Hermione", 4, P, TypeUnit.Silver, "U", "None", "MS", Resources.Load<Sprite>("hermione"),"No tiene efecto especial"));
@@ -44,7 +44,7 @@ namespace LogicalSide
             }
             else if(P.faction==2)
             {
-                #region Aliens
+                #region Slytherin
                 Deck.Add(new Card(P.P, "Voldemort", 0, P, TypeUnit.None, "L", "None", "", Resources.Load<Sprite>("voldemort"), "Roba una carta extra al final de cada ronda"));
                 Deck.Add(new Card(P.P, "Snape", 9, P, TypeUnit.Golden, "U", "None", "MRS", Resources.Load<Sprite>("snape"), "No es afectada por ninguna habilidad"));
                 Deck.Add(new Card(P.P, "Bellatrix", 8, P, TypeUnit.Golden, "U", "None", "MRS", Resources.Load<Sprite>("bellatrix"), "No es afectada por ninguna habilidad especial"));
@@ -56,8 +56,8 @@ namespace LogicalSide
                 Deck.Add(new Card(P.P, "Vincent", 3, P, TypeUnit.Silver, "U", "Less Pwr", "S", Resources.Load<Sprite>("vincentcrabbe"), "Elimina la carta con menor poder del campo"));
                 Deck.Add(new Card(P.P, "Draco", 5, P, TypeUnit.Silver, "U", "None", "MS", Resources.Load<Sprite>("draco"), "No tiene efecto especial"));
                 Deck.Add(new Card(P.P, "Draco", 5, P, TypeUnit.Silver, "U", "None", "MS", Resources.Load<Sprite>("draco"), "No tiene efecto especial"));
-                Deck.Add(new Card(P.P, "Baron Sanguinario", 3, P, TypeUnit.Silver, "U", "Stealer", "R", Resources.Load<Sprite>("baronsanguinario"), "Roba una carta"));
-                Deck.Add(new Card(P.P, "Baron Sanguinario", 3, P, TypeUnit.Silver, "U", "Stealer", "R", Resources.Load<Sprite>("baronsanguinario"), "Roba una carta"));
+                Deck.Add(new Card(P.P, "Baron Sanguinario", 3, P, TypeUnit.Silver, "U", "Steal", "R", Resources.Load<Sprite>("baronsanguinario"), "Roba una carta"));
+                Deck.Add(new Card(P.P, "Baron Sanguinario", 3, P, TypeUnit.Silver, "U", "Steal", "R", Resources.Load<Sprite>("baronsanguinario"), "Roba una carta"));
                 Deck.Add(new Card(P.P, "Blaise", 4, P, TypeUnit.Silver, "U", "None", "MR", Resources.Load<Sprite>("blaisezabini"), "No tiene efecto especial"));
                 Deck.Add(new Card(P.P, "Blaise", 4, P, TypeUnit.Silver, "U", "None", "MR", Resources.Load<Sprite>("blaisezabini"), "No tiene efecto especial"));
                 Deck.Add(new Card(P.P, "Basilisco", 0, P, TypeUnit.None, "C", "Weather", "M", Resources.Load<Sprite>("basilisco"), "Afecta la fila seleccionada disminuyendo en 3 el poder de cada carta en ambos campos"));
