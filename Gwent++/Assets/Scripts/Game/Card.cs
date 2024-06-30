@@ -6,57 +6,72 @@ using UnityEngine.UI;
 
 namespace LogicalSide
 {
-    [CreateAssetMenu(fileName ="New Card", menuName = "Card")]
+    // [CreateAssetMenu(fileName ="New Card", menuName = "Card")]
     public class Card: ScriptableObject
     {
-        public Player Owner;
+        public Player Faction;
         public Sprite Artwork;
         public string Name;
-        private int _pwr; // Campo de respaldo
-        public int Pwr
+        private int _points; 
+        public int Points
         {
-            get { return _pwr; }
+            get { return _points; }
             set
             {
-                int provi = _pwr;
-                _pwr = value; // Almacena el valor en el campo de respaldo
+                int temp = _points;
+                _points = value; 
                 GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-                if (GM != null&& current_Rg!=""&& current_Rg!=null)
+                if (GM != null&& CurrentPlace!=""&& CurrentPlace!=null)
                 {
-                    GM.AddScore(DownBoard,_pwr-provi);
+                    GM.AddScore(LocationBoard,_points-temp);
                 }
                 if(PwrText!=null)
-                PwrText.text = _pwr.ToString();
+                PwrText.text = _points.ToString();
             }
 
         }
 
-        public int OriginPwr;
+        public int OriginalPoints;
         public string description;
-        public string Atk_Rg;
-        public string current_Rg;
+        public string AttackPlace;
+        public string CurrentPlace;
         public string type;
-        public TypeUnit unit;
-        public string Eff;
-        public bool DownBoard;
+        public KindofCard unit;
+        public Effect SuperPower;
+        public bool LocationBoard; //true if its down
         public TextMeshProUGUI PwrText= new();
         
 
-        public Card(bool DownBoard ,string name ,int pwr,Player Owner,TypeUnit unit,string type ,string Eff,string atk_Rg, Sprite Img, string description)
+        public Card(bool LocationBoard ,string name ,int points,Player Player,KindofCard unit,string type ,Effect ability,string attackRange, Sprite Img, string description)
         {
             this.Name = name;
-            this.Pwr = pwr;
-            OriginPwr = pwr;
+            this.Points = points;
+            OriginalPoints = points;
             this.description = description;
-            this.Atk_Rg = atk_Rg;
+            this.AttackPlace = attackRange;
             this.Artwork = Img;
             this.type = type;
             this.unit = unit;
-            this.Eff = Eff;
-            this.DownBoard = DownBoard;
-            this.Owner = Owner;
+            this.SuperPower = ability;
+            this.LocationBoard = LocationBoard;
+            this.Faction = Player;
         }
 
+    }
+
+    public enum Effect
+    {
+        Weather,
+        Raise,
+        MostPwr,
+        LessPwr,
+        Multpwr,
+        ZoneCleaner,
+        Stealer,
+        Cleaner,
+        Average,
+        Decoy,
+        None,
     }
     public enum Type
     {
@@ -66,10 +81,11 @@ namespace LogicalSide
         Decoy,
         Raise,
     }
-    public enum TypeUnit
+    public enum KindofCard
     {
         Golden,
         Silver,
-        None
+        None,
     }
+
 }

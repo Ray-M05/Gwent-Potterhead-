@@ -23,11 +23,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text Pwrplayer;
     public TMP_Text Pwroponent;
     public TextMeshProUGUI Message;
-    public TextMeshProUGUI Teller;
-    public TextMeshProUGUI EffTeller;
     public GameObject ButtonOK;
     public GameObject MessagePanel;
-    public GameObject TellerPanel;
     public UnityEngine.UI.Button Pass;
     public GameObject prefabCard;
     public GameObject prefabLeader;
@@ -63,7 +60,7 @@ public class GameManager : MonoBehaviour
                 SendPrincipal("Turno de " + P2.name);
             }
             VisibilityGM();
-            Textos();
+            //Textos();
         }
     }
     // Start is called before the first frame update
@@ -107,21 +104,7 @@ public class GameManager : MonoBehaviour
             SMS = new();
         
     }
-    private void Textos()
-    {
-        if (WhichPlayer(Turn).SetedUp != true)
-        {
-            Teller.gameObject.SetActive(true);
-            Send("Puedes descartar hasta dos cartas de tu mano haciendo click sobre ellas en este momento, si estás conforme con tu mano puedes pulsar el botón OK", Teller);
-        }
-        else
-        {
-            Send("", Teller);
-            Teller.gameObject.SetActive(false);
-        }
-    }
 
-    #region SetupingGame
     public void SetupPLayers()
     {
         GameObject deck = GameObject.Find("Deck");
@@ -181,26 +164,23 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    #endregion
-    #region RoundLogic
     int indexP =0; int indexE=0;
     public void EndRound()
     {
-        #region AlwaysWin
         int diff = Convert.ToInt32(Pwrplayer.text) - Convert.ToInt32(Pwroponent.text);
         if (diff > 0)
         {
             //Gana el P1
             Rounds.transform.GetChild(indexE).gameObject.SetActive(true);
             indexE++;
-            SendPrincipal((P1.name + " Ganó la ronda"));
+            SendPrincipal((P1.name + " GanÃ³ la ronda"));
             Turn = true;
         }
         else if(diff<0)
         {
             RoundsEnemy.transform.GetChild(indexP).gameObject.SetActive(true);
             indexP++;
-            SendPrincipal(P2.name + " Ganó la ronda");
+            SendPrincipal(P2.name + " GanÃ³ la ronda");
             Turn =false;
         }
         else
@@ -212,7 +192,7 @@ public class GameManager : MonoBehaviour
             {
                 Rounds.transform.GetChild(indexE).gameObject.SetActive(true);
                 indexE++;
-                result = ((P1.name + " Ganó la ronda aplicando el efecto de su líder"));
+                result = ((P1.name + " GanÃ³ la ronda aplicando el efecto de su lÃ­der"));
                 turno = true;
             }
             else
@@ -223,7 +203,7 @@ public class GameManager : MonoBehaviour
             {
                 RoundsEnemy.transform.GetChild(indexP).gameObject.SetActive(true);
                 indexP++;
-                result= ((P2.name + " Ganó la ronda aplicando el efecto de su líder"));
+                result= ((P2.name + " GanÃ³ la ronda aplicando el efecto de su lÃ­der"));
                 turno = false;
             }
             else
@@ -248,7 +228,7 @@ public class GameManager : MonoBehaviour
             }
             Turn = turno;
         }
-        #endregion
+
         if (indexE == indexP && indexP == 2)
             EndGame("Ambos", null);
         else if (indexP == 2)
@@ -256,13 +236,14 @@ public class GameManager : MonoBehaviour
         else if (indexE == 2)
             EndGame(P1.name, P1);
         Eff.GetComponent<Efectos>().ToCementery();
-        #region Stealer
+
+
         string r = "";
         PlayerDeck deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
         if (P1.Stealer)
         {
             deck.InstanciateLastOnDeck(3, false);
-            r = P1.name + " ha robado una carta de más gracias al efecto de su lider";
+            r = P1.name + " ha robado una carta de mï¿½s gracias al efecto de su lider";
         }
         else
         {
@@ -272,19 +253,18 @@ public class GameManager : MonoBehaviour
         if (P2.Stealer)
         { 
             deck.InstanciateLastOnDeck(3, false);
-            r = P2.name + " ha robado una carta de más gracias al efecto de su lider";
+            r = P2.name + " ha robado una carta de mÃ¡s gracias al efecto de su lider";
         }
         else
             deck.InstanciateLastOnDeck(2, false);
         if (P1.Stealer && P2.Stealer)
-            r = "Ambos jugadores han robado una carta de más gracias al efecto de su lider";
+            r = "Ambos jugadores han robado una carta de mÃ¡s gracias al efecto de su lider";
         if(r!= "")
         {
             SendPrincipal(r);
         }
-        #endregion
+
         VisibilityGM();
-        Send("", EffTeller);
         P1.Surrender = false;
         P2.Surrender = false;
     }
@@ -299,7 +279,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Turn = !Turn;
-            Send("Tu oponente pasó turno", EffTeller);
         }
         
     }
@@ -311,7 +290,7 @@ public class GameManager : MonoBehaviour
             
         else
         {
-            WinnerTxt.text = winner + " ganó la partida";
+            WinnerTxt.text = winner + " ganÃ³ la partida";
             if (Winner.faction == 1)
                 Win = Resources.Load<Sprite>("Gryffindor wins");
             else
@@ -320,8 +299,6 @@ public class GameManager : MonoBehaviour
         PanelWinner.GetComponent<UnityEngine.UI.Image>().sprite = Win;
         PanelWinner.SetActive(true);   
     }
-    #endregion
-    #region Messaging
     public void Send(string message, TextMeshProUGUI Mess)
     {
         Mess.gameObject.SetActive(true);
@@ -332,7 +309,6 @@ public class GameManager : MonoBehaviour
     {
         Mess.gameObject.SetActive(false);
         Mess.text = "";
-        Teller.gameObject.SetActive(true);
     }
     public void SendPrincipal(string s)
     {
@@ -352,7 +328,6 @@ public class GameManager : MonoBehaviour
     {
         WhichPlayer(Turn).SetedUp = true;
     }
-    #endregion
 
     public Player WhichPlayer(bool b)
     {
@@ -367,7 +342,6 @@ public class GameManager : MonoBehaviour
 }
 public class Player: ScriptableObject
 {
-    #region UsualProps
     public int faction;
     public new string name;
     public int lifes;
@@ -386,24 +360,19 @@ public class Player: ScriptableObject
             if(!_seted && GM.Turn== P)
             {
                 GM.ButtonOK.SetActive(true);
-                GM.Teller.gameObject.SetActive(true);
-                GM.TellerPanel.SetActive(true);
+
             }
             else
             {
                 GM.ButtonOK.SetActive(false);
-                GM.Teller.gameObject.SetActive(false);
-                GM.TellerPanel.SetActive(false);
+
             }
         }
     }
     private int _cards; //
-    #endregion
 
-    #region EffectProps
     public bool Stealer;
     public bool AlwaysAWinner;
-    #endregion
     public int cardsExchanged 
     {
         get

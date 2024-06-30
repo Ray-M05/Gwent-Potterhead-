@@ -9,20 +9,20 @@ using UnityEngine.XR;
 
 public class PlayerDeck : MonoBehaviour
 {
-    public GameObject prefabCarta; // El prefab genérico de la carta
+    public GameObject prefabCarta; // El prefab genï¿½rico de la carta
     public GameObject prefabLeader;
-    public Transform playerZone; // El lugar donde se colocará la carta del jugador
+    public Transform playerZone; // El lugar donde se colocarï¿½ la carta del jugador
     public GameObject PlayerHand;
     public Transform Leaderzone;
     public List<Card> deck; // Tu lista de cartas
     public List<Card> cement;
     public Image Back;
     
-    // Método para instanciar la última carta del mazo
+    // Mï¿½todo para instanciar la ï¿½ltima carta del mazo
     public void Instanciate(Card card, Transform zone, GameObject prefab)
     {
         Sprite sp;
-        if (card.Owner.faction == 1)
+        if (card.Faction.faction == 1)
         {
             sp= Resources.Load<Sprite>("gryffreverse");
             Back.sprite = Resources.Load<Sprite>("gryffreverse");

@@ -19,9 +19,9 @@ namespace LogicalSide
         {
             if (cardTemplate != null)
             { 
-              if (cardTemplate.Pwr != 0)
+              if (cardTemplate.Points != 0)
                 {
-                    PwrTxt.text = cardTemplate.Pwr.ToString();
+                    PwrTxt.text = cardTemplate.Points.ToString();
                     cardTemplate.PwrText = PwrTxt;
                 }
                 else
@@ -29,7 +29,7 @@ namespace LogicalSide
                 DescriptionText.text = "";//cardTemplate.description;
                 ArtworkImg.sprite = cardTemplate.Artwork;
                 if(Back!=null)
-                if(cardTemplate.Owner.faction==1)
+                if(cardTemplate.Faction.faction==1)
                     Back.sprite = Resources.Load<Sprite>("gryffreverse");
                 else
                     Back.sprite = Resources.Load<Sprite>("slythreverse");

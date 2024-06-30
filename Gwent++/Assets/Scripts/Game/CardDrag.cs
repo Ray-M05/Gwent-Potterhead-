@@ -26,15 +26,15 @@ public class CardDrag : MonoBehaviour
         AssociatedCard = gameObject.GetComponent<CardDisplay>().cardTemplate;
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
-    #region Drag
+
     public void StartDrag()
     {
         if (!IsDragging)
         {
             startPos = gameObject.transform.position;
-            if (!Played && GM.WhichPlayer(AssociatedCard.DownBoard).SetedUp)
+            if (!Played && GM.WhichPlayer(AssociatedCard.LocationBoard).SetedUp)
             {
-                if (AssociatedCard.DownBoard == GM.Turn)
+                if (AssociatedCard.LocationBoard == GM.Turn)
                 {
                     IsDragging = true;
                     BigCardDestroy();
@@ -52,20 +52,20 @@ public class CardDrag : MonoBehaviour
             {
                 if (AssociatedCard.type != "D")
                 {
-                    if (AssociatedCard.Eff != "Light")
+                    if (AssociatedCard.SuperPower != Effect.Cleaner)
                         transform.SetParent(dropzone.transform, false);
                     if (AssociatedCard.type.IndexOf("C") == -1 && AssociatedCard.type.IndexOf("A") == -1)
-                        AssociatedCard.current_Rg = dropzone.tag;
+                        AssociatedCard.CurrentPlace = dropzone.tag;
                     else
                     {
-                        AssociatedCard.current_Rg = AssociatedCard.Atk_Rg;
+                        AssociatedCard.CurrentPlace = AssociatedCard.AttackPlace;
                     }
                 }
                 else
                 {
                     //Es un Decoy, regreso la carta a la mano
                     CardDisplay exchange = dropzone.GetComponent<CardDisplay>();
-                    AssociatedCard.current_Rg = exchange.cardTemplate.current_Rg;
+                    AssociatedCard.CurrentPlace = exchange.cardTemplate.CurrentPlace;
                     Transform drop = dropzone.transform.parent;
                     transform.SetParent(drop.transform, false);
                     efectos.Decoy(exchange.cardTemplate);
@@ -80,12 +80,12 @@ public class CardDrag : MonoBehaviour
                     efectos.PlayCard(AssociatedCard);
                 GM.Sounds.PlaySoundButton();
                 if(AssociatedCard.type!="D")
-                    efectos.ListEffects[AssociatedCard.Eff].Invoke(AssociatedCard);
+                    efectos.ListEffects[AssociatedCard.SuperPower].Invoke(AssociatedCard);
 
                 GM.Turn = !GM.Turn;
-                if (AssociatedCard.Eff == "Light")
+                if (AssociatedCard.SuperPower == Effect.Cleaner)
                 {
-                    PlayerDeck deck = efectos.Decking(AssociatedCard.DownBoard);
+                    PlayerDeck deck = efectos.Decking(AssociatedCard.LocationBoard);
                     deck.AddToCement(AssociatedCard);
                     Destroy(gameObject);
 
@@ -108,7 +108,7 @@ public class CardDrag : MonoBehaviour
             {
                 if (AssociatedCard.type.IndexOf('D') == -1)
                 {
-                    if (drop.transform.childCount < 6 && AssociatedCard.Atk_Rg.IndexOf(drop.tag) != -1 && efectos.RangeMap[(AssociatedCard.DownBoard, drop.tag)] == drop)
+                    if (drop.transform.childCount < 6 && AssociatedCard.AttackPlace.IndexOf(drop.tag) != -1 && efectos.RangeMap[(AssociatedCard.LocationBoard, drop.tag)] == drop)
                     {
                         return drop;
                     }
@@ -117,7 +117,7 @@ public class CardDrag : MonoBehaviour
                 {
                     if (drop.tag == "Card"&& drop.transform.parent.tag!="P"&& drop.transform.parent.tag != "E")
                         {
-                            if(drop.GetComponent<CardDisplay>().cardTemplate.DownBoard== AssociatedCard.DownBoard)
+                            if(drop.GetComponent<CardDisplay>().cardTemplate.LocationBoard== AssociatedCard.LocationBoard)
                                 return drop;
 
                         }
@@ -125,12 +125,12 @@ public class CardDrag : MonoBehaviour
             }
             else
             {
-                if (drop.tag == AssociatedCard.type && efectos.RangeMap[(AssociatedCard.DownBoard, drop.tag)] == drop&& drop.transform.childCount<1)
+                if (drop.tag == AssociatedCard.type && efectos.RangeMap[(AssociatedCard.LocationBoard, drop.tag)] == drop&& drop.transform.childCount<1)
                     return drop;
             }
         else
         {
-            if ((drop.transform.childCount < 3 && drop.tag == "C") || (drop.tag != "P" && AssociatedCard.Eff == "Light"))
+            if ((drop.transform.childCount < 3 && drop.tag == "C") || (drop.tag != "P" && AssociatedCard.SuperPower == Effect.Cleaner))
                 return drop;
         }
         return null;
@@ -150,9 +150,7 @@ public class CardDrag : MonoBehaviour
             transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         }
     }
-    #endregion
 
-    #region BigCard
     public GameObject BigCardPrefab;
     GameObject Big;
     public GameObject Visualizer;
@@ -180,24 +178,20 @@ public class CardDrag : MonoBehaviour
     {
         Destroy(Big);
     }
-    #endregion
     public void CardExchange()
     {
-        Player P = GM.WhichPlayer(AssociatedCard.DownBoard);
-        if (GM.Turn == AssociatedCard.DownBoard) 
+        Player P = GM.WhichPlayer(AssociatedCard.LocationBoard);
+        if (GM.Turn == AssociatedCard.LocationBoard) 
         {
             if (!P.SetedUp)
             {
                 BigCardDestroy();
-                PlayerDeck Deck = efectos.Decking(AssociatedCard.DownBoard);
+                PlayerDeck Deck = efectos.Decking(AssociatedCard.LocationBoard);
                 Deck.deck.Insert(0,AssociatedCard);
                 Deck.InstanciateLastOnDeck(1, true);
                 P.cardsExchanged++;
                 Destroy(gameObject);
-                if (P.cardsExchanged == 2)
-                {
-                    GM.Teller.text="";
-                }
+                
             }
         }
     }
