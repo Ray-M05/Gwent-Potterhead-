@@ -838,6 +838,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
       insertIndex: -1
       addedObject: {fileID: 407777436}
+    - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 407777437}
   m_SourcePrefab: {fileID: 100100000, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
 --- !u!224 &407777434 stripped
 RectTransform:
@@ -863,6 +866,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raised: 0
   weather: 0
+--- !u!114 &407777437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407777435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 407777436}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &440481054
 GameObject:
   m_ObjectHideFlags: 0
@@ -2610,6 +2642,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1576792999}
+    - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1576793000}
   m_SourcePrefab: {fileID: 100100000, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
 --- !u!224 &1080586042 stripped
 RectTransform:
@@ -3134,6 +3169,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1258895788}
+    - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1258895789}
   m_SourcePrefab: {fileID: 100100000, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
 --- !u!224 &1258895786 stripped
 RectTransform:
@@ -3159,6 +3197,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raised: 0
   weather: 0
+--- !u!114 &1258895789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258895787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1258895788}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1259045350 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1552971429096601434, guid: d12a2d4845c4d284783b1ac28bf9f245, type: 3}
@@ -3379,6 +3446,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1339772759}
   - component: {fileID: 1339772761}
+  - component: {fileID: 1339772762}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GM
@@ -3434,6 +3502,19 @@ MonoBehaviour:
   PlayerZone: {fileID: 465665518}
   EnemyZone: {fileID: 1705959963}
   CardFilter: 1
+--- !u!114 &1339772762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339772758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a25c7122ef303ad43bf1b1316ca00d71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardSelected: {fileID: 0}
 --- !u!1001 &1369848655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3567,6 +3648,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raised: 0
   weather: 0
+--- !u!114 &1369879743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076447168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1369879742}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &1382355167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4105,6 +4215,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1559524039}
+    - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1559524040}
   m_SourcePrefab: {fileID: 100100000, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
 --- !u!224 &1559524037 stripped
 RectTransform:
@@ -4130,6 +4243,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raised: 0
   weather: 0
+--- !u!114 &1559524040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559524038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1559524039}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1576792998 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
@@ -4149,6 +4291,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raised: 0
   weather: 0
+--- !u!114 &1576793000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576792998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1576792999}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1637951676
 GameObject:
   m_ObjectHideFlags: 0
@@ -4637,6 +4808,49 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4640132750503709390, guid: 497c15d2fcce7824d8c1e9f0dd183ef4, type: 3}
   m_PrefabInstance: {fileID: 3397956021614137821}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1854317056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722648847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1854317057}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &1854317057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722648847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0ce0792507e4ba48908ed9942b61f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raised: 0
+  weather: 0
 --- !u!1 &1868346300
 GameObject:
   m_ObjectHideFlags: 0
@@ -4984,6 +5198,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1973261807}
+    - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1973261808}
   m_SourcePrefab: {fileID: 100100000, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
 --- !u!224 &1973261806 stripped
 RectTransform:
@@ -5004,6 +5221,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raised: 0
   weather: 0
+--- !u!114 &1973261808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133241465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1973261807}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!224 &2038393104 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1153390034776769937, guid: d12a2d4845c4d284783b1ac28bf9f245, type: 3}
@@ -5338,7 +5584,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3935959388483065035, guid: 497c15d2fcce7824d8c1e9f0dd183ef4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1854317057}
+    - targetCorrespondingSourceObject: {fileID: 3935959388483065035, guid: 497c15d2fcce7824d8c1e9f0dd183ef4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1854317056}
   m_SourcePrefab: {fileID: 100100000, guid: 497c15d2fcce7824d8c1e9f0dd183ef4, type: 3}
 --- !u!1001 &4098458661404371556
 PrefabInstance:
@@ -5447,6 +5699,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1369879742}
+    - targetCorrespondingSourceObject: {fileID: 7235237127665886485, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1369879743}
   m_SourcePrefab: {fileID: 100100000, guid: 94a9b12a9752059429abcb22f373f739, type: 3}
 --- !u!1001 &5296945816282974752
 PrefabInstance:

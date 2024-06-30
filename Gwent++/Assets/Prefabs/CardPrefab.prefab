@@ -358,9 +358,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Played: 0
+  dropzone: {fileID: 0}
+  AssociatedCard: {fileID: 0}
   BigCardPrefab: {fileID: 1484326637192916486, guid: f9dd0c50aefdce94896db2e42f71abcb, type: 3}
   Visualizer: {fileID: 0}
   Description: {fileID: 0}
+  ZoneDescription: {fileID: 0}
   zoneBig: {x: -886.0909, y: -119.06, z: 0}
 --- !u!114 &8638299925223098551
 MonoBehaviour:
@@ -375,38 +378,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 13
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8464157495241519836}
-          m_TargetAssemblyTypeName: CardDrag, Assembly-CSharp
-          m_MethodName: StartDrag
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 14
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8464157495241519836}
-          m_TargetAssemblyTypeName: CardDrag, Assembly-CSharp
-          m_MethodName: EndDrag
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventID: 0
     callback:
       m_PersistentCalls:
@@ -439,13 +410,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventID: 5
+  - eventID: 4
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8464157495241519836}
           m_TargetAssemblyTypeName: CardDrag, Assembly-CSharp
-          m_MethodName: BigCardDestroy
+          m_MethodName: Selected
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -455,10 +426,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
         - m_Target: {fileID: 8464157495241519836}
           m_TargetAssemblyTypeName: CardDrag, Assembly-CSharp
           m_MethodName: CardExchange

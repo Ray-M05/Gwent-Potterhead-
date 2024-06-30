@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5713955722006025234}
   - component: {fileID: 3146061269255077927}
   - component: {fileID: -7872211984837388489}
+  - component: {fileID: -5589837444461985119}
   m_Layer: 5
   m_Name: Dropzones
   m_TagString: M1
@@ -187,3 +188,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ce0792507e4ba48908ed9942b61f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raised: 0
+  weather: 0
+--- !u!114 &-5589837444461985119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3493966895998174621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: -7872211984837388489}
+          m_TargetAssemblyTypeName: LogicalSide.DropProp, Assembly-CSharp
+          m_MethodName: DropClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2

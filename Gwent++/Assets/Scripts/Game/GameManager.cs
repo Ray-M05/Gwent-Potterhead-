@@ -173,14 +173,14 @@ public class GameManager : MonoBehaviour
             //Gana el P1
             Rounds.transform.GetChild(indexE).gameObject.SetActive(true);
             indexE++;
-            SendPrincipal((P1.name + " Ganó la ronda"));
+            SendPrincipal((P1.name + " Gano la ronda"));
             Turn = true;
         }
         else if(diff<0)
         {
             RoundsEnemy.transform.GetChild(indexP).gameObject.SetActive(true);
             indexP++;
-            SendPrincipal(P2.name + " Ganó la ronda");
+            SendPrincipal(P2.name + " Gano la ronda");
             Turn =false;
         }
         else
@@ -192,7 +192,7 @@ public class GameManager : MonoBehaviour
             {
                 Rounds.transform.GetChild(indexE).gameObject.SetActive(true);
                 indexE++;
-                result = ((P1.name + " Ganó la ronda aplicando el efecto de su líder"));
+                result = ((P1.name + " Gano la ronda aplicando el efecto de su líder"));
                 turno = true;
             }
             else
@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviour
             {
                 RoundsEnemy.transform.GetChild(indexP).gameObject.SetActive(true);
                 indexP++;
-                result= ((P2.name + " Ganó la ronda aplicando el efecto de su líder"));
+                result= ((P2.name + " Gano la ronda aplicando el efecto de su líder"));
                 turno = false;
             }
             else
@@ -243,7 +243,7 @@ public class GameManager : MonoBehaviour
         if (P1.Stealer)
         {
             deck.InstanciateLastOnDeck(3, false);
-            r = P1.name + " ha robado una carta de m�s gracias al efecto de su lider";
+            r = P1.name + " ha robado una carta de más gracias al efecto de su lider";
         }
         else
         {
@@ -290,7 +290,7 @@ public class GameManager : MonoBehaviour
             
         else
         {
-            WinnerTxt.text = winner + " ganó la partida";
+            WinnerTxt.text = winner + " ha ganado la partida";
             if (Winner.faction == 1)
                 Win = Resources.Load<Sprite>("Gryffindor wins");
             else

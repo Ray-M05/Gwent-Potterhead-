@@ -88,7 +88,6 @@ namespace LogicalSide
         {
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             C.GetComponent<DropProp>().DropStatus(+1);
-            
         }
         public void PlayCard(Card card)
         {

@@ -9,14 +9,13 @@ using Unity.VisualScripting;
 public class CardDrag : MonoBehaviour
 {
     
-    private bool IsDragging= false;
     public bool Played= false;
     private Vector2 startPos;
-    private GameObject dropzone;
-    private List<GameObject> dropzones = new List<GameObject>();
+    public GameObject dropzone;
     private Efectos efectos;
-    private Card AssociatedCard;
+    public Card AssociatedCard;
     private GameManager GM;
+    PointerData pointer;
     void Start()
     // Start is called before the first frame update
     {
@@ -26,30 +25,38 @@ public class CardDrag : MonoBehaviour
         AssociatedCard = gameObject.GetComponent<CardDisplay>().cardTemplate;
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
         Description = GameObject.Find("Description").GetComponent<TextMeshProUGUI>();
-        ZoneDescription = GameObject.Find("ZoneDescription").GetComponent<TextMeshProUGUI>();        
+        ZoneDescription = GameObject.Find("ZoneDescription").GetComponent<TextMeshProUGUI>();
+        pointer = GameObject.Find("GameManager").GetComponent<PointerData>();
     }
 
-    public void StartDrag()
+    public void Selected()
     {
-        if (!IsDragging)
-        {
-            startPos = gameObject.transform.position;
-            if (!Played && GM.WhichPlayer(AssociatedCard.LocationBoard).SetedUp)
+            startPos = transform.position;
+            if (GM.WhichPlayer(AssociatedCard.LocationBoard).SetedUp)
             {
                 if (AssociatedCard.LocationBoard == GM.Turn)
                 {
-                    IsDragging = true;
-                    BigCardDestroy();
+                    if (pointer.CardSelected != null)
+                    {
+                        Card card = pointer.CardSelected.GetComponent<CardDrag>().AssociatedCard;
+                        if (card.type.IndexOf("D")!= -1)
+                        {
+                            pointer.PlayCard(this.gameObject);                                
+                        }
+                    }
+                    if(!Played){
+                        GM.Sounds.PlaySoundButton();
+                        pointer.CardSelected=this.gameObject;
+                        }
+                    
                 }
             }
-        }
     }
-    public void EndDrag()
+    public void EndClicked()
     {
         if (!Played)
         {
-            IsDragging = false;
-            dropzone = IsPosible();
+            dropzone = IsPossible();
             if (dropzone != null)
             {
                 if (AssociatedCard.type != "D")
@@ -90,7 +97,6 @@ public class CardDrag : MonoBehaviour
                     PlayerDeck deck = efectos.Decking(AssociatedCard.LocationBoard);
                     deck.AddToCement(AssociatedCard);
                     Destroy(gameObject);
-
                 }
                 
             }
@@ -102,55 +108,39 @@ public class CardDrag : MonoBehaviour
             GM.Sounds.PlayError();
         }
     }
-    private GameObject IsPosible()
+    private GameObject IsPossible()
     {
-        foreach(GameObject drop in dropzones)
         if (AssociatedCard.type.IndexOf("C") == -1)
             if (AssociatedCard.type.IndexOf("A") == -1)
             {
                 if (AssociatedCard.type.IndexOf('D') == -1)
                 {
-                    if (drop.transform.childCount < 6 && AssociatedCard.AttackPlace.IndexOf(drop.tag) != -1 && efectos.RangeMap[(AssociatedCard.LocationBoard, drop.tag)] == drop)
+                    if (dropzone.transform.childCount < 6 && AssociatedCard.AttackPlace.IndexOf(dropzone.tag) != -1 && efectos.RangeMap[(AssociatedCard.LocationBoard, dropzone.tag)] == dropzone)
                     {
-                        return drop;
+                        return dropzone;
                     }
                 }
                 else
                 {
-                    if (drop.tag == "Card"&& drop.transform.parent.tag!="P"&& drop.transform.parent.tag != "E")
+                    if (dropzone.tag == "Card"&& dropzone.transform.parent.tag!="P"&& dropzone.transform.parent.tag != "E")
                         {
-                            if(drop.GetComponent<CardDisplay>().cardTemplate.LocationBoard== AssociatedCard.LocationBoard)
-                                return drop;
+                            if(dropzone.GetComponent<CardDisplay>().cardTemplate.LocationBoard== AssociatedCard.LocationBoard)
+                                return dropzone;
 
                         }
                     }
             }
             else
             {
-                if (drop.tag == AssociatedCard.type && efectos.RangeMap[(AssociatedCard.LocationBoard, drop.tag)] == drop&& drop.transform.childCount<1)
-                    return drop;
+                if (dropzone.tag == AssociatedCard.type && efectos.RangeMap[(AssociatedCard.LocationBoard, dropzone.tag)] == dropzone&& dropzone.transform.childCount<1)
+                    return dropzone;
             }
         else
         {
-            if ((drop.transform.childCount < 3 && drop.tag == "C") || (drop.tag != "P" && AssociatedCard.SuperPower == Effect.Cleaner))
-                return drop;
+            if ((dropzone.transform.childCount < 3 && dropzone.tag == "C") || (dropzone.tag != "P" && AssociatedCard.SuperPower == Effect.Cleaner))
+                return dropzone;
         }
         return null;
-    }
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        dropzones.Insert(0,collision.gameObject);
-    }
-    public void OnCollisionExit2D(Collision2D collision)
-    {
-        dropzones.Remove(collision.gameObject);
-    }
-    void Update()
-    {
-        if (IsDragging)
-        {
-            transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        }
     }
 
     public GameObject BigCardPrefab;
@@ -159,14 +149,12 @@ public class CardDrag : MonoBehaviour
     public TextMeshProUGUI Description;
     public TextMeshProUGUI ZoneDescription;
 
-
-
     public Vector3 zoneBig= new Vector3(1800, 300);
     public void BigCardProduce() 
     {
         if(Big!=null)
             BigCardDestroy();
-        if (!IsDragging&&( gameObject.tag=="LeaderCard"||(gameObject.tag=="Card" && !gameObject.transform.GetChild(3).gameObject.activeSelf)))
+        if (( gameObject.tag=="LeaderCard"||(gameObject.tag=="Card" && !gameObject.transform.GetChild(3).gameObject.activeSelf)))
         {
             CardDisplay card = gameObject.GetComponent<CardDisplay>();
             Big = Instantiate(BigCardPrefab, zoneBig, Quaternion.identity);

@@ -41,6 +41,11 @@ namespace LogicalSide
                 }
             }
         }
+        public void DropClicked()
+        {
+            PointerData pointer = GameObject.Find("GameManager").GetComponent<PointerData>();
+            pointer.PlayCard(this.gameObject);
+        }
 
 
     }
