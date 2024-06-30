@@ -360,6 +360,7 @@ MonoBehaviour:
   Played: 0
   BigCardPrefab: {fileID: 1484326637192916486, guid: f9dd0c50aefdce94896db2e42f71abcb, type: 3}
   Visualizer: {fileID: 0}
+  Description: {fileID: 0}
   zoneBig: {x: -886.0909, y: -119.06, z: 0}
 --- !u!114 &8638299925223098551
 MonoBehaviour:

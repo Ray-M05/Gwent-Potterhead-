@@ -25,6 +25,8 @@ public class CardDrag : MonoBehaviour
         Visualizer = GameObject.Find("Visualizer");
         AssociatedCard = gameObject.GetComponent<CardDisplay>().cardTemplate;
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+        Description = GameObject.Find("Description").GetComponent<TextMeshProUGUI>();
+        ZoneDescription = GameObject.Find("ZoneDescription").GetComponent<TextMeshProUGUI>();        
     }
 
     public void StartDrag()
@@ -154,6 +156,10 @@ public class CardDrag : MonoBehaviour
     public GameObject BigCardPrefab;
     GameObject Big;
     public GameObject Visualizer;
+    public TextMeshProUGUI Description;
+    public TextMeshProUGUI ZoneDescription;
+
+
 
     public Vector3 zoneBig= new Vector3(1800, 300);
     public void BigCardProduce() 
@@ -172,11 +178,15 @@ public class CardDrag : MonoBehaviour
             if (disp.ArtworkImg != null)
                 disp.DescriptionText = Big.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             disp.PwrTxt = Big.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            Description.text = card.cardTemplate.description;
+            ZoneDescription.text = card.cardTemplate.AttackPlace;
         }
     }
     public void BigCardDestroy()
     {
         Destroy(Big);
+        Description.text = "";
+        ZoneDescription.text = "";
     }
     public void CardExchange()
     {
