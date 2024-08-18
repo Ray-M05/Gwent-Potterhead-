@@ -1,50 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System;
+using System.IO;
 
 namespace Compiler
 {
-    public class Program
+    public class Compilator
     {
-        public static void Main()
+        public static List<Card> GetCards(string filePath)
         {
-            try
-            {
-                string filePath = @"C:\Pro\Compiler-Extension\Example.txt";
-                string text = File.ReadAllText(filePath);
-                Lexer l = new Lexer(text);
-                List<Token> tokens = l.Tokenize();
-                Console.WriteLine(text);
-                foreach (Token t in tokens)
-                {
-                    Console.WriteLine(t.Type.ToString() + " in " + t.PositionError.Row + " line " + " and " + t.PositionError.Column + " column ");
-                }
-                Parser parser = new(tokens);
-                Expression root = parser.Parse();
-
-                Errors.PrintAll();
-                Console.WriteLine(parser.position);
-                PrintExpressionTree(root);
-                root.CheckSemantic(null);
-                PrintExpressionTree(root);
-                Errors.PrintAll();
-                List<Card> cards = (List<Card>)root.Evaluate(null!, null!);
-                CheckingContext context = new();
-
-                foreach (Card item in cards)
-                {
-                    context.Deck.Add(item);
-                }
-                if (cards != null)
-                    for (int i = cards.Count - 1; i >= 0; i--)
-                    {
-                        Card card = cards[i];
-                        Console.WriteLine(card.ToString());
-                        card.Execute(context);
-                    }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            string text = File.ReadAllText(filePath);
+            Lexer l = new Lexer(text);
+            List<Token> tokens = l.Tokenize();
+            
+            Parser parser = new(tokens);
+            Expression root = parser.Parse();
+            root.CheckSemantic(null);
+            PrintExpressionTree(root);
+            return (List<Card>)root.Evaluate(null!, null!);
         }
 
         public static void PrintExpressionTree(Expression node, int indentLevel = 0)

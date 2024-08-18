@@ -49,6 +49,17 @@ public class MenuGM : MonoBehaviour
             OpenPanel(MainPanel);
         }
     }
+    public GameObject PanelSaved;
+    public void SaveThis(GameObject Panel)
+    {
+        PanelSaved = Panel;
+    }
+
+    public void ComeBack()
+    {
+        OpenPanel(PanelSaved);
+    }
+
 
     public void OpenPanel(GameObject panel)
     {

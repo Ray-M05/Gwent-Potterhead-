@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
@@ -14,15 +15,20 @@ public class PlayerDeck : MonoBehaviour
     public Transform playerZone; // El lugar donde se colocar� la carta del jugador
     public GameObject PlayerHand;
     public Transform Leaderzone;
-    public List<Card> deck; // Tu lista de cartas
-    public List<Card> cement;
+    [SerializeField]public List<UnityCard> deck; // Tu lista de cartas
+    [SerializeField]public List<UnityCard> cement;
     public Image Back;
+
+    public void Start()
+    {
+        cement= new();
+    }
     
     // M�todo para instanciar la �ltima carta del mazo
-    public void Instanciate(Card card, Transform zone, GameObject prefab)
+    public void Instanciate(UnityCard card, Transform zone, GameObject prefab)
     {
         Sprite sp;
-        if (card.Faction.faction == 1)
+        if (card.Faction == "Gryffindor")
         {
             sp= Resources.Load<Sprite>("gryffreverse");
             Back.sprite = Resources.Load<Sprite>("gryffreverse");
@@ -54,7 +60,7 @@ public class PlayerDeck : MonoBehaviour
     {
         if (deck.Count > 0 && n>0)
         {
-            Card card = deck[deck.Count - 1];
+            UnityCard card = deck[deck.Count - 1];
             if ((playerZone.childCount <= 9 || exception))
             {
                 GameObject instanciaCarta = Instantiate(prefabCarta, playerZone);
@@ -79,7 +85,7 @@ public class PlayerDeck : MonoBehaviour
             InstanciateLastOnDeck(n - 1, exception);
         }
     }
-    public void AddToCement(Card card)
+    public void AddToCement(UnityCard card)
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
         cement.Add(card);
@@ -98,18 +104,20 @@ public class PlayerDeck : MonoBehaviour
         if(deck.Count > 0)
         InstanciateLastOnDeck(1,false);
     }
-    public void Shuffle(List<Card> deck)
+    public void Shuffle(List<UnityCard> deck, bool debug=false)
     {
         System.Random random = new System.Random();
         Instanciate(deck[0],Leaderzone, prefabLeader);
         if(Leaderzone.name == "LeaderplaceEnemy")
             Leaderzone.transform.GetChild(0).Rotate(0, 0, 180);
-        int n = deck.Count;
-        while (n > 0)
-        {
-            n--;
-            int k = random.Next(n + 1);
-            (deck[n], deck[k]) = (deck[k], deck[n]);
+        if(!debug) {
+            int n = deck.Count;
+            while (n > 0)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                (deck[n], deck[k]) = (deck[k], deck[n]);
+            }
         }
         InstanciateLastOnDeck(10,false);
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace Compiler
 {
@@ -158,12 +159,12 @@ namespace Compiler
             {
                 Evaluator.AddVar(Targets);
             }
-            else throw new Exception("Evaluate Error, Targets is not set correctly");
+            else Errors.List.Add(new CompilingError("Evaluate Error, Targets is not set correctly", new Position()));
             if (Context.Value != null)
             {
                 Evaluator.AddVar(Context);
             }
-            else throw new Exception("Evaluate Error, Targets is not set correctly");
+            else Errors.List.Add(new CompilingError("Evaluate Error, Targets is not set correctly", new Position()));
             Instructions.Evaluate(Evaluator, null);
             return true;
         }

@@ -28,7 +28,7 @@ namespace LogicalSide
 
         public List<GameObject>[] Board;
         public Dictionary<(bool, string), GameObject> RangeMap;
-        public Dictionary<Effect, Action<Card>> ListEffects;
+        public Dictionary<Effect, Action<UnityCard>> ListEffects;
         public Dictionary<(bool, string), GameObject> RaiseMap;
         private void Start()
         {
@@ -56,7 +56,7 @@ namespace LogicalSide
                 [(false, "AR")] = P2AR,
                 [(false, "AM")] = P2AM,
             };
-            ListEffects = new Dictionary<Effect, Action<Card>>()
+            ListEffects = new Dictionary<Effect, Action<UnityCard>>()
         {
             {Effect.Weather, Weather },
             {Effect.Raise, Raise },
@@ -71,12 +71,12 @@ namespace LogicalSide
             {Effect.Decoy, Decoy},
         };
         }
-        public void None(Card card)
+        public void None(UnityCard card)
         {
             return;
         }
 
-        public void Weather(Card card)
+        public void Weather(UnityCard card)
         {
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             C.GetComponent<DropProp>().DropStatus(-1);
@@ -84,24 +84,24 @@ namespace LogicalSide
             C.GetComponent<DropProp>().DropStatus(-1);
             
         }
-        public void Raise(Card card)
+        public void Raise(UnityCard card)
         {
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             C.GetComponent<DropProp>().DropStatus(+1);
         }
-        public void PlayCard(Card card)
+        public void PlayCard(UnityCard card)
         {
             string rg = card.CurrentPlace;
             int increase = 0;
             GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-            GM.AddScore(card.LocationBoard, card.Points);
+            GM.AddScore(card.LocationBoard, card.Power);
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             increase = C.GetComponent<DropProp>().weather + C.GetComponent<DropProp>().raised;
             if(card.unit!= KindofCard.Golden)
-            card.Points = card.Points + increase;
+            card.Power = card.Power + increase;
             
         }
-        public void Decoy(Card card)
+        public void Decoy(UnityCard card)
         {//Este efecto realmente establece las dropzones
             if(card.SuperPower == Effect.Weather)
             {
@@ -119,12 +119,12 @@ namespace LogicalSide
             }
             
         }
-        public void MostPwr(Card card)
+        public void MostPwr(UnityCard card)
         {
             GameObject Bigger = null;
             GameObject Var = null;
-            Card disp = null;
-            Card dispvar = null;
+            UnityCard disp = null;
+            UnityCard dispvar = null;
             System.Random random = new();
             foreach (GameObject Gamezone in RangeMap.Values)
             {
@@ -135,7 +135,7 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.type == "U" || dispvar.type == "D") && dispvar.unit == KindofCard.Silver )
+                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver )
                         {
                             Bigger = Gamezone.transform.GetChild(i).gameObject;
                             disp = Bigger.GetComponent<CardDisplay>().cardTemplate;
@@ -145,14 +145,14 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.type == "U" || dispvar.type == "D") && dispvar.unit == KindofCard.Silver)
+                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver)
                         {
-                            if (dispvar.Points > disp.Points)
+                            if (dispvar.Power > disp.Power)
                             {
                                 disp = dispvar;
                                 Bigger = Var;
                             }
-                            else if (dispvar.Points == disp.Points)
+                            else if (dispvar.Power == disp.Power)
                             {
                                 int var = random.Next(0, 1);
                                 if (var == 0)
@@ -174,12 +174,12 @@ namespace LogicalSide
                 Destroy(Bigger);
             }
         } 
-        public void LessPwr(Card card)
+        public void LessPwr(UnityCard card)
         {
             GameObject Bigger = null;
             GameObject Var = null;
-            Card disp = null;
-            Card dispvar = null;
+            UnityCard disp = null;
+            UnityCard dispvar = null;
             System.Random random = new();
             foreach (GameObject Gamezone in RangeMap.Values)
             {
@@ -190,7 +190,7 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.type == "U" || dispvar.type == "D") && dispvar.unit == KindofCard.Silver)
+                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver)
                         {
                             Bigger = Gamezone.transform.GetChild(i).gameObject;
                             disp = Bigger.GetComponent<CardDisplay>().cardTemplate;
@@ -200,14 +200,14 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.type == "U" || dispvar.type == "D") && dispvar.unit == KindofCard.Silver)
+                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver)
                         {
-                            if (dispvar.Points < disp.Points)
+                            if (dispvar.Power < disp.Power)
                             {
                                 disp = dispvar;
                                 Bigger = Var;
                             }
-                            else if (dispvar.Points == disp.Points)
+                            else if (dispvar.Power == disp.Power)
                             {
                                 int var = random.Next(0, 1);
                                 if (var == 0)
@@ -229,20 +229,20 @@ namespace LogicalSide
                 Destroy(Bigger);
             }
         }
-        public void Average(Card card)
+        public void Average(UnityCard card)
         {
             int totalPwr = 0;
             int cant = 0;
-            Card dispvar;
+            UnityCard dispvar;
             foreach (GameObject Gamezone in RangeMap.Values)
             {
                 if(Gamezone.tag.IndexOf("A") == -1)
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
                 {
                     dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null&& (dispvar.type=="U" || dispvar.type == "D"))
+                    if (dispvar != null&& (dispvar.Type=="U" || dispvar.Type == "D"))
                     {
-                        totalPwr += dispvar.Points;
+                        totalPwr += dispvar.Power;
                         cant++;
                     }
                 }
@@ -254,21 +254,21 @@ namespace LogicalSide
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
                 {
                     dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null && (dispvar.type == "U" || dispvar.type == "D") && dispvar.unit== KindofCard.Silver)
+                    if (dispvar != null && (dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit== KindofCard.Silver)
                     {
-                        dispvar.Points = media;
+                        dispvar.Power = media;
                     }
                 }
             }
         }
-        public void Stealer(Card card)
+        public void Stealer(UnityCard card)
         {
-            Decking(card).InstanciateLastOnDeck(1,false);
+            Decking(card.Owner.Turn).InstanciateLastOnDeck(1,false);
         }
-        public void Multpwr(Card card)
+        public void Multpwr(UnityCard card)
         {
             int increase = 0;
-            Card dispvar;
+            UnityCard dispvar;
             foreach (GameObject Gamezone in RangeMap.Values)
             {
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
@@ -280,14 +280,14 @@ namespace LogicalSide
                     }
                 }
             }
-            card.Points += increase;
+            card.Power += increase;
         }
-        public void ZoneCleanerMax(Card card)
+        public void ZoneCleanerMax(UnityCard card)
         {//Este efecto es la misma idea del expuesto en el pdf, solo me parecio mejor eliminar la zona mas poblada, en caso de que quieran probar su funcionamiento para el otro caso basta cambiar el signo > por <
             GameObject Me;
             int childs = 0;
             GameObject Target = null;
-            Card dispvar = null;
+            UnityCard dispvar = null;
 
             System.Random random = new();
             foreach (GameObject Gamezone in RangeMap.Values)
@@ -317,12 +317,12 @@ namespace LogicalSide
 
             }
         }
-        public void ZoneCleaner(Card card)
+        public void ZoneCleaner(UnityCard card)
         {
             GameObject Me;
             int childs = int.MaxValue;
             GameObject Target = null;
-            Card dispvar = null;
+            UnityCard dispvar = null;
 
             System.Random random = new();
             foreach (GameObject Gamezone in RangeMap.Values)
@@ -351,7 +351,7 @@ namespace LogicalSide
 
             }
         }
-        public void Cleaner(Card card)
+        public void Cleaner(UnityCard card)
         {
             foreach (GameObject Gamezone in RangeMap.Values)
             {
@@ -360,9 +360,9 @@ namespace LogicalSide
                 {
                     for (int i = 0; i < Gamezone.transform.childCount; i++)
                     {
-                        Card disp = Gamezone.transform.GetChild(i).GetComponent<CardDisplay>().cardTemplate;
-                        if (disp.unit == KindofCard.Silver&& disp.type!="D")
-                            disp.Points -= props.weather;
+                        UnityCard disp = Gamezone.transform.GetChild(i).GetComponent<CardDisplay>().cardTemplate;
+                        if (disp.unit == KindofCard.Silver&& disp.Type!="D")
+                            disp.Power -= props.weather;
                     }
                     props.weather = 0;
                 }
@@ -370,7 +370,7 @@ namespace LogicalSide
             for (int i = 0; i < C.transform.childCount; i++)
             {
                 GameObject weather = C.transform.GetChild(i).gameObject;
-                Card disp = C.transform.GetChild(i).GetComponent<CardDisplay>().cardTemplate;
+                UnityCard disp = C.transform.GetChild(i).GetComponent<CardDisplay>().cardTemplate;
                 PlayerDeck Current = Decking(weather);
                 Current.AddToCement(disp);
                 Destroy(weather);
@@ -379,7 +379,7 @@ namespace LogicalSide
 
         public void RestartCard(GameObject Card, GameObject Place, bool home)
         {
-            Card card = Card.GetComponent<CardDisplay>().cardTemplate;
+            UnityCard card = Card.GetComponent<CardDisplay>().cardTemplate;
             Restart(card);
             if (home)
             {
@@ -399,11 +399,11 @@ namespace LogicalSide
             else
                 return GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
         }
-        private void Restart(Card card)
+        private void Restart(UnityCard card)
         {
-            card.Points = 0;
+            card.Power = 0;
             card.CurrentPlace = "";
-            card.Points = card.OriginalPoints;
+            card.Power = card.OriginalPoints;
         }
         public void ToCementery()
         {
@@ -411,7 +411,7 @@ namespace LogicalSide
             PlayerDeck DeckE = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
             PlayerDeck Current;
             GameObject card;
-            List<Card> Permanents = new List<Card>();
+            List<UnityCard> Permanents = new List<UnityCard>();
             foreach (GameObject GameZone in RangeMap.Values)
             {
                 DropProp drop = GameZone.GetComponent<DropProp>();
@@ -434,7 +434,7 @@ namespace LogicalSide
                     CardDisplay disp = card.GetComponent<CardDisplay>();
                     if (disp != null)
                     {
-                        if (disp.cardTemplate.type == "U")
+                        if (disp.cardTemplate.Type == "U")
                             Restart(disp.cardTemplate);
                         
                             Current.AddToCement(disp.cardTemplate);
@@ -456,15 +456,15 @@ namespace LogicalSide
                     Destroy(card);
                 }
             }
-            foreach (Card disp in Permanents)
+            foreach (UnityCard disp in Permanents)
             {
                 //Primero verifico que en el otro terreno no haya quedado en juego un clima casualmente
                 int increase = 0;
-                disp.Points= disp.OriginalPoints;
+                disp.Power= disp.OriginalPoints;
                 GameObject C = RangeMap[(disp.LocationBoard, disp.CurrentPlace)];
                 increase = C.GetComponent<DropProp>().weather + C.GetComponent<DropProp>().raised;
                 if (disp.unit != KindofCard.Golden)
-                    disp.Points = disp.Points + increase;
+                    disp.Power = disp.Power + increase;
                 if(disp.SuperPower== Effect.Weather|| disp.SuperPower== Effect.Raise|| disp.SuperPower == Effect.Multpwr)
                     ListEffects[disp.SuperPower](disp);
             }
@@ -473,14 +473,14 @@ namespace LogicalSide
         public bool RandomizedRem(Player Player)
         {
             int cant = 0;
-            Card dispvar;
+            UnityCard dispvar;
             System.Random r= new();
             foreach (GameObject Gamezone in RangeMap.Values)
             {
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
                 {
                     dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null && (dispvar.type == "U"|| dispvar.type== "D" )&& dispvar.Faction== Player)
+                    if (dispvar != null && (dispvar.Type == "U"|| dispvar.Type== "D" )&& dispvar.Owner== Player)
                     {
                         cant++;
                     }
@@ -495,7 +495,7 @@ namespace LogicalSide
                     for (int i = 0; i < Gamezone.transform.childCount; i++)
                     {
                         dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                        if (dispvar != null && (dispvar.type == "U" || dispvar.type == "D") && dispvar.Faction == Player)
+                        if (dispvar != null && (dispvar.Type == "U" || dispvar.Type == "D") && dispvar.Owner == Player)
                         {
                             if (cant2 == cant)
                             {

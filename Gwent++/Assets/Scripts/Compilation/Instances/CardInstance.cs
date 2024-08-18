@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
+using System;
+using UnityEngine;
+using UnityEditor.Experimental.Rendering;
 
 namespace Compiler
 {
@@ -319,7 +322,7 @@ namespace Compiler
         }
     }
 
-    public abstract class Card
+    public abstract class Card: ScriptableObject
     {
         public abstract string Name { get; set; }
         public abstract string Type { get; set; }

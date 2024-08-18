@@ -1,0 +1,71 @@
+effect 
+{
+    Name: "Damage",
+    Params: 
+    {
+        Amount: Number
+    },
+    Action: (targets, context) => 
+    {
+        for target in targets 
+        {
+            i = 0;
+            while (i++ < Amount)
+                target.Power+=1;
+        };
+    }
+}
+effect 
+{
+    Name: "Draw",
+    Action: (targets, context) => {
+        topCard = context.Deck.Pop();
+        context.Hand.Add(topCard);
+        context.Hand.Shuffle();
+}
+}
+effect {
+    Name: "Return to deck",
+    Action: (targets, context) => 
+        for target in targets {
+            owner = target.Owner;
+            deck = context.DeckOfPlayer(owner);
+            deck.Push(target);
+            deck.Shuffle();
+            context.Board.Remove(target);
+        };
+}
+card {
+    Type: "Oro",
+    Name: "Beluga",
+    Faction: "Gryffindor",
+    Power: 5 * (1+1),
+    Range: ["Melee", "Range"],
+    OnActivation: 
+    [
+        {
+            Effect: 
+            {
+                Name: "Damage",
+                Amount: 5
+            },
+            Selector: {
+                Source: "deck",
+                Single: false,
+                Predicate: (unit) => unit.Faction == "Gryffindor"
+            },
+            PostAction: {
+                Effect: "Return to deck",
+                Selector: {
+                    Source: "parent",
+                    Single: false,
+                    Predicate: (unit) => unit.Power < 20
+                },
+            },
+        },
+        {
+            Effect: "Draw"
+        }
+        
+    ]
+}

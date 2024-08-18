@@ -68,19 +68,21 @@ public class GameManager : MonoBehaviour
     {
         SMS = new();
         SavedData data= null;
+        Compilation compi= null;
         if (GameObject.Find("SoundManager")!= null)
         {
             data = GameObject.Find("SoundManager").GetComponent<SavedData>();
+            compi = GameObject.Find("SoundManager").GetComponent<Compilation>();
         }
         if (data != null && !data.debug)
         {
-            P1 = new Player(data.faction_1, data.name_1, true);
-            P2 = new Player(data.faction_2, data.name_2,false);
+            P1 = new Player(data.faction_1, data.name_1, true, compi.CardsPlayer1);
+            P2 = new Player(data.faction_2, data.name_2,false, compi.CardsPlayer2);
         }
         else
         {
-            P1 = new Player(1, "Gryffindor",true);
-            P2 = new Player(2, "Slytherin",false);
+            P1 = new Player(1, "Gryffindor",true,null);
+            P2 = new Player(2, "Slytherin",false, null);
         }
         SetupPLayers();
         Sounds = GameObject.Find("Menus").GetComponent<MenuGM>();
@@ -112,14 +114,14 @@ public class GameManager : MonoBehaviour
         {
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P1);
-            setup.Shuffle(setup.deck);
+            setup.Shuffle(setup.deck,  true);
         }
         deck = GameObject.Find("DeckEnemy");
         if (deck != null)
         {
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P2);
-            setup.Shuffle(setup.deck);
+            setup.Shuffle(setup.deck, true);
         }
     }
     public void AddScore(bool Downboard, int value)
@@ -340,7 +342,7 @@ public class GameManager : MonoBehaviour
         Thread.Sleep(Convert.ToInt32(seconds*1000));
     }
 }
-public class Player: ScriptableObject
+public class Player: Compiler.Player
 {
     public int faction;
     public new string name;
@@ -348,6 +350,7 @@ public class Player: ScriptableObject
     public bool Surrender;
     public bool P;
     private bool _seted;
+    public List<UnityCard> Cards;
     public bool SetedUp
     {
         get
@@ -369,8 +372,7 @@ public class Player: ScriptableObject
             }
         }
     }
-    private int _cards; //
-
+    private int _cards; 
     public bool Stealer;
     public bool AlwaysAWinner;
     public int cardsExchanged 
@@ -388,7 +390,7 @@ public class Player: ScriptableObject
             }
         }
     }
-    public Player(int faction, string name, bool b)
+    public Player(int faction, string name, bool b, List<UnityCard> cards)
     {
 
         this.name = name;
@@ -397,6 +399,7 @@ public class Player: ScriptableObject
         this.P = b;
         SetedUp = false;
         cardsExchanged = 0;
+        Cards = cards;
     }
 }
 
