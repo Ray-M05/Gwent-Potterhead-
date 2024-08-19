@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Compiler;
+using LogicalSide;
+using UnityEditor.Build;
+using UnityEngine;
 
 namespace ListExtensions
 {
@@ -58,17 +61,56 @@ namespace ListExtensions
 
         public static void AddCard<T>(this List<T> list, T item)
         {
-            list.Add(item);
+            if(AddPosibility!= null && (bool)AddPosibility&& item is UnityCard card)
+            {
+                PlayerDeck Deck;
+                if(Id== "Hand")
+                {
+                    Deck= GameObject.Find("Player Hand").GetComponent<PlayerDeck>();
+                    Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
+                }
+                else if(Id== "OtherHand")
+                {
+                    Deck= GameObject.Find("Enemy Hand").GetComponent<PlayerDeck>();
+                    Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
+                }
+                if(PlayerOwner!= null)
+                {
+                    GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                    card.LocationBoard= (bool)PlayerOwner;
+                    card.Owner= GM.WhichPlayer((bool)PlayerOwner);
+                }
+                list.Add(item);
+            }
+            else
+                throw new Exception(Id+ " list, is not available to Add elements, due to its Ambiguity");
         }
 
         public static void RemoveCard<T>(this List<T> list, T item)
         {
-            list.Remove(item);
+            if(item is UnityCard card)
+            {//En caso de que la carta este siendo mostrada en la interfaz, 
+            //ella seteará internamente que debe ser destruida
+            //y los scripts que heredan de MonoBehavior lo detectarán, y la destruirán automaticamente
+                card.Destroy= true;
+            }
+            for(int i = 0; i< list.Count; i++)
+            {
+                if(list[i].Equals(item))
+                {
+                    list.RemoveAt(i);
+                    break;
+                }
+            }
         }
 
         public static bool? PlayerOwner = null;
         public static bool? AddPosibility = null;
         public static string Id = "";
+        public static void UpdateId<T>(this List<T> list, string newId)
+        {
+            Id = newId; 
+        }
     }
 }
 

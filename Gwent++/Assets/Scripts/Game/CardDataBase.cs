@@ -86,7 +86,7 @@ namespace LogicalSide
             }
 
             //Barajear la lista sin mover el cero
-
+            //permitir la entrada de cualquier faccion
             int conta = 24;
             if(P.Cards!=null)
             foreach (var card in P.Cards)

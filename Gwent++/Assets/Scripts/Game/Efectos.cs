@@ -6,11 +6,198 @@ using System.IO;
 using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
+using ListExtensions;
+using Compiler;
 
 namespace LogicalSide
 {
-    public class Efectos : MonoBehaviour
+
+    public class Efectos : MonoBehaviour, IDeckContext
     {
+        public bool Turn{get; set;}
+        public bool DecksInverted;
+
+        public List<Card> Deck 
+        {
+            get
+            {
+                DecksInverted= false;
+                return DeckOfPlayer(TriggerPlayer);
+            }
+        }
+        public List<Card> OtherDeck 
+        {
+            get
+            {
+                DecksInverted = true;
+                List<Card> l = DeckOfPlayer(TriggerPlayer);
+                DecksInverted = false;
+                return l;
+            }
+        }
+        public List<Card> DeckOfPlayer(Player player)
+        {
+            List<Card> l= new();
+            PlayerDeck deck;
+            if ((player.Turn && !DecksInverted)||(!player.Turn && DecksInverted))
+            {
+                //l = new(true, true); TODO:
+                deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
+                l.UpdateId("Deck");
+            }
+            else
+            {
+                deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
+                l.UpdateId("OtherDeck");
+            }
+            foreach(Card card in deck.deck)
+            {
+                l.AddCard(card);
+            }
+            return l;
+        }
+
+
+        public List<Card> GraveYard 
+        {
+            get
+            {
+                DecksInverted = false;
+                return GraveYardOfPlayer(TriggerPlayer);
+            }
+        }
+        public List<Card> OtherGraveYard 
+        {
+            get
+            {
+                DecksInverted = true;
+                List<Card> l = GraveYardOfPlayer(TriggerPlayer);
+                DecksInverted = false;
+                return l;
+            }
+        }
+
+        public List<Card> GraveYardOfPlayer(Player player)
+        {
+            List<Card> l = new();
+            PlayerDeck deck;
+            if ((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
+            {
+                //l = new(true, true); TODO:
+                deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
+                l.UpdateId("GraveYard");
+            }
+            else
+            {
+                deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
+                l.UpdateId("OtherGraveYard");
+            }
+            foreach (Card card in deck.cement)
+            {
+                l.AddCard(card);
+            }
+            return l;
+        }
+
+        public List<Card> Field 
+        {
+            get
+            {
+                DecksInverted = false;
+                return FieldOfPlayer(TriggerPlayer);
+            }
+        }
+        public List<Card> OtherField 
+        {
+            get
+            {
+                DecksInverted = true;
+                List<Card> l = FieldOfPlayer(TriggerPlayer);
+                DecksInverted = false;
+                return l;
+            }
+        }
+        public List<Card> FieldOfPlayer(Player player)
+        {
+
+        }
+
+
+        public List<Card> Hand 
+        {
+            get
+            {
+                //List<Card> cards= new(true, null, 10);
+                DecksInverted = false;
+                return HandOfPlayer(TriggerPlayer);
+            }
+        }
+        public List<Card> OtherHand 
+        {
+            get
+            {
+                DecksInverted = true;
+                List<Card> l = HandOfPlayer(TriggerPlayer);
+                DecksInverted = false;
+                return l;
+            }
+        }
+
+
+        public List<Card> HandOfPlayer(Player player)
+        {
+            GameObject Hand;
+            List<Card> l = new();
+            if((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
+            {
+                Hand= GameObject.Find("Player Hand");
+                l.UpdateId("Hand");
+            }
+            else
+            {
+                Hand = GameObject.Find("Enemy Hand");
+                l.UpdateId("OtherHand");
+            }
+            GameObject obj = null;
+            for (int i = 0; i< Hand.transform.childCount; i++)
+            {
+                obj = Hand.transform.GetChild(i).gameObject;
+                CardDisplay disp = obj.GetComponent<CardDisplay>();
+                if (disp != null)
+                {
+                    l.AddCard(disp.cardTemplate);
+                }
+            }
+            return l;
+        }
+        public List<Card> Board 
+        {
+            get
+            {
+                List<Card> l = new();
+                foreach(GameObject zone in BoardOfGameObject)
+                {
+                    for (int i = 0; i < zone.transform.childCount; i++)
+                    {
+                        CardDisplay disp = zone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>();
+                        if (disp != null)
+                        {
+                            l.AddCard(disp.cardTemplate);
+                        }
+                    }
+                }
+                return l;
+            }
+        }
+        public Player TriggerPlayer 
+        {
+            get
+            {
+                GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                return GM.WhichPlayer(GM.Turn);
+            }
+        }
+
 
         public GameObject P1S;
         public GameObject P1R;
@@ -25,8 +212,8 @@ namespace LogicalSide
         public GameObject P2AR;
         public GameObject P2AS;
         public GameObject C;
-
-        public List<GameObject>[] Board;
+        
+        public List<GameObject> BoardOfGameObject;
         public Dictionary<(bool, string), GameObject> RangeMap;
         public Dictionary<Effect, Action<UnityCard>> ListEffects;
         public Dictionary<(bool, string), GameObject> RaiseMap;

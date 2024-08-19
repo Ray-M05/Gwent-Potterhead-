@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using Compiler;
 
 public class CardDrag : MonoBehaviour
 {
@@ -90,6 +91,19 @@ public class CardDrag : MonoBehaviour
                 GM.Sounds.PlaySoundButton();
                 if(AssociatedCard.Type!="D")
                     efectos.ListEffects[AssociatedCard.SuperPower].Invoke(AssociatedCard);
+
+                if (!(AssociatedCard.Effects == null || AssociatedCard.Effects.Count == 0))
+                {
+                    try
+                    {
+                        AssociatedCard.Execute(efectos);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        GM.SendPrincipal("Error en la ejecucion del efecto:");
+                        GM.SendPrincipal(ex.Message);
+                    }
+                }
 
                 GM.Turn = !GM.Turn;
                 if (AssociatedCard.SuperPower == Effect.Cleaner)

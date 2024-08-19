@@ -63,7 +63,7 @@ namespace Compiler
             return true;
         }
 
-        public void Execute(DeckContext context, List<Card> targets, List<IdentifierExpression> Param)
+        public void Execute(IDeckContext context, List<Card> targets, List<IdentifierExpression> Param)
         {
             Scope Evaluator = new Scope();
             Action.Context.Result = context;
@@ -294,7 +294,7 @@ namespace Compiler
         List<IdentifierExpression> Params { get; set; }
         Selector Selector { get; set; }
 
-        void Execute(DeckContext context)
+        void Execute(IDeckContext context)
         {
             List<Card> targets;
             if (Selector != null)

@@ -254,7 +254,7 @@ namespace Compiler
             return null;
         }
 
-        public List<Card> Execute(DeckContext context)
+        public List<Card> Execute(IDeckContext context)
         {
             Predicate predicate = (Predicate as Predicate)!;
 
@@ -333,7 +333,7 @@ namespace Compiler
         public abstract List<IEffect> Effects { get; set; }
         public abstract Card GetCopy();
 
-        public void Execute(DeckContext context)
+        public void Execute(IDeckContext context)
         {
             foreach (IEffect effect in Effects)
             {
@@ -390,30 +390,30 @@ namespace Compiler
         public bool Turn { get; set; }
     }
 
-    public abstract class DeckContext
+    public interface IDeckContext
     {
         bool Turn { get; }
-        public abstract List<Card> Deck { get; }
-        public abstract List<Card> OtherDeck { get; }
-        public abstract List<Card> DeckOfPlayer(Player player);
+        public List<Card> Deck { get; }
+        public List<Card> OtherDeck { get; }
+        public List<Card> DeckOfPlayer(Player player);
 
 
-        public abstract List<Card> GraveYard { get; }
-        public abstract List<Card> OtherGraveYard { get; }
+        public List<Card> GraveYard { get; }
+        public List<Card> OtherGraveYard { get; }
 
-        public abstract List<Card> GraveYardOfPlayer(Player player);
+        public List<Card> GraveYardOfPlayer(Player player);
 
-        public abstract List<Card> Field { get; }
-        public abstract List<Card> OtherField { get; }
-        public abstract List<Card> FieldOfPlayer(Player player);
-
-
-        public abstract List<Card> Hand { get; }
-        public abstract List<Card> OtherHand { get; }
+        public List<Card> Field { get; }
+        public List<Card> OtherField { get; }
+        public List<Card> FieldOfPlayer(Player player);
 
 
-        public abstract List<Card> HandOfPlayer(Player player);
-        public abstract List<Card> Board { get; }
-        public abstract Player TriggerPlayer { get; }
+        public List<Card> Hand { get; }
+        public List<Card> OtherHand { get; }
+
+
+        public List<Card> HandOfPlayer(Player player);
+        public List<Card> Board { get; }
+        public Player TriggerPlayer { get; }
     }
 }

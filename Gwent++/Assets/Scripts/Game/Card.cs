@@ -7,7 +7,6 @@ using Compiler;
 
 namespace LogicalSide
 {
-    // [CreateAssetMenu(fileName ="New Card", menuName = "Card")]
     public class UnityCard: Card
     {
         public override Compiler.Player Owner{get; set;}
@@ -15,7 +14,7 @@ namespace LogicalSide
         public override string Name{get; set;}
         public override string Faction{get; set;}
         private int _points; 
-        public override int Power//Modificar poder
+        public override int Power
         {
             get { return _points; }
             set

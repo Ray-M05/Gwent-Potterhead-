@@ -569,7 +569,7 @@ namespace Compiler
         {
             if (Tools.GetPossibleMethods(ValueType.Context).Contains(Value.Type))
             {
-                if (instance is DeckContext context)
+                if (instance is IDeckContext context)
                 {
                     var cont = context.GetType();
                     return cont.GetProperty(Value.Meaning).GetValue(context);
