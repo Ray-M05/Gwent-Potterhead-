@@ -2376,10 +2376,9 @@ MonoBehaviour:
   ErrorSound: {fileID: 8300000, guid: 3a199f6425a6f88478dcfaad5c1b44e4, type: 3}
   FXsource: {fileID: 0}
   SoundGM: {fileID: 0}
-  ButtonGryff2: {fileID: 0}
-  ButtonSlyth2: {fileID: 0}
-  ButtonSlith1: {fileID: 0}
+  ButtonSlyth1: {fileID: 0}
   ButtonGryff1: {fileID: 0}
+  PanelSaved: {fileID: 0}
 --- !u!1 &934289988 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1552971429096601434, guid: d12a2d4845c4d284783b1ac28bf9f245, type: 3}
@@ -3497,8 +3496,6 @@ MonoBehaviour:
   prefabCard: {fileID: 8389824397379620764, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
   prefabLeader: {fileID: 6812664536142041913, guid: 3356d76ce75ac8c42836f212acb1d496, type: 3}
   Sounds: {fileID: 0}
-  P1: {fileID: 0}
-  P2: {fileID: 0}
   PlayerZone: {fileID: 465665518}
   EnemyZone: {fileID: 1705959963}
   CardFilter: 1
@@ -5458,7 +5455,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1552971429096601434, guid: d12a2d4845c4d284783b1ac28bf9f245, type: 3}
       propertyPath: m_Name
-      value: Payer Hand
+      value: Player Hand
       objectReference: {fileID: 0}
     - target: {fileID: 1552971429096601434, guid: d12a2d4845c4d284783b1ac28bf9f245, type: 3}
       propertyPath: m_TagString

@@ -1538,6 +1538,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LittleErrors: {fileID: 438982309}
   Console: {fileID: 1756782574}
+  CardsPlayer1: []
+  CardsPlayer2: []
   FilePath: C:/Pro/Gwent-Potterhead-/Gwent++/Assets/Scripts/Compilation/Tools/Example.txt
   Player: 0
 --- !u!1 &533816071
@@ -3796,9 +3798,7 @@ MonoBehaviour:
   ErrorSound: {fileID: 8300000, guid: 3a199f6425a6f88478dcfaad5c1b44e4, type: 3}
   FXsource: {fileID: 503116313}
   SoundGM: {fileID: 503116315}
-  ButtonGryff2: {fileID: 856267071}
-  ButtonSlyth2: {fileID: 91100810}
-  ButtonSlith1: {fileID: 2096290092}
+  ButtonSlyth1: {fileID: 2096290092}
   ButtonGryff1: {fileID: 2004473470}
   PanelSaved: {fileID: 0}
 --- !u!1 &1416065401

@@ -14,8 +14,8 @@ namespace LogicalSide
 
     public class Efectos : MonoBehaviour, IDeckContext
     {
-        public bool Turn{get; set;}
-        public bool DecksInverted;
+        public bool Turn{ get; set; }
+        public bool DecksInverted = false;
 
         public List<Card> Deck 
         {
@@ -35,24 +35,25 @@ namespace LogicalSide
                 return l;
             }
         }
-        public List<Card> DeckOfPlayer(Player player)
+        public List<Card> DeckOfPlayer(Compiler.Player player)
         {
             List<Card> l= new();
             PlayerDeck deck;
             if ((player.Turn && !DecksInverted)||(!player.Turn && DecksInverted))
             {
-                //l = new(true, true); TODO:
+                l.UpdateOwner(true, true);
                 deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
                 l.UpdateId("Deck");
             }
             else
             {
+                l.UpdateOwner(false, true);
                 deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
                 l.UpdateId("OtherDeck");
             }
             foreach(Card card in deck.deck)
             {
-                l.AddCard(card);
+                l.Add(card);
             }
             return l;
         }
@@ -77,24 +78,25 @@ namespace LogicalSide
             }
         }
 
-        public List<Card> GraveYardOfPlayer(Player player)
+        public List<Card> GraveYardOfPlayer(Compiler.Player player)
         {
             List<Card> l = new();
             PlayerDeck deck;
             if ((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
             {
-                //l = new(true, true); TODO:
+                l.UpdateOwner(true,true);
                 deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
                 l.UpdateId("GraveYard");
             }
             else
             {
+                l.UpdateOwner(false, true);
                 deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
                 l.UpdateId("OtherGraveYard");
             }
             foreach (Card card in deck.cement)
             {
-                l.AddCard(card);
+                l.Add(card);
             }
             return l;
         }
@@ -117,9 +119,29 @@ namespace LogicalSide
                 return l;
             }
         }
-        public List<Card> FieldOfPlayer(Player player)
+        public List<Card> FieldOfPlayer(Compiler.Player player)
         {
-
+            List<Card> l= new();
+            int count;
+            if((player.Turn && !DecksInverted)|| (!player.Turn && DecksInverted))
+            {
+                count= 0;
+                l.UpdateOwner(true, false);
+            }
+            else
+            {
+                count= 6;
+                l.UpdateOwner(false, false);
+            }
+            for(int i = count; i<6+count ; i++)
+            {
+                foreach(GameObject card in BoardOfGameObject[i].transform)
+                {
+                    CardDisplay disp= card.GetComponent<CardDisplay>();
+                    l.Add(disp.cardTemplate);
+                }
+            }
+            return l;
         }
 
 
@@ -127,8 +149,9 @@ namespace LogicalSide
         {
             get
             {
-                //List<Card> cards= new(true, null, 10);
                 DecksInverted = false;
+                List<Card> l= new();
+                l.UpdateOwner(null, true);
                 return HandOfPlayer(TriggerPlayer);
             }
         }
@@ -144,18 +167,20 @@ namespace LogicalSide
         }
 
 
-        public List<Card> HandOfPlayer(Player player)
+        public List<Card> HandOfPlayer(Compiler.Player player)
         {
             GameObject Hand;
             List<Card> l = new();
             if((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
             {
                 Hand= GameObject.Find("Player Hand");
+                l.UpdateOwner(true,true);
                 l.UpdateId("Hand");
             }
             else
             {
                 Hand = GameObject.Find("Enemy Hand");
+                l.UpdateOwner(false, true);
                 l.UpdateId("OtherHand");
             }
             GameObject obj = null;
@@ -163,10 +188,7 @@ namespace LogicalSide
             {
                 obj = Hand.transform.GetChild(i).gameObject;
                 CardDisplay disp = obj.GetComponent<CardDisplay>();
-                if (disp != null)
-                {
-                    l.AddCard(disp.cardTemplate);
-                }
+                l.Add(disp.cardTemplate);
             }
             return l;
         }
@@ -175,21 +197,21 @@ namespace LogicalSide
             get
             {
                 List<Card> l = new();
+                l.UpdateOwner(null, false);
                 foreach(GameObject zone in BoardOfGameObject)
                 {
+                    GameObject obj;
                     for (int i = 0; i < zone.transform.childCount; i++)
                     {
-                        CardDisplay disp = zone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>();
-                        if (disp != null)
-                        {
-                            l.AddCard(disp.cardTemplate);
-                        }
+                        obj = zone.transform.GetChild(i).gameObject;
+                        CardDisplay disp = obj.GetComponent<CardDisplay>();
+                        l.Add(disp.cardTemplate);
                     }
                 }
                 return l;
             }
         }
-        public Player TriggerPlayer 
+        public Compiler.Player TriggerPlayer 
         {
             get
             {
@@ -197,6 +219,7 @@ namespace LogicalSide
                 return GM.WhichPlayer(GM.Turn);
             }
         }
+        
 
 
         public GameObject P1S;
@@ -213,12 +236,29 @@ namespace LogicalSide
         public GameObject P2AS;
         public GameObject C;
         
-        public List<GameObject> BoardOfGameObject;
         public Dictionary<(bool, string), GameObject> RangeMap;
         public Dictionary<Effect, Action<UnityCard>> ListEffects;
         public Dictionary<(bool, string), GameObject> RaiseMap;
+        public List<GameObject> BoardOfGameObject;
         private void Start()
         {
+            BoardOfGameObject = new List<GameObject>()
+            {
+                P1M,
+                P1R,
+                P1S,
+                P1AS,
+                P1AR,
+                P1AM,
+                P2M,
+                P2R,
+                P2S,
+                P2AS,
+                P2AR,
+                P2AM ,
+                C,
+            };
+
             RaiseMap = new Dictionary<(bool, string), GameObject>
             {
                 [(true, "S")] = P1AS,
@@ -268,7 +308,7 @@ namespace LogicalSide
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             C.GetComponent<DropProp>().DropStatus(-1);
             C = RangeMap[(!card.LocationBoard, card.CurrentPlace)];
-            C.GetComponent<DropProp>().DropStatus(-1);
+            C.GetComponent<DropProp>().DropStatus(-2);
             
         }
         public void Raise(UnityCard card)
@@ -586,7 +626,7 @@ namespace LogicalSide
             else
                 return GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
         }
-        private void Restart(UnityCard card)
+        public void Restart(UnityCard card)
         {
             card.Power = 0;
             card.CurrentPlace = "";

@@ -60,7 +60,6 @@ public class GameManager : MonoBehaviour
                 SendPrincipal("Turno de " + P2.name);
             }
             VisibilityGM();
-            //Textos();
         }
     }
     // Start is called before the first frame update
@@ -106,7 +105,13 @@ public class GameManager : MonoBehaviour
             SMS = new();
         
     }
-
+    private Sprite GiveMeBack(Player player)
+    {
+        if(player.faction== 1){
+            return Resources.Load<Sprite>("gryffreverse");
+        }
+        return Resources.Load<Sprite>("slythreverse");
+    }
     public void SetupPLayers()
     {
         GameObject deck = GameObject.Find("Deck");
@@ -115,6 +120,7 @@ public class GameManager : MonoBehaviour
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P1);
             setup.Shuffle(setup.deck,  true);
+            setup.SetSprite(GiveMeBack(P1));
         }
         deck = GameObject.Find("DeckEnemy");
         if (deck != null)
@@ -122,6 +128,7 @@ public class GameManager : MonoBehaviour
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P2);
             setup.Shuffle(setup.deck, true);
+            setup.SetSprite(GiveMeBack(P2));
         }
     }
     public void AddScore(bool Downboard, int value)
@@ -314,6 +321,9 @@ public class GameManager : MonoBehaviour
     }
     public void SendPrincipal(string s)
     {
+        string sQ;
+        SMS.TryPeek(out sQ);
+        if (s!= sQ)
         SMS.Enqueue(s);
         Message.gameObject.SetActive(true);
         MessagePanel.SetActive(true);
@@ -397,6 +407,7 @@ public class Player: Compiler.Player
         this.faction = faction;
         Surrender = false;
         this.P = b;
+        Turn = b;
         SetedUp = false;
         cardsExchanged = 0;
         Cards = cards;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 using Compiler;
 using LogicalSide;
 using UnityEditor.Build;
@@ -29,14 +30,19 @@ namespace ListExtensions
 
         public static void Shuffle<T>(this List<T> list)
         {
-            int n = list.Count;
-            System.Random random = new System.Random();
-            while (n > 0)
+            if (Id == "Deck" || Id == "OtherDeck" || Id == "GraveYard" || Id == "OtherGraveYard")
             {
-                n--;
-                int k = random.Next(n + 1);
-                (list[n], list[k]) = (list[k], list[n]);
+                int n = list.Count;
+                System.Random random = new System.Random();
+                while (n > 0)
+                {
+                    n--;
+                    int k = random.Next(n + 1);
+                    (list[n], list[k]) = (list[k], list[n]);
+                }
             }
+            else
+                throw new Exception("You are trying to Shuffle a not shuffable list, please read the instructions and check the shuffable lists");
         }
 
         public static T Pop<T>(this List<T> list)
@@ -44,7 +50,7 @@ namespace ListExtensions
             if (list.Count > 0)
             {
                 T obj = list[list.Count - 1];
-                list.Remove(obj);
+                list.RemoveCard(obj);
                 return obj;
             }
 
@@ -66,19 +72,21 @@ namespace ListExtensions
                 PlayerDeck Deck;
                 if(Id== "Hand")
                 {
-                    Deck= GameObject.Find("Player Hand").GetComponent<PlayerDeck>();
+                    Deck= GameObject.Find("Deck").GetComponent<PlayerDeck>();
                     Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
                 }
                 else if(Id== "OtherHand")
                 {
-                    Deck= GameObject.Find("Enemy Hand").GetComponent<PlayerDeck>();
+                    Deck= GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
                     Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
                 }
                 if(PlayerOwner!= null)
                 {
                     GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                    card.OnConstruction = true;
                     card.LocationBoard= (bool)PlayerOwner;
                     card.Owner= GM.WhichPlayer((bool)PlayerOwner);
+                    card.OnConstruction = false;
                 }
                 list.Add(item);
             }
@@ -89,9 +97,7 @@ namespace ListExtensions
         public static void RemoveCard<T>(this List<T> list, T item)
         {
             if(item is UnityCard card)
-            {//En caso de que la carta este siendo mostrada en la interfaz, 
-            //ella seteará internamente que debe ser destruida
-            //y los scripts que heredan de MonoBehavior lo detectarán, y la destruirán automaticamente
+            {
                 card.Destroy= true;
             }
             for(int i = 0; i< list.Count; i++)
@@ -105,6 +111,11 @@ namespace ListExtensions
         }
 
         public static bool? PlayerOwner = null;
+        public static void UpdateOwner<T>(this List<T> list, bool? newOwner, bool? IstherePosibility)
+        {
+            PlayerOwner = newOwner; 
+            AddPosibility = IstherePosibility;
+        }
         public static bool? AddPosibility = null;
         public static string Id = "";
         public static void UpdateId<T>(this List<T> list, string newId)

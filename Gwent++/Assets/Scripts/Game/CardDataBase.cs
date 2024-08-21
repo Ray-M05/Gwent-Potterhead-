@@ -86,18 +86,17 @@ namespace LogicalSide
             }
 
             //Barajear la lista sin mover el cero
-            //permitir la entrada de cualquier faccion
             int conta = 24;
             if(P.Cards!=null)
             foreach (var card in P.Cards)
             {
-                if(card.Faction== MyFaction)
-                {
-                    if(card.Type!= "L")
-                        Deck[conta--]= card;
-                    else
-                        Deck[0]= card;
-                }
+                if(card.Type!= "L")
+                    Deck[conta--]= card;
+                else
+                    Deck[0]= card;
+                card.OnConstruction = true;
+                card.Owner = P;
+                card.OnConstruction = false;
             }
             return Deck;
         }

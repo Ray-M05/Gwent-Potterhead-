@@ -18,12 +18,13 @@ namespace LogicalSide
         void Update()
         {
             if (cardTemplate != null)
-            { 
-              if (cardTemplate.Power != 0)
-                {
-                    PwrTxt.text = cardTemplate.Power.ToString();
-                    cardTemplate.PwrText = PwrTxt;
-                }
+            {
+                cardTemplate.Displayed = true;
+                  if (cardTemplate.Power != 0)
+                    {
+                        PwrTxt.text = cardTemplate.Power.ToString();
+                        cardTemplate.PwrText = PwrTxt;
+                    }
                 else
                     PwrTxt.text = "";
                 DescriptionText.text = "";//cardTemplate.description;

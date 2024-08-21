@@ -58,7 +58,7 @@ public class Compilation : MonoBehaviour
         }
         if(Errors.List.Count == 0)
         {
-            Console.text = "Compilacion exitosa";
+            Console.text = "Compilacion exitosa" + "\n" + "Las cartas compiladas se mostraran de color azul dentro del juego";
             LittleErrors.SetActive(true);
         }
 
@@ -68,21 +68,22 @@ public class Compilation : MonoBehaviour
             b = true;
             CardsPlayer1 = cards;
         }
-        else{ b = false;
+        else
+        { 
+            b = false;
             CardsPlayer2 = cards;
         }
+        int cantLiders = 0;
 
         foreach (var card in cardscomp)
         {
-            if (card.Faction == "Gryffindor" || card.Faction == "Slytherin")
-                cards.Add(GenerateCard(card, b));
-            else
-            {
-                Console.text = "";
-                Console.text += $"La faccion de la carta {card.Name} no existe, debe ser Gryffindor o Slytherin";
-                LittleErrors.SetActive(true);
+            if(card.Type=="Lider")
+            { 
+                cantLiders++;
+                if (cantLiders > 1)
+                    throw new System.Exception("Has declarado al menos dos cartas lider");
             }
-                
+            cards.Add(GenerateCard(card, b));
         }
 
         Processor.ParamsRequiered.Clear();
@@ -91,7 +92,6 @@ public class Compilation : MonoBehaviour
 
     private UnityCard GenerateCard(Card card, bool DownBoard)
     {
-        #region Finding Out Type Unit
         KindofCard unit = KindofCard.None;
         Effect eff = Effect.None;
         string image = null;
@@ -132,10 +132,10 @@ public class Compilation : MonoBehaviour
                 eff = Effect.Cleaner;
                 image = "Clearance";
                 break;
+            default:
+                throw new System.Exception($"Tipo no válido: {card.Type}.");
         }
 
-
-        #endregion
         UnityCard UnityCard = new(DownBoard, card.Name, card.Power, null, unit, Type, eff, card.Range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada");
         UnityCard.Effects= card.Effects;
         UnityCard.Faction= card.Faction;

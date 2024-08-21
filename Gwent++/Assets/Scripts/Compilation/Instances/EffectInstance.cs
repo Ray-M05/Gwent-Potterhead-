@@ -164,7 +164,7 @@ namespace Compiler
             {
                 Evaluator.AddVar(Context);
             }
-            else Errors.List.Add(new CompilingError("Evaluate Error, Targets is not set correctly", new Position()));
+            else Errors.List.Add(new CompilingError("Evaluate Error, Context is not set correctly", new Position()));
             Instructions.Evaluate(Evaluator, null);
             return true;
         }

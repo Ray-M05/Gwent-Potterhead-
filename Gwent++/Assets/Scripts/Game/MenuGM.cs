@@ -23,9 +23,7 @@ public class MenuGM : MonoBehaviour
     public AudioClip ErrorSound;
     public AudioSource FXsource;
     public SavedData SoundGM;
-    public GameObject ButtonGryff2;
-    public GameObject ButtonSlyth2;
-    public GameObject ButtonSlith1;
+    public GameObject ButtonSlyth1;
     public GameObject ButtonGryff1;
     private void Awake()
     {

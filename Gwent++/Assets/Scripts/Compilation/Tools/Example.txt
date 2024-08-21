@@ -21,7 +21,6 @@ effect
     Action: (targets, context) => {
         topCard = context.Deck.Pop();
         context.Hand.Add(topCard);
-        context.Hand.Shuffle();
 }
 }
 effect {
@@ -50,7 +49,7 @@ card {
                 Amount: 5
             },
             Selector: {
-                Source: "deck",
+                Source: "board",
                 Single: false,
                 Predicate: (unit) => unit.Faction == "Gryffindor"
             },

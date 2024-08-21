@@ -29,7 +29,17 @@ public class CardDrag : MonoBehaviour
         ZoneDescription = GameObject.Find("ZoneDescription").GetComponent<TextMeshProUGUI>();
         pointer = GameObject.Find("GameManager").GetComponent<PointerData>();
     }
-
+    private void Update()
+    {
+        if (AssociatedCard.Destroy)
+        {
+            PlayerDeck Current = efectos.Decking(AssociatedCard.LocationBoard);
+            efectos.Decoy(AssociatedCard);
+            efectos.Restart(AssociatedCard);
+            Current.AddToCement(AssociatedCard);
+            Destroy(gameObject);
+        }
+    }
     public void Selected()
     {
             startPos = transform.position;

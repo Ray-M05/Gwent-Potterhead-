@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.UI;
 using UnityEngine.XR;
 
@@ -23,22 +24,28 @@ public class PlayerDeck : MonoBehaviour
     {
         cement= new();
     }
-    
-    // M�todo para instanciar la �ltima carta del mazo
+    public void SetSprite(Sprite sprite)
+    {
+        gameObject.GetComponent<Image>().sprite=  sprite;
+    }
+    // Metodo para instanciar la ultima carta del mazo
     public void Instanciate(UnityCard card, Transform zone, GameObject prefab)
     {
         Sprite sp;
         if (card.Faction == "Gryffindor")
         {
             sp= Resources.Load<Sprite>("gryffreverse");
-            Back.sprite = Resources.Load<Sprite>("gryffreverse");
-            gameObject.GetComponent<Image>().sprite = sp;
+            Back.sprite = sp;
+        } 
+        else if (card.Faction == "Slytherin")
+        {
+            sp = Resources.Load<Sprite>("slythreverse");
+            Back.sprite = sp;
         }
         else
         {
-            sp = Resources.Load<Sprite>("slythreverse");
-            Back.sprite = Resources.Load<Sprite>("slythreverse");
-            gameObject.GetComponent<Image>().sprite = sp;
+            sp = Resources.Load<Sprite>("Ravenclaw back");
+            Back.sprite = sp;
         }
         if (deck.Count > 0 )
         {
@@ -63,13 +70,13 @@ public class PlayerDeck : MonoBehaviour
             UnityCard card = deck[deck.Count - 1];
             if ((playerZone.childCount <= 9 || exception))
             {
-                GameObject instanciaCarta = Instantiate(prefabCarta, playerZone);
-                CardDisplay disp = instanciaCarta.GetComponent<CardDisplay>();
+                GameObject instanciateCard = Instantiate(prefabCarta, playerZone);
+                CardDisplay disp = instanciateCard.GetComponent<CardDisplay>();
                 disp.cardTemplate = card;
-                disp.ArtworkImg = instanciaCarta.transform.GetChild(0).GetComponent<Image>();
-                disp.DescriptionText = instanciaCarta.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                disp.PwrTxt = instanciaCarta.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-                disp.Back = instanciaCarta.transform.GetChild(3).GetComponent<Image>();
+                disp.ArtworkImg = instanciateCard.transform.GetChild(0).GetComponent<Image>();
+                disp.DescriptionText = instanciateCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                disp.PwrTxt = instanciateCard.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+                disp.Back = instanciateCard.transform.GetChild(3).GetComponent<Image>();
                 deck.Remove(card);
                 GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
                 if (PlayerHand.tag.IndexOf("DE") != -1)

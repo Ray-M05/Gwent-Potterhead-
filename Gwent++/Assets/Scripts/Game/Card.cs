@@ -54,7 +54,7 @@ namespace LogicalSide
         public bool LocationBoard; //true if its down
         public TextMeshProUGUI PwrText= new();
         
-        bool OnConstruction = true;
+        public bool OnConstruction = true;
         private bool _Destroy;
         public bool Destroy
         {
@@ -64,11 +64,17 @@ namespace LogicalSide
             }
             set
             {
-                if(Displayed&& value==true)
+                if( value==true)
                 {
-                    _Destroy= true;
-                    Displayed = false;
+                    if(Displayed)
+                    {
+                        _Destroy= true;
+                        Displayed = false;
+                    }
                 }
+                else
+                    _Destroy = false;
+
             }
         }
         public bool Displayed=false;
@@ -76,11 +82,21 @@ namespace LogicalSide
          public override List<IEffect> Effects{get; set;}
         public override Card GetCopy()
         {
-            // Card card = new Card();
-            // CardDataBase.CustomizeCard(card);
-            // card.Effects= Effects;
-            // return card;
-            throw new System.NotImplementedException();
+            UnityCard card = new UnityCard(LocationBoard,Name,Power,Owner,unit,Type,SuperPower,Range,Artwork,description);
+            card.Effects= Effects;
+            return card;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if(obj is UnityCard card)
+            {
+                if(this.Name == card.Name && this.Power == card.Power && this.Range == card.Range &&
+                this.unit == card.unit && this.Type == card.Type && this.description == card.description &&
+                this.SuperPower == card.SuperPower && this.Owner == card.Owner && Effects==card.Effects)
+                    return true;
+            }
+            return false;
         }
 
         public UnityCard(bool LocationBoard ,string name ,int points,Compiler.Player Player,KindofCard unit,string type ,Effect ability,string attackRange, Sprite Img, string description)
