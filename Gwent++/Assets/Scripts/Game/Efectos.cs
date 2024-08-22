@@ -17,7 +17,7 @@ namespace LogicalSide
         public bool Turn{ get; set; }
         public bool DecksInverted = false;
 
-        public List<Card> Deck 
+        public List<UnityCard> Deck 
         {
             get
             {
@@ -25,19 +25,19 @@ namespace LogicalSide
                 return DeckOfPlayer(TriggerPlayer);
             }
         }
-        public List<Card> OtherDeck 
+        public List<UnityCard> OtherDeck 
         {
             get
             {
                 DecksInverted = true;
-                List<Card> l = DeckOfPlayer(TriggerPlayer);
+                List<UnityCard> l = DeckOfPlayer(TriggerPlayer);
                 DecksInverted = false;
                 return l;
             }
         }
-        public List<Card> DeckOfPlayer(Compiler.Player player)
+        public List<UnityCard> DeckOfPlayer(Compiler.Player player)
         {
-            List<Card> l= new();
+            List<UnityCard> l= new();
             PlayerDeck deck;
             if ((player.Turn && !DecksInverted)||(!player.Turn && DecksInverted))
             {
@@ -51,15 +51,12 @@ namespace LogicalSide
                 deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
                 l.UpdateId("OtherDeck");
             }
-            foreach(Card card in deck.deck)
-            {
-                l.Add(card);
-            }
+            l = deck.deck;
             return l;
         }
 
 
-        public List<Card> GraveYard 
+        public List<UnityCard> GraveYard 
         {
             get
             {
@@ -67,20 +64,20 @@ namespace LogicalSide
                 return GraveYardOfPlayer(TriggerPlayer);
             }
         }
-        public List<Card> OtherGraveYard 
+        public List<UnityCard> OtherGraveYard 
         {
             get
             {
                 DecksInverted = true;
-                List<Card> l = GraveYardOfPlayer(TriggerPlayer);
+                List<UnityCard> l = GraveYardOfPlayer(TriggerPlayer);
                 DecksInverted = false;
                 return l;
             }
         }
 
-        public List<Card> GraveYardOfPlayer(Compiler.Player player)
+        public List<UnityCard> GraveYardOfPlayer(Compiler.Player player)
         {
-            List<Card> l = new();
+            List<UnityCard> l = new();
             PlayerDeck deck;
             if ((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
             {
@@ -94,14 +91,14 @@ namespace LogicalSide
                 deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
                 l.UpdateId("OtherGraveYard");
             }
-            foreach (Card card in deck.cement)
+            foreach (UnityCard card in deck.cement)
             {
                 l.Add(card);
             }
             return l;
         }
 
-        public List<Card> Field 
+        public List<UnityCard> Field 
         {
             get
             {
@@ -109,19 +106,19 @@ namespace LogicalSide
                 return FieldOfPlayer(TriggerPlayer);
             }
         }
-        public List<Card> OtherField 
+        public List<UnityCard> OtherField 
         {
             get
             {
                 DecksInverted = true;
-                List<Card> l = FieldOfPlayer(TriggerPlayer);
+                List<UnityCard> l = FieldOfPlayer(TriggerPlayer);
                 DecksInverted = false;
                 return l;
             }
         }
-        public List<Card> FieldOfPlayer(Compiler.Player player)
+        public List<UnityCard> FieldOfPlayer(Compiler.Player player)
         {
-            List<Card> l= new();
+            List<UnityCard> l= new();
             int count;
             if((player.Turn && !DecksInverted)|| (!player.Turn && DecksInverted))
             {
@@ -135,9 +132,9 @@ namespace LogicalSide
             }
             for(int i = count; i<6+count ; i++)
             {
-                foreach(GameObject card in BoardOfGameObject[i].transform)
+                foreach(GameObject UnityCard in BoardOfGameObject[i].transform)
                 {
-                    CardDisplay disp= card.GetComponent<CardDisplay>();
+                    CardDisplay disp= UnityCard.GetComponent<CardDisplay>();
                     l.Add(disp.cardTemplate);
                 }
             }
@@ -145,32 +142,32 @@ namespace LogicalSide
         }
 
 
-        public List<Card> Hand 
+        public List<UnityCard> Hand 
         {
             get
             {
                 DecksInverted = false;
-                List<Card> l= new();
+                List<UnityCard> l= new();
                 l.UpdateOwner(null, true);
                 return HandOfPlayer(TriggerPlayer);
             }
         }
-        public List<Card> OtherHand 
+        public List<UnityCard> OtherHand 
         {
             get
             {
                 DecksInverted = true;
-                List<Card> l = HandOfPlayer(TriggerPlayer);
+                List<UnityCard> l = HandOfPlayer(TriggerPlayer);
                 DecksInverted = false;
                 return l;
             }
         }
 
 
-        public List<Card> HandOfPlayer(Compiler.Player player)
+        public List<UnityCard> HandOfPlayer(Compiler.Player player)
         {
             GameObject Hand;
-            List<Card> l = new();
+            List<UnityCard> l = new();
             if((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
             {
                 Hand= GameObject.Find("Player Hand");
@@ -192,11 +189,11 @@ namespace LogicalSide
             }
             return l;
         }
-        public List<Card> Board 
+        public List<UnityCard> Board 
         {
             get
             {
-                List<Card> l = new();
+                List<UnityCard> l = new();
                 l.UpdateOwner(null, false);
                 foreach(GameObject zone in BoardOfGameObject)
                 {

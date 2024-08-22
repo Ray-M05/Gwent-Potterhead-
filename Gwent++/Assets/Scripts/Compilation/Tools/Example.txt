@@ -30,8 +30,8 @@ effect {
             owner = target.Owner;
             deck = context.DeckOfPlayer(owner);
             deck.Push(target);
-            deck.Shuffle();
             context.Board.Remove(target);
+            context.Hand;
         };
 }
 card {
@@ -43,24 +43,13 @@ card {
     OnActivation: 
     [
         {
-            Effect: 
-            {
-                Name: "Damage",
-                Amount: 5
-            },
-            Selector: {
-                Source: "board",
-                Single: false,
-                Predicate: (unit) => unit.Faction == "Gryffindor"
-            },
-            PostAction: {
-                Effect: "Return to deck",
-                Selector: {
-                    Source: "parent",
+            Effect: "Return to deck",
+                Selector: 
+                {
+                    Source: "board",
                     Single: false,
                     Predicate: (unit) => unit.Power < 20
-                },
-            },
+                }
         },
         {
             Effect: "Draw"

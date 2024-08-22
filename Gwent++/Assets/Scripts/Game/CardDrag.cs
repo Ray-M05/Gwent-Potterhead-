@@ -104,15 +104,15 @@ public class CardDrag : MonoBehaviour
 
                 if (!(AssociatedCard.Effects == null || AssociatedCard.Effects.Count == 0))
                 {
-                    try
-                    {
+                    //try
+                    //{
                         AssociatedCard.Execute(efectos);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        GM.SendPrincipal("Error en la ejecucion del efecto:");
-                        GM.SendPrincipal(ex.Message);
-                    }
+                    //}
+                    //catch (System.Exception ex)
+                    //{
+                    //    GM.SendPrincipal("Error en la ejecucion del efecto:");
+                    //    GM.SendPrincipal(ex.Message);
+                    //}
                 }
 
                 GM.Turn = !GM.Turn;

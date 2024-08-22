@@ -31,24 +31,7 @@ public class PlayerDeck : MonoBehaviour
     // Metodo para instanciar la ultima carta del mazo
     public void Instanciate(UnityCard card, Transform zone, GameObject prefab)
     {
-        Sprite sp;
-        if (card.Faction == "Gryffindor")
-        {
-            sp= Resources.Load<Sprite>("gryffreverse");
-            Back.sprite = sp;
-        } 
-        else if (card.Faction == "Slytherin")
-        {
-            sp = Resources.Load<Sprite>("slythreverse");
-            Back.sprite = sp;
-        }
-        else
-        {
-            sp = Resources.Load<Sprite>("Ravenclaw back");
-            Back.sprite = sp;
-        }
-        if (deck.Count > 0 )
-        {
+        
             if ((playerZone.childCount <= 9))
             {
                 GameObject instanciaCarta = Instantiate(prefab, zone);
@@ -58,9 +41,10 @@ public class PlayerDeck : MonoBehaviour
                 disp.Back = instanciaCarta.transform.GetChild(3).GetComponent<Image>();
                 disp.DescriptionText = instanciaCarta.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                 disp.PwrTxt = instanciaCarta.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-                deck.Remove(card);
             }
-            
+        if (prefab== prefabCarta &&PlayerHand.tag.IndexOf("DE") != -1)
+        {
+            playerZone.GetChild(playerZone.childCount - 1).Rotate(0, 0, 180);
         }
     }
     public void InstanciateLastOnDeck( int n, bool exception)
@@ -77,8 +61,7 @@ public class PlayerDeck : MonoBehaviour
                 disp.DescriptionText = instanciateCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                 disp.PwrTxt = instanciateCard.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
                 disp.Back = instanciateCard.transform.GetChild(3).GetComponent<Image>();
-                deck.Remove(card);
-                GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                deck.RemoveAt(deck.Count-1);
                 if (PlayerHand.tag.IndexOf("DE") != -1)
                 {
                     playerZone.GetChild(playerZone.childCount - 1).Rotate(0, 0, 180);
@@ -115,6 +98,7 @@ public class PlayerDeck : MonoBehaviour
     {
         System.Random random = new System.Random();
         Instanciate(deck[0],Leaderzone, prefabLeader);
+        deck.RemoveAt(0);
         if(Leaderzone.name == "LeaderplaceEnemy")
             Leaderzone.transform.GetChild(0).Rotate(0, 0, 180);
         if(!debug) {

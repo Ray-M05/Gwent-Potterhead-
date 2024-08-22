@@ -138,7 +138,9 @@ public class Compilation : MonoBehaviour
 
         UnityCard UnityCard = new(DownBoard, card.Name, card.Power, null, unit, Type, eff, card.Range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada");
         UnityCard.Effects= card.Effects;
+        UnityCard.OnConstruction = true;
         UnityCard.Faction= card.Faction;
+        UnityCard.OnConstruction = false;
         return UnityCard;
     }
 

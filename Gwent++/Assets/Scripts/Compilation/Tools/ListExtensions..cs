@@ -88,7 +88,8 @@ namespace ListExtensions
                     card.Owner= GM.WhichPlayer((bool)PlayerOwner);
                     card.OnConstruction = false;
                 }
-                list.Add(item);
+                if(list is List<UnityCard> listica)
+                listica.Add((UnityCard)card.GetCopy());
             }
             else
                 throw new Exception(Id+ " list, is not available to Add elements, due to its Ambiguity");

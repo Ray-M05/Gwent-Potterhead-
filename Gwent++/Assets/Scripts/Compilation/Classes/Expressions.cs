@@ -2,6 +2,7 @@ using System.Reflection;
 using ListExtensions;
 using System.Collections.Generic;
 using System;
+using LogicalSide;
 
 namespace Compiler
 {
@@ -390,7 +391,7 @@ namespace Compiler
                 case TokenType.Find:
                 case TokenType.Pop:
                     {
-                        Type type = instance.GetType();
+                        System.Type type = instance.GetType();
                         string methodName = Operator.ToString();
                         if (methodName == "Add")
                             methodName = "AddCard";
@@ -398,7 +399,7 @@ namespace Compiler
                         else if (methodName == "Remove")
                             methodName = "RemoveCard";
                         MethodInfo methodInfo = type.GetMethod(methodName);
-                        if (instance is List<Card> list)
+                        if (instance is List<UnityCard> list)
                         {
                             switch (methodName)
                             {
@@ -406,19 +407,19 @@ namespace Compiler
                                 case "AddCard":
                                     {
                                         object card = Parameter.Evaluate(scope, null);
-                                        list.AddCard((Card)card);
+                                        list.AddCard((UnityCard)card);
                                         return null;
                                     }
                                 case "RemoveCard":
                                     {
                                         object card = Parameter.Evaluate(scope, null);
-                                        list.RemoveCard((Card)card);
+                                        list.RemoveCard((UnityCard)card);
                                         return null;
                                     }
                                 case "SendBottom":
                                     {
                                         object card = Parameter.Evaluate(scope, null);
-                                        list.SendBottom((Card)card);
+                                        list.SendBottom((UnityCard)card);
                                         return null;
                                     }
                                 case "Shuffle":

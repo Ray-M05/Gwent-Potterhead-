@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using LogicalSide;
 
 namespace Compiler
 {
@@ -63,7 +64,7 @@ namespace Compiler
             return true;
         }
 
-        public void Execute(IDeckContext context, List<Card> targets, List<IdentifierExpression> Param)
+        public void Execute(IDeckContext context, List<UnityCard> targets, List<IdentifierExpression> Param)
         {
             Scope Evaluator = new Scope();
             Action.Context.Result = context;
@@ -224,7 +225,7 @@ namespace Compiler
 
             Collection!.Result = Collection.Evaluate(scope, null);
 
-            List<Card> list = (List<Card>)Collection.Result;
+            List<UnityCard> list = (List<UnityCard>)Collection.Result;
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -296,10 +297,10 @@ namespace Compiler
 
         void Execute(IDeckContext context)
         {
-            List<Card> targets;
+            List<UnityCard> targets;
             if (Selector != null)
                 targets = Selector.Execute(context);
-            else targets = new List<Card>();
+            else targets = new List<UnityCard>();
 
             effect.Execute(context, targets, Params);
         }

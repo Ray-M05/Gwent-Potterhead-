@@ -3,6 +3,7 @@ using System.Reflection;
 using System;
 using UnityEngine;
 using UnityEditor.Experimental.Rendering;
+using LogicalSide;
 
 namespace Compiler
 {
@@ -254,16 +255,16 @@ namespace Compiler
             return null;
         }
 
-        public List<Card> Execute(IDeckContext context)
+        public List<UnityCard> Execute(IDeckContext context)
         {
             Predicate predicate = (Predicate as Predicate)!;
 
             var cont = context.GetType();
-            List<Card> SourceCards = (List<Card>)cont.GetProperty(Mapping[(string)Source.Result!]).GetValue(context);
+            List<UnityCard> SourceCards = (List<UnityCard>)cont.GetProperty(Mapping[(string)Source.Result!]).GetValue(context);
 
-            List<Card> Targets = new();
+            List<UnityCard> Targets = new();
 
-            foreach (Card card in SourceCards)
+            foreach (UnityCard card in SourceCards)
             {
                 if ((bool)predicate.Evaluate(null!, card))
                 {
@@ -393,27 +394,27 @@ namespace Compiler
     public interface IDeckContext
     {
         bool Turn { get; }
-        public List<Card> Deck { get; }
-        public List<Card> OtherDeck { get; }
-        public List<Card> DeckOfPlayer(Player player);
+        public List<UnityCard> Deck { get; }
+        public List<UnityCard> OtherDeck { get; }
+        public List<UnityCard> DeckOfPlayer(Player player);
 
 
-        public List<Card> GraveYard { get; }
-        public List<Card> OtherGraveYard { get; }
+        public List<UnityCard> GraveYard { get; }
+        public List<UnityCard> OtherGraveYard { get; }
 
-        public List<Card> GraveYardOfPlayer(Player player);
+        public List<UnityCard> GraveYardOfPlayer(Player player);
 
-        public List<Card> Field { get; }
-        public List<Card> OtherField { get; }
-        public List<Card> FieldOfPlayer(Player player);
-
-
-        public List<Card> Hand { get; }
-        public List<Card> OtherHand { get; }
+        public List<UnityCard> Field { get; }
+        public List<UnityCard> OtherField { get; }
+        public List<UnityCard> FieldOfPlayer(Player player);
 
 
-        public List<Card> HandOfPlayer(Player player);
-        public List<Card> Board { get; }
+        public List<UnityCard> Hand { get; }
+        public List<UnityCard> OtherHand { get; }
+
+
+        public List<UnityCard> HandOfPlayer(Player player);
+        public List<UnityCard> Board { get; }
         public Player TriggerPlayer { get; }
     }
 }

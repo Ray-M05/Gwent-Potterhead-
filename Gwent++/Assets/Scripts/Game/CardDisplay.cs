@@ -32,8 +32,11 @@ namespace LogicalSide
                 if(Back!=null)
                 if(cardTemplate.Faction == "Gryffindor")
                     Back.sprite = Resources.Load<Sprite>("gryffreverse");
-                else
+                else if(cardTemplate.Faction == "Slytherin")
                     Back.sprite = Resources.Load<Sprite>("slythreverse");
+                else
+                    Back.sprite= Resources.Load<Sprite>("Ravenclaw back");
+                
             }
         }
     }
