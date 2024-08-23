@@ -78,7 +78,7 @@ public class MenuGM : MonoBehaviour
             SoundGM.Name2 = GameObject.Find("Name2").GetComponent<TMP_InputField>();
     }
     public void NextBtn(GameObject Panel)
-    {//Llamado si se termina con exito el primer Player
+    {
         if (SoundGM.faction_1 != 0 && SoundGM.name_1 != "")
             OpenPanel(Panel);
         else

@@ -39,12 +39,12 @@ namespace Compiler
             {
                 Errors.List.Add(new CompilingError("Card must have a faction", new Position()));
             }
-            //FIXME:arrgelar el parser para que sea opcional
+            //this property can be optional
             if (Power != null)
                 Power.CheckSemantic(scope);
 
-            //FIXME:
-            if (Range != null)
+            //this property can be optional
+            if (Range != null && Range.Count != 0)
                 foreach (var range in Range)
                 {
                     range.CheckSemantic(scope);
@@ -52,10 +52,6 @@ namespace Compiler
 
             if (OnActivation != null)
                 OnActivation.CheckSemantic(scope);
-            else
-            {
-                Errors.List.Add(new CompilingError("Card must have an OnActivation", new Position()));
-            }
             return ValueType.Checked;
         }
 
@@ -70,6 +66,7 @@ namespace Compiler
         {
             string range = "";
             string temp;
+            if(Range != null && Range.Count != 0)
             foreach (Expression item in Range)
             {
                 temp = (string)item.Evaluate(scope, set);
@@ -83,9 +80,20 @@ namespace Compiler
                 }
             }
 
+            int Pow = 0;
+            if(Power!= null)
+            {
+                Pow = (int)Power.Evaluate(scope, set);
+            }
+            List<IEffect> effects = null;
+            if (OnActivation != null)
+            {
+                effects = (List<IEffect>)OnActivation!.Evaluate(scope, null!);
+            }
+
             CompilerCard card = new((string)Name!.Evaluate(scope, set), (string)Type!.Evaluate(scope, set),
-            (int)Power!.Evaluate(scope, set), range, new Player(), (string)Faction!.Evaluate(scope, set),
-            (List<IEffect>)OnActivation!.Evaluate(scope, null!));
+            Pow, range, new Player(), (string)Faction!.Evaluate(scope, set),
+            effects);
             return card;
         }
     }

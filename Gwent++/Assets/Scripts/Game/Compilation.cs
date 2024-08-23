@@ -41,49 +41,48 @@ public class Compilation : MonoBehaviour
         try
         {
             cardscomp = Compilator.GetCards(FilePath);
-            
+            if (Errors.List.Count > 0)
+            {
+                foreach (var item in Errors.List)
+                {
+                    Console.text += item.ToString() + "\n";
+                }
+                LittleErrors.SetActive(true);
+            }
+            if (Errors.List.Count == 0)
+            {
+                Console.text = "Compilacion exitosa" + "\n" + "Las cartas compiladas se mostraran de color azul dentro del juego";
+                LittleErrors.SetActive(true);
+            }
+
+            bool b;
+            if (Player == 1)
+            {
+                b = true;
+                CardsPlayer1 = cards;
+            }
+            else
+            {
+                b = false;
+                CardsPlayer2 = cards;
+            }
+            int cantLiders = 0;
+
+            foreach (var card in cardscomp)
+            {
+                if (card.Type == "Lider")
+                {
+                    cantLiders++;
+                    if (cantLiders > 1)
+                        throw new System.Exception("Has declarado al menos dos cartas lider");
+                }
+                cards.Add(GenerateCard(card, b));
+            }
         }
-        catch(System.Exception e) 
+        catch (System.Exception e)
         {
             LittleErrors.SetActive(true);
             Console.text = e.Message;
-        }
-        if (Errors.List.Count >0)
-        {
-            foreach (var item in Errors.List)
-            {
-                Console.text += item.ToString() + "\n";
-            }
-            LittleErrors.SetActive(true);
-        }
-        if(Errors.List.Count == 0)
-        {
-            Console.text = "Compilacion exitosa" + "\n" + "Las cartas compiladas se mostraran de color azul dentro del juego";
-            LittleErrors.SetActive(true);
-        }
-
-        bool b;
-        if(Player == 1)
-        {
-            b = true;
-            CardsPlayer1 = cards;
-        }
-        else
-        { 
-            b = false;
-            CardsPlayer2 = cards;
-        }
-        int cantLiders = 0;
-
-        foreach (var card in cardscomp)
-        {
-            if(card.Type=="Lider")
-            { 
-                cantLiders++;
-                if (cantLiders > 1)
-                    throw new System.Exception("Has declarado al menos dos cartas lider");
-            }
-            cards.Add(GenerateCard(card, b));
         }
 
         Processor.ParamsRequiered.Clear();
@@ -103,6 +102,8 @@ public class Compilation : MonoBehaviour
                 Type = "C";
                 eff = Effect.Weather;
                 image = "Weather";
+                if (card.Range.Length > 1)
+                    throw new System.Exception("Los climas solo pueden afectar un rango");
                 break;
             case "Plata":
                 unit = KindofCard.Silver;
@@ -116,12 +117,15 @@ public class Compilation : MonoBehaviour
                 break;
             case "Aumento":
                 unit = KindofCard.None;
+                if(card.Range != null || card.Range != "")
                 foreach(char c in card.Range)
                 {
                     Type += "A"+c;
                 }
                 eff = Effect.Raise;
                 image = "Increasement";
+                if (card.Range.Length > 1)
+                    throw new System.Exception("Los aumentos solo pueden afectar un rango");
                 break;
             case "Lider":
                 Type = "L";
@@ -132,11 +136,40 @@ public class Compilation : MonoBehaviour
                 eff = Effect.Cleaner;
                 image = "Clearance";
                 break;
+            case "Señuelo":
+                Type = "D";
+                eff = Effect.Decoy;
+                image = "Clearance";
+                break;
             default:
-                throw new System.Exception($"Tipo no válido: {card.Type}.");
+                throw new System.Exception($"Tipo no valido: {card.Type}.");
         }
 
-        UnityCard UnityCard = new(DownBoard, card.Name, card.Power, null, unit, Type, eff, card.Range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada");
+        string range = "";
+        if( card.Type =="Lider" || card.Type == "Despeje" || card.Type == "Señuelo")
+        {
+            if(!(card.Range == null || card.Range== ""))
+            throw new System.Exception("No se puede crear una carta lider/despeje/señuelo que tenga Rangos");
+        }
+        else
+        {
+            if (card.Range == null || card.Range == "")
+            throw new System.Exception("No se puede crear una carta de unidad o especial sin rango");
+            else
+            {
+                range = card.Range;
+            }
+        }
+        if( card.Type == "Lider" || card.Type == "Clima" || card.Type == "Aumento" || card.Type == "Despeje")
+        {
+            if (card.Power != null && card.Power != 0 )
+                throw new System.Exception("Las cartas especiales no pueden tener poder");
+            else
+                card.Power = 0;
+        }
+
+
+        UnityCard UnityCard = new(DownBoard, card.Name, card.Type, card.Power, null, unit, Type, eff, range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada");
         UnityCard.Effects= card.Effects;
         UnityCard.OnConstruction = true;
         UnityCard.Faction= card.Faction;

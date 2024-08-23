@@ -45,12 +45,12 @@ public class CardDrag : MonoBehaviour
             startPos = transform.position;
             if (GM.WhichPlayer(AssociatedCard.LocationBoard).SetedUp)
             {
-                if (AssociatedCard.LocationBoard == GM.Turn &&  AssociatedCard.Type!= "L")
+                if (AssociatedCard.LocationBoard == GM.Turn &&  AssociatedCard.TypeOfCard!= "L")
                 {
                     if (pointer.CardSelected != null)
                     {
                         UnityCard card = pointer.CardSelected.GetComponent<CardDrag>().AssociatedCard;
-                        if (card.Type.IndexOf("D")!= -1)
+                        if (card.TypeOfCard.IndexOf("D")!= -1)
                         {
                             pointer.PlayCard(this.gameObject);                                
                         }
@@ -70,11 +70,11 @@ public class CardDrag : MonoBehaviour
             dropzone = IsPossible();
             if (dropzone != null)
             {
-                if (AssociatedCard.Type != "D")
+                if (AssociatedCard.TypeOfCard != "D")
                 {
                     if (AssociatedCard.SuperPower != Effect.Cleaner)
                         transform.SetParent(dropzone.transform, false);
-                    if (AssociatedCard.Type.IndexOf("C") == -1 && AssociatedCard.Type.IndexOf("A") == -1)
+                    if (AssociatedCard.TypeOfCard.IndexOf("C") == -1 && AssociatedCard.TypeOfCard.IndexOf("A") == -1)
                         AssociatedCard.CurrentPlace = dropzone.tag;
                     else
                     {
@@ -96,10 +96,10 @@ public class CardDrag : MonoBehaviour
                     GM.P1.Surrender = false;
                 else
                     GM.P2.Surrender = false;
-                if (AssociatedCard.Type == "U")
+                if (AssociatedCard.TypeOfCard == "U")
                     efectos.PlayCard(AssociatedCard);
                 GM.Sounds.PlaySoundButton();
-                if(AssociatedCard.Type!="D")
+                if(AssociatedCard.TypeOfCard!="D")
                     efectos.ListEffects[AssociatedCard.SuperPower].Invoke(AssociatedCard);
 
                 if (!(AssociatedCard.Effects == null || AssociatedCard.Effects.Count == 0))
@@ -134,10 +134,10 @@ public class CardDrag : MonoBehaviour
     }
     private GameObject IsPossible()
     {
-        if (AssociatedCard.Type.IndexOf("C") == -1)
-            if (AssociatedCard.Type.IndexOf("A") == -1)
+        if (AssociatedCard.TypeOfCard.IndexOf("C") == -1)
+            if (AssociatedCard.TypeOfCard.IndexOf("A") == -1)
             {
-                if (AssociatedCard.Type.IndexOf('D') == -1)
+                if (AssociatedCard.TypeOfCard.IndexOf('D') == -1)
                 {
                     if (dropzone.transform.childCount < 6 && AssociatedCard.Range.IndexOf(dropzone.tag) != -1 && efectos.RangeMap[(AssociatedCard.LocationBoard, dropzone.tag)] == dropzone)
                     {
@@ -156,7 +156,7 @@ public class CardDrag : MonoBehaviour
             }
             else
             {
-                if (dropzone.tag == AssociatedCard.Type && efectos.RangeMap[(AssociatedCard.LocationBoard, dropzone.tag)] == dropzone&& dropzone.transform.childCount<1)
+                if (dropzone.tag == AssociatedCard.TypeOfCard && efectos.RangeMap[(AssociatedCard.LocationBoard, dropzone.tag)] == dropzone&& dropzone.transform.childCount<1)
                     return dropzone;
             }
         else
@@ -203,7 +203,7 @@ public class CardDrag : MonoBehaviour
     public void CardExchange()
     {
         Player P = GM.WhichPlayer(AssociatedCard.LocationBoard);
-        if (GM.Turn == AssociatedCard.LocationBoard && AssociatedCard.Type != "L") 
+        if (GM.Turn == AssociatedCard.LocationBoard && AssociatedCard.TypeOfCard != "L") 
         {
             if (!P.SetedUp)
             {

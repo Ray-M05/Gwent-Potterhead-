@@ -305,7 +305,7 @@ namespace LogicalSide
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             C.GetComponent<DropProp>().DropStatus(-1);
             C = RangeMap[(!card.LocationBoard, card.CurrentPlace)];
-            C.GetComponent<DropProp>().DropStatus(-2);
+            C.GetComponent<DropProp>().DropStatus(-1);
             
         }
         public void Raise(UnityCard card)
@@ -359,7 +359,7 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver )
+                        if ((dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.unit == KindofCard.Silver )
                         {
                             Bigger = Gamezone.transform.GetChild(i).gameObject;
                             disp = Bigger.GetComponent<CardDisplay>().cardTemplate;
@@ -369,7 +369,7 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver)
+                        if ((dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.unit == KindofCard.Silver)
                         {
                             if (dispvar.Power > disp.Power)
                             {
@@ -414,7 +414,7 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver)
+                        if ((dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.unit == KindofCard.Silver)
                         {
                             Bigger = Gamezone.transform.GetChild(i).gameObject;
                             disp = Bigger.GetComponent<CardDisplay>().cardTemplate;
@@ -424,7 +424,7 @@ namespace LogicalSide
                     {
                         Var = Gamezone.transform.GetChild(i).gameObject;
                         dispvar = Var.GetComponent<CardDisplay>().cardTemplate;
-                        if ((dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit == KindofCard.Silver)
+                        if ((dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.unit == KindofCard.Silver)
                         {
                             if (dispvar.Power < disp.Power)
                             {
@@ -464,7 +464,7 @@ namespace LogicalSide
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
                 {
                     dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null&& (dispvar.Type=="U" || dispvar.Type == "D"))
+                    if (dispvar != null&& (dispvar.TypeOfCard=="U" || dispvar.TypeOfCard == "D"))
                     {
                         totalPwr += dispvar.Power;
                         cant++;
@@ -478,7 +478,7 @@ namespace LogicalSide
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
                 {
                     dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null && (dispvar.Type == "U" || dispvar.Type == "D") && dispvar.unit== KindofCard.Silver)
+                    if (dispvar != null && (dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.unit== KindofCard.Silver)
                     {
                         dispvar.Power = media;
                     }
@@ -585,7 +585,7 @@ namespace LogicalSide
                     for (int i = 0; i < Gamezone.transform.childCount; i++)
                     {
                         UnityCard disp = Gamezone.transform.GetChild(i).GetComponent<CardDisplay>().cardTemplate;
-                        if (disp.unit == KindofCard.Silver&& disp.Type!="D")
+                        if (disp.unit == KindofCard.Silver&& disp.TypeOfCard!="D")
                             disp.Power -= props.weather;
                     }
                     props.weather = 0;
@@ -658,7 +658,7 @@ namespace LogicalSide
                     CardDisplay disp = card.GetComponent<CardDisplay>();
                     if (disp != null)
                     {
-                        if (disp.cardTemplate.Type == "U")
+                        if (disp.cardTemplate.TypeOfCard == "U")
                             Restart(disp.cardTemplate);
                         
                             Current.AddToCement(disp.cardTemplate);
@@ -704,7 +704,7 @@ namespace LogicalSide
                 for (int i = 0; i < Gamezone.transform.childCount; i++)
                 {
                     dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null && (dispvar.Type == "U"|| dispvar.Type== "D" )&& dispvar.Owner== Player)
+                    if (dispvar != null && (dispvar.TypeOfCard == "U"|| dispvar.TypeOfCard== "D" )&& dispvar.Owner== Player)
                     {
                         cant++;
                     }
@@ -719,7 +719,7 @@ namespace LogicalSide
                     for (int i = 0; i < Gamezone.transform.childCount; i++)
                     {
                         dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                        if (dispvar != null && (dispvar.Type == "U" || dispvar.Type == "D") && dispvar.Owner == Player)
+                        if (dispvar != null && (dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.Owner == Player)
                         {
                             if (cant2 == cant)
                             {

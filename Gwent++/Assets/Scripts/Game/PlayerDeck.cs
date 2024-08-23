@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 using UnityEngine.XR;
 
@@ -78,6 +79,7 @@ public class PlayerDeck : MonoBehaviour
     public void AddToCement(UnityCard card)
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        gameObject.transform.GetChild(0).GetComponent<Image>().sprite= gameObject.GetComponent<Image>().sprite;
         cement.Add(card);
     }
     public void GetFromCement()

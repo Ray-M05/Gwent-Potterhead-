@@ -1,59 +1,48 @@
-effect 
+effect
 {
-    Name: "Damage",
-    Params: 
-    {
-        Amount: Number
+    Name: "Testing the AddPossibilities",
+    Params:{
+        Auxilio: Bool,
+        Numerin: Number,
+        Letra: String,
+        Letraa: String
     },
-    Action: (targets, context) => 
+	Action: (galletica, context) => 
     {
-        for target in targets 
+        inicio=Numerin;
+        for target in galletica.Find((unit)=> (unit.Power>3 && (Auxilio|| Letra== Letraa)))
         {
-            i = 0;
-            while (i++ < Amount)
-                target.Power+=1;
-        };
+            target.Power= inicio++;
+        }
     }
+
 }
-effect 
-{
-    Name: "Draw",
-    Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Add(topCard);
-}
-}
-effect {
-    Name: "Return to deck",
-    Action: (targets, context) => 
-        for target in targets {
-            owner = target.Owner;
-            deck = context.DeckOfPlayer(owner);
-            deck.Push(target);
-            context.Board.Remove(target);
-            context.Hand;
-        };
-}
+
+
+
 card {
-    Type: "Oro",
+    Type: "Plata",
     Name: "Beluga",
-    Faction: "Gryffindor",
-    Power: 5 * (1+1),
+    Faction: "Prueba",
+    Power: 5,
     Range: ["Melee", "Range"],
     OnActivation: 
     [
         {
-            Effect: "Return to deck",
-                Selector: 
-                {
-                    Source: "board",
-                    Single: false,
-                    Predicate: (unit) => unit.Power < 20
-                }
-        },
-        {
-            Effect: "Draw"
+            Effect:
+            {
+               	Name: "Testing the AddPossibilities",
+                Auxilio: false|| true,
+                Numerin: 2^2^3,
+                Letra: "Ingenieros Celestiales",
+                Letraa: "Compilada"
+            },
+            Selector:
+            {
+                Source: "otherhand",
+                Single: false,
+                Predicate: (unit) => true
+            },
         }
-        
     ]
 }

@@ -220,7 +220,7 @@ namespace Compiler
                         break;
 
                     case TokenType.Pow:
-                        this.Result = Math.Pow((int)Left.Result, (int)Right.Result);
+                        this.Result = Convert.ToInt32(Math.Pow((int)Left.Result, (int)Right.Result));
                         break;
 
                     case TokenType.Less:
@@ -434,7 +434,7 @@ namespace Compiler
                                 case "Find":
                                     {
                                         object pred = Parameter.Evaluate(scope, null);
-                                        return list.Find((Predicate)pred);
+                                        return list.Find((Predicate)pred, scope);
                                     }
 
                             }

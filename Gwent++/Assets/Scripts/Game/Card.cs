@@ -24,7 +24,7 @@ namespace LogicalSide
                 GameObject Object = GameObject.Find("GameManager");
                 if (Object != null)
                     GM = Object.GetComponent<GameManager>();
-                GM.SendPrincipal("No se puede cambiar el owner de las cartas (ReadOnly)");
+                GM.SendPrincipal($"No se puede cambiar el owner de las cartas (ReadOnly)");
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal("No se puede cambiar el nombre de las cartas (ReadOnly)");
+                    GM.SendPrincipal($"No se puede cambiar el nombre de las cartas (ReadOnly)");
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal("No se puede cambiar la faccion de las cartas (ReadOnly)");
+                    GM.SendPrincipal($"No se puede cambiar la faccion de las cartas (ReadOnly)");
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    if (GM != null && Type != null && (Type == "C" || Type.IndexOf("A") != -1))
+                    if (GM != null && TypeOfCard != null && (TypeOfCard == "C" || TypeOfCard.IndexOf("A") != -1))
                         GM.SendPrincipal("Has tratado de modificar el poder de un clima o un aumento, lo cual no es permitido pues no tienen");
                     if (GM != null && CurrentPlace != "" && CurrentPlace != null)
                     {
@@ -112,15 +112,13 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal("No se puede cambiar el rango de las cartas (ReadOnly)");
+                    GM.SendPrincipal($"No se puede cambiar el rango de las cartas (ReadOnly)");
                 }
             }
         }
-        public string CurrentPlace;
-        private string _type;
-        public override string Type
+        public override string Type 
         {
-            get { return _type; }
+             get { return _type; }
             set
             {
                 if (OnConstruction)
@@ -131,10 +129,13 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal("No se puede cambiar el tipo de las cartas (ReadOnly)");
+                    GM.SendPrincipal($"No se puede cambiar el tipo de las cartas (ReadOnly)");
                 }
             }
         }
+        public string CurrentPlace;
+        private string _type;
+        public string TypeOfCard{get; set;}
         public KindofCard unit;
         public Effect SuperPower;
         public bool LocationBoard; //true if its down
@@ -168,9 +169,11 @@ namespace LogicalSide
          public override List<IEffect> Effects{get; set;}
         public override Card GetCopy()
         {
-            UnityCard card = new UnityCard(LocationBoard,Name,Power,Owner,unit,Type,SuperPower,Range,Artwork,description);
+            UnityCard card = new UnityCard(LocationBoard,Name, Type, Power,Owner,unit,TypeOfCard,SuperPower,Range,Artwork,description);
             card.Effects= Effects;
+            card.OnConstruction = true;
             card.Faction= Faction;
+            card.OnConstruction = false;
             return card;
         }
         
@@ -186,7 +189,7 @@ namespace LogicalSide
         //    return false;
         //}
 
-        public UnityCard(bool LocationBoard ,string name ,int points,Compiler.Player Player,KindofCard unit,string type ,Effect ability,string attackRange, Sprite Img, string description)
+        public UnityCard(bool LocationBoard ,string name, string Type ,int points,Compiler.Player Player,KindofCard unit,string typeofcard ,Effect ability,string attackRange, Sprite Img, string description)
         {
             this.Name = name;
             this.Power = points;
@@ -194,7 +197,8 @@ namespace LogicalSide
             this.description = description;
             this.Range = attackRange;
             this.Artwork = Img;
-            this.Type = type;
+            this.TypeOfCard = typeofcard;
+            this.Type = Type;
             this.unit = unit;
             this.SuperPower = ability;
             this.LocationBoard = LocationBoard;

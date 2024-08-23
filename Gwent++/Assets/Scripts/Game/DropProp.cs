@@ -19,7 +19,7 @@ namespace LogicalSide
             foreach (Transform cardTransform in transform)
             {
                 disp = cardTransform.GetComponent<CardDisplay>();
-                if (disp != null && disp.cardTemplate.unit == KindofCard.Silver && disp.cardTemplate.Type!="D")
+                if (disp != null && disp.cardTemplate.unit == KindofCard.Silver && disp.cardTemplate.TypeOfCard!="D")
                 {
                     disp.cardTemplate.Power += diff;
                 }
@@ -35,7 +35,7 @@ namespace LogicalSide
             foreach (Transform cardTransform in transform)
             {
                 disp = cardTransform.GetComponent<CardDisplay>();
-                if (disp != null && disp.cardTemplate.unit == KindofCard.Silver && disp.cardTemplate.Type != "D")
+                if (disp != null && disp.cardTemplate.unit == KindofCard.Silver && disp.cardTemplate.TypeOfCard != "D")
                 {
                     disp.cardTemplate.Power += diff;
                 }

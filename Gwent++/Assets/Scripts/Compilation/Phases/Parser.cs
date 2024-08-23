@@ -94,7 +94,8 @@ namespace Compiler
         {
             ProgramExpression general = new();
             Token token = tokens[position];
-            while (position < tokens.Count)
+            int count = Errors.List.Count;
+            while (position < tokens.Count && count == Errors.List.Count)
             {
                 if (LookAhead(token.Type, TokenType.Effect) || LookAhead(token.Type, TokenType.Card))
                 {
@@ -119,7 +120,8 @@ namespace Compiler
         {
             CardInstance card = new();
             Token token = tokens[position];
-            while (position < tokens.Count)
+            int count = Errors.List.Count;
+            while (position < tokens.Count && count == Errors.List.Count)
             {
                 if (LookAhead(token.Type, TokenType.Name) || LookAhead(token.Type, TokenType.Type) ||
                 LookAhead(token.Type, TokenType.Range) || LookAhead(token.Type, TokenType.Power) ||
@@ -146,7 +148,8 @@ namespace Compiler
         {
             EffectInstance effect = new();
             Token token = tokens[position];
-            while (position < tokens.Count)
+            int count = Errors.List.Count;
+            while (position < tokens.Count && count == Errors.List.Count)
             {
                 if (LookAhead(token.Type, TokenType.Name) ||
                 LookAhead(token.Type, TokenType.Params) ||
@@ -460,7 +463,8 @@ namespace Compiler
             {
                 List<Expression> ranges = new();
                 position++;
-                while (position < tokens.Count)
+                int count = Errors.List.Count;
+                while (position < tokens.Count && count == Errors.List.Count)
                 {
                     if (LookAhead(tokens[position].Type, TokenType.String))
                     {
@@ -482,8 +486,10 @@ namespace Compiler
                                     break;
                                 }
                                 else
-                                    Errors.List.Add(new CompilingError("Invalid token", tokens[position].PositionError));
+                                    Errors.List.Add(new CompilingError("Invalid token, expecting RCurly, Semicolon or Comma", tokens[position].PositionError));
                             }
+                            else
+                                Errors.List.Add(new CompilingError("Invalid token, expecting RBracket", tokens[position].PositionError));
                         }
                         else
                             Errors.List.Add(new CompilingError("Invalid token, expecting Comma", tokens[position].PositionError));
@@ -507,7 +513,9 @@ namespace Compiler
             position++;
             if (LookAhead(tokens[position++].Type, TokenType.Colon) &&
                 LookAhead(tokens[position++].Type, TokenType.LBracket))
-                while (position < tokens.Count)
+            {
+                int count = Errors.List.Count;
+                while (position < tokens.Count && count == Errors.List.Count)
                 {
                     if (LookAhead(tokens[position].Type, TokenType.LCurly))
                     {
@@ -521,6 +529,7 @@ namespace Compiler
                     else
                         Errors.List.Add(new CompilingError("Invalid token in OnActivation method", tokens[position].PositionError));
                 }
+            }
             return activation;
         }
 
@@ -531,7 +540,9 @@ namespace Compiler
             Token token = tokens[++position];
             if (LookAhead(tokens[position++].Type, TokenType.Colon) &&
                LookAhead(tokens[position++].Type, TokenType.LCurly))
-                while (true)
+            {
+                int count = Errors.List.Count;
+                while (position < tokens.Count && count == Errors.List.Count)
                 {
                     token = tokens[position];
                     if (LookAhead(token.Type, TokenType.Id))
@@ -549,6 +560,7 @@ namespace Compiler
                     else
                         Errors.List.Add(new CompilingError("Invalid params definition", token.PositionError));
                 }
+            }
             else
                 Errors.List.Add(new CompilingError("Invalid token", token.PositionError));
             return parameters;
@@ -560,7 +572,9 @@ namespace Compiler
             Token token = tokens[++position];
             if (LookAhead(tokens[position++].Type, TokenType.Colon) &&
                LookAhead(tokens[position++].Type, TokenType.LCurly))
-                while (true)
+                {
+                int count = Errors.List.Count;
+                while (position < tokens.Count && count == Errors.List.Count)
                 {
                     token = tokens[position];
                     if (LookAhead(token.Type, TokenType.Id))
@@ -584,6 +598,7 @@ namespace Compiler
                     else
                         Errors.List.Add(new CompilingError("Invalid effect parameter definition", token.PositionError));
                 }
+            }
             else
                 Errors.List.Add(new CompilingError("Invalid token", token.PositionError));
             return parameters;
@@ -622,7 +637,9 @@ namespace Compiler
         {
             EffectParam effect = new();
             if (LookAhead(tokens[position++].Type, TokenType.LCurly))
-                while (position < tokens.Count)
+            {
+                int count = Errors.List.Count;
+                while (position < tokens.Count && count == Errors.List.Count)
                 {
                     switch (tokens[position].Type)
                     {
@@ -658,6 +675,7 @@ namespace Compiler
                             }
                     }
                 }
+            }
             return effect;
         }
 
@@ -696,7 +714,9 @@ namespace Compiler
             Selector selector = new();
             position++;
             if (LookAhead(tokens[position++].Type, TokenType.Colon) && LookAhead(tokens[position++].Type, TokenType.LCurly))
-                while (position < tokens.Count)
+                {
+                int count = Errors.List.Count;
+                while (position < tokens.Count && count == Errors.List.Count)
                 {
                     switch (tokens[position].Type)
                     {
@@ -729,6 +749,7 @@ namespace Compiler
                             }
                     }
                 }
+            }
             return selector;
         }
 

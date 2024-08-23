@@ -138,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -151,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 6886968101909737081}
+      objectReference: {fileID: 3418654385258171870}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -162,7 +162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: EndDrag
+      value: LeaderClicked
       objectReference: {fileID: 0}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -174,7 +174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CardDrag, Assembly-CSharp
+      value: LogicalSide.CardDisplay, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8638299925223098551, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -248,7 +248,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2649985115818066245}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3418654385258171870}
+        m_TargetAssemblyTypeName: LogicalSide.CardDisplay, Assembly-CSharp
+        m_MethodName: LeaderClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2649985115818066245 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1018787641605922272, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
@@ -258,6 +270,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3418654385258171870 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 402041471474536827, guid: 9594645e91a5fb1428d6603d9a577173, type: 3}
+  m_PrefabInstance: {fileID: 3091112677902261413}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d49f2c7d9529c498068e1f43f64ea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6886968101909737081 stripped

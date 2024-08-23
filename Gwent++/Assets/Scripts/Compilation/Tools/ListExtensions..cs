@@ -11,14 +11,14 @@ namespace ListExtensions
 {
     public static class Extensions
     {
-        public static List<T> Find<T>(this List<T> list, Compiler.Expression pred)
+        public static List<T> Find<T>(this List<T> list, Compiler.Expression pred, Scope Scope)
         {
             if (pred is Predicate predicate)
             {
                 List<T> custom = new();
                 foreach (var item in list)
                 {
-                    if ((bool)predicate.Evaluate(null, item))
+                    if ((bool)predicate.Evaluate(Scope, item))
                         custom.Add(item);
                 }
                 return custom;
