@@ -48,6 +48,7 @@ namespace Compiler
         }
         public override ValueType? CheckSemantic(Scope scope)
         {
+            //if(Instances.Count != 0)
             foreach (var instance in Instances)
             {
                 if (instance.CheckSemantic(scope) != ValueType.Checked)
@@ -433,8 +434,7 @@ namespace Compiler
                                     }
                                 case "Find":
                                     {
-                                        object pred = Parameter.Evaluate(scope, null);
-                                        return list.Find((Predicate)pred, scope);
+                                        return list.Find((Predicate)Parameter, scope);
                                     }
 
                             }

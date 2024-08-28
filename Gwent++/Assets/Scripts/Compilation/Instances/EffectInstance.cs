@@ -13,9 +13,7 @@ namespace Compiler
         public override ValueType? CheckSemantic(Scope scope)
         {
             SemScope = new Scope(scope);
-            if (Name != null)
-                Name.CheckSemantic(scope);
-            else
+            if (Name == null || Name.CheckSemantic(scope)!= ValueType.String)
             {
                 Errors.List.Add(new CompilingError("Effect must have a name", new Position()));
             }
@@ -180,7 +178,7 @@ namespace Compiler
     {
         public InstructionBlock? Instructions = new();
         public IdentifierExpression? Variable;
-        public IdentifierExpression? Collection;
+        public Expression? Collection;
 
         public override ValueType? CheckSemantic(Scope scope)
         {

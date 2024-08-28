@@ -54,7 +54,7 @@ public class Compilation : MonoBehaviour
                 Console.text = "Compilacion exitosa" + "\n" + "Las cartas compiladas se mostraran de color azul dentro del juego";
                 LittleErrors.SetActive(true);
             }
-
+            Errors.List.Clear();
             bool b;
             if (Player == 1)
             {
@@ -136,7 +136,7 @@ public class Compilation : MonoBehaviour
                 eff = Effect.Cleaner;
                 image = "Clearance";
                 break;
-            case "Señuelo":
+            case "Senuelo":
                 Type = "D";
                 eff = Effect.Decoy;
                 image = "Clearance";
@@ -146,10 +146,10 @@ public class Compilation : MonoBehaviour
         }
 
         string range = "";
-        if( card.Type =="Lider" || card.Type == "Despeje" || card.Type == "Señuelo")
+        if( card.Type =="Lider" || card.Type == "Despeje" || card.Type == "Senuelo")
         {
             if(!(card.Range == null || card.Range== ""))
-            throw new System.Exception("No se puede crear una carta lider/despeje/señuelo que tenga Rangos");
+            throw new System.Exception("No se puede crear una carta lider/despeje/senuelo que tenga Rangos");
         }
         else
         {
@@ -160,7 +160,7 @@ public class Compilation : MonoBehaviour
                 range = card.Range;
             }
         }
-        if( card.Type == "Lider" || card.Type == "Clima" || card.Type == "Aumento" || card.Type == "Despeje")
+        if( card.Type == "Lider" || card.Type == "Clima" || card.Type == "Aumento" || card.Type == "Despeje" || card.Type == "Senuelo")
         {
             if (card.Power != null && card.Power != 0 )
                 throw new System.Exception("Las cartas especiales no pueden tener poder");

@@ -121,12 +121,15 @@ namespace Compiler
             CardInstance card = new();
             Token token = tokens[position];
             int count = Errors.List.Count;
+            int hola = 0;
             while (position < tokens.Count && count == Errors.List.Count)
             {
                 if (LookAhead(token.Type, TokenType.Name) || LookAhead(token.Type, TokenType.Type) ||
                 LookAhead(token.Type, TokenType.Range) || LookAhead(token.Type, TokenType.Power) ||
                 LookAhead(token.Type, TokenType.Faction) || LookAhead(token.Type, TokenType.OnActivation))
                 {
+                    if (LookAhead(token.Type, TokenType.Range))
+                        hola++;
                     var instance = card.GetType();
                     var prop = instance.GetProperty(token.Meaning);
                     var pars = CardParsing[prop.Name];
@@ -167,7 +170,9 @@ namespace Compiler
                     return effect;
                 }
                 else
-                    Errors.List.Add(new CompilingError("Invalid token, expecting properties of effects or Right Curly", token.PositionError)); ;
+                {
+                    Errors.List.Add(new CompilingError("Invalid token, expecting properties of effects or Right Curly", token.PositionError));
+                }
             }
             return effect;
         }
@@ -337,7 +342,7 @@ namespace Compiler
                 {
                     position++;
                     Expression argument;
-                    if (!LookAhead(tokens[position].Type, TokenType.Find))
+                    if (!LookAhead(token.Type, TokenType.Find))
                         argument = ParseExpression();
                     else
                         argument = ParsePredicate(true);
@@ -397,7 +402,7 @@ namespace Compiler
             if (LookAhead(token.Type, TokenType.Assign) || LookAhead(token.Type, TokenType.Colon))//Agregar formas como incremento etc...
             {
                 position++;
-                if (LookAhead(tokens[position].Type, TokenType.NumberType) || LookAhead(tokens[position].Type, TokenType.StringType))
+                if (LookAhead(tokens[position].Type, TokenType.NumberType) || LookAhead(tokens[position].Type, TokenType.StringType) || LookAhead(tokens[position].Type, TokenType.Bool))
                 {
                     right = new IdentifierExpression(tokens[position]);
                     position++;
@@ -488,8 +493,6 @@ namespace Compiler
                                 else
                                     Errors.List.Add(new CompilingError("Invalid token, expecting RCurly, Semicolon or Comma", tokens[position].PositionError));
                             }
-                            else
-                                Errors.List.Add(new CompilingError("Invalid token, expecting RBracket", tokens[position].PositionError));
                         }
                         else
                             Errors.List.Add(new CompilingError("Invalid token, expecting Comma", tokens[position].PositionError));
@@ -683,6 +686,7 @@ namespace Compiler
         private InstructionBlock ParseInstructionBlock(bool single = false)
         {
             InstructionBlock block = new();
+            int count = Errors.List.Count;
             do
             {
                 if (LookAhead(tokens[position].Type, TokenType.Id))
@@ -705,7 +709,7 @@ namespace Compiler
                 else
                     Errors.List.Add(new CompilingError("Invalid instruction definition", tokens[position].PositionError));
             }
-            while (true && !single);
+            while (count == Errors.List.Count && !single);
             return block;
         }
 
@@ -727,7 +731,11 @@ namespace Compiler
                             selector.Single = ParsePropertyAssignment();
                             break;
                         case TokenType.Predicate:
-                            selector.Predicate = ParsePredicate();
+                            position++;
+                            if (LookAhead(tokens[position++].Type, TokenType.Colon))
+                                selector.Predicate = ParsePredicate();
+                            else
+                                Errors.List.Add(new CompilingError($"Invalid token {tokens[position-1]}, Expected Colon", tokens[position-1].PositionError));
                             break;
                         case TokenType.RCurly:
                             if (LookAhead(tokens[++position].Type, TokenType.Comma) || LookAhead(tokens[position].Type, TokenType.Semicolon) || LookAhead(tokens[position].Type, TokenType.RCurly))
@@ -755,10 +763,9 @@ namespace Compiler
 
         public Predicate ParsePredicate(bool frommethod = false)
         {
-            if (LookAhead(tokens[++position].Type, TokenType.Colon))
-            {
+            
                 Predicate predicate = new();
-                if (LookAhead(tokens[++position].Type, TokenType.LParen) && LookAhead(tokens[++position].Type, TokenType.Id))
+                if (LookAhead(tokens[position].Type, TokenType.LParen) && LookAhead(tokens[++position].Type, TokenType.Id))
                     predicate.Unit = new IdentifierExpression(tokens[position]);
                 if (LookAhead(tokens[++position].Type, TokenType.RParen) && LookAhead(tokens[++position].Type, TokenType.Arrow))
                 {
@@ -776,9 +783,6 @@ namespace Compiler
                 }
                 else
                     Errors.List.Add(new CompilingError("Invalid token", tokens[position].PositionError));
-            }
-            else
-                Errors.List.Add(new CompilingError("Invalid token", tokens[position].PositionError));
             return null;
         }
 
@@ -790,9 +794,9 @@ namespace Compiler
             if (LookAhead(tokens[position++].Type, TokenType.Id))
             {
                 ForExp.Variable = new IdentifierExpression(tokens[position - 1]);
-                if (LookAhead(tokens[position++].Type, TokenType.In) && LookAhead(tokens[position++].Type, TokenType.Id))
+                if (LookAhead(tokens[position++].Type, TokenType.In))
                 {
-                    ForExp.Collection = new IdentifierExpression(tokens[position - 1]);
+                    ForExp.Collection = ParseExpression();
                     if (LookAhead(tokens[position++].Type, TokenType.LCurly))
                     {
                         ForExp.Instructions = ParseInstructionBlock();

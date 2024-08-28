@@ -115,10 +115,11 @@ namespace Compiler
         public override object Evaluate(Scope scope, object set, object instance = null)
         {
             List<IEffect> effects = new();
-            foreach (EffectParam assignment in Effects)
-            {
-                assignment.Evaluate(scope, set, effects);
-            }
+        if (Effects != null)
+        foreach (EffectParam assignment in Effects)
+        {
+            assignment.Evaluate(scope, set, effects);
+        }
             Result = effects;
             return Result;
         }

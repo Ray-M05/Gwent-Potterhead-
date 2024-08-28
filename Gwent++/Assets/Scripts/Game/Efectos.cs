@@ -132,9 +132,10 @@ namespace LogicalSide
             }
             for(int i = count; i<6+count ; i++)
             {
-                foreach(GameObject UnityCard in BoardOfGameObject[i].transform)
+                for(int j =0; j < BoardOfGameObject[i].transform.childCount; j++)
                 {
-                    CardDisplay disp= UnityCard.GetComponent<CardDisplay>();
+                    GameObject card = BoardOfGameObject[i].transform.GetChild(j).gameObject;
+                    CardDisplay disp= card.GetComponent<CardDisplay>();
                     l.Add(disp.cardTemplate);
                 }
             }
