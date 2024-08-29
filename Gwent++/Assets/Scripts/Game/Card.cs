@@ -169,7 +169,7 @@ namespace LogicalSide
          public override List<IEffect> Effects{get; set;}
         public override Card GetCopy()
         {
-            UnityCard card = new UnityCard(LocationBoard,Name, Type, Power,Owner,unit,TypeOfCard,SuperPower,Range,Artwork,description);
+            UnityCard card = new UnityCard(LocationBoard,Name, Type, OriginalPoints,Owner,unit,TypeOfCard,SuperPower,Range,Artwork,description);
             card.Effects= Effects;
             card.OnConstruction = true;
             card.Faction= Faction;

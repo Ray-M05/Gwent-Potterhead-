@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         if (GameObject.Find("SoundManager")!= null)
         {
             data = GameObject.Find("SoundManager").GetComponent<SavedData>();
-            compi = GameObject.Find("SoundManager").GetComponent<Compilation>();
+            compi = data.Compi;
         }
         if (data != null && !data.debug)
         {
@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
         {
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P1);
-            setup.Shuffle(setup.deck,  true);
+            setup.Shuffle(setup.deck, P1.Cards.Count);
             setup.SetSprite(GiveMeBack(P1));
         }
         deck = GameObject.Find("DeckEnemy");
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
         {
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P2);
-            setup.Shuffle(setup.deck, true);
+            setup.Shuffle(setup.deck, P2.Cards.Count);
             setup.SetSprite(GiveMeBack(P2));
         }
     }

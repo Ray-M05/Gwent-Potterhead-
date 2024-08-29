@@ -76,18 +76,9 @@ namespace Compiler
         }
         public Expression Parse()
         {
-            try
-            {
-                Expression expression;
-                expression = ParseGeneral();
-                return expression;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Roto en: " + position);
-                Console.WriteLine(e);
-            }
-            return null;
+            Expression expression;
+            expression = ParseGeneral();
+            return expression;
         }
 
         private Expression ParseGeneral()
@@ -121,15 +112,12 @@ namespace Compiler
             CardInstance card = new();
             Token token = tokens[position];
             int count = Errors.List.Count;
-            int hola = 0;
             while (position < tokens.Count && count == Errors.List.Count)
             {
                 if (LookAhead(token.Type, TokenType.Name) || LookAhead(token.Type, TokenType.Type) ||
                 LookAhead(token.Type, TokenType.Range) || LookAhead(token.Type, TokenType.Power) ||
                 LookAhead(token.Type, TokenType.Faction) || LookAhead(token.Type, TokenType.OnActivation))
                 {
-                    if (LookAhead(token.Type, TokenType.Range))
-                        hola++;
                     var instance = card.GetType();
                     var prop = instance.GetProperty(token.Meaning);
                     var pars = CardParsing[prop.Name];
@@ -283,7 +271,7 @@ namespace Compiler
                 Token token = tokens[position];
                 position++;
                 Expression expr = ParsePrimaryExpression();
-                returned = new UnaryExpression(expr, token);
+                return new UnaryExpression(expr, token);
             }
             else if (LookAhead(tokens[position].Type, TokenType.False) || LookAhead(tokens[position].Type, TokenType.True))
             {
@@ -689,7 +677,7 @@ namespace Compiler
             int count = Errors.List.Count;
             do
             {
-                if (LookAhead(tokens[position].Type, TokenType.Id))
+                if (LookAhead(tokens[position].Type, TokenType.Id) || LookAhead(tokens[position].Type, TokenType.Increment) || LookAhead(tokens[position].Type, TokenType.Decrement))
                 {
                     block.Instructions.Add(ParseInstructionAssigment());
                 }

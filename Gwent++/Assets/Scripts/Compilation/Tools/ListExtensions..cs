@@ -67,32 +67,66 @@ namespace ListExtensions
 
         public static void AddCard<T>(this List<T> list, T item)
         {
-            if(AddPosibility!= null && (bool)AddPosibility&& item is UnityCard card)
+            if (AddPosibility != null && (bool)AddPosibility && item is Card Card)
             {
+                GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                bool allfine = true;
+                UnityCard card = (UnityCard)Card.GetCopy();
                 PlayerDeck Deck;
-                if(Id== "Hand")
+                if (Id == "Hand")
                 {
-                    Deck= GameObject.Find("Deck").GetComponent<PlayerDeck>();
+                    Deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
                     Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
                 }
-                else if(Id== "OtherHand")
+                else if (Id == "OtherHand")
                 {
-                    Deck= GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
+                    Deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
                     Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
                 }
-                if(PlayerOwner!= null)
+                else if (Id == "Field")
                 {
-                    GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                    Efectos efectos = GameObject.Find("Effects").GetComponent<Efectos>();
+                    allfine = efectos.AddInField(card, true);
+                }
+                else if (Id == "OtherField")
+                {
+                    Efectos efectos = GameObject.Find("Effects").GetComponent<Efectos>();
+                    allfine = efectos.AddInField(card, false);
+                }
+                else if (Id == "Board")
+                {//En este caso hay probabilidad de que se juegue a ambos lados, luego hay q sortear, y si el lado 
+                 //elegido al azar no se encuentra disponible, se añade al otro lado de ser posible(2 de cada 3 veces se elegirá el lado del propietario)
+
+                    bool[] luck = new bool[3] { card.LocationBoard, card.LocationBoard, !(card.LocationBoard) };
+                    System.Random random = new System.Random();
+                    bool result = luck[random.Next(luck.Length)];
+                    Efectos efectos = GameObject.Find("Effects").GetComponent<Efectos>();
+
+                    if (!efectos.AddInField(card, result))
+                    {
+                        if (card.TypeOfCard != "C" && !efectos.AddInField(card, !result))
+                        {
+                            GM.SendPrincipal($"Imposible añadir la carta {card.Name}");
+                            allfine = false;
+                        }
+                    }
+                }
+                if (allfine && PlayerOwner != null && Id != "Board" && Id != "OtherField" && Id != "Field")
+                {
+                    card.LocationBoard = (bool)PlayerOwner;
                     card.OnConstruction = true;
-                    card.LocationBoard= (bool)PlayerOwner;
-                    card.Owner= GM.WhichPlayer((bool)PlayerOwner);
+                    card.Owner = GM.WhichPlayer((bool)PlayerOwner);
                     card.OnConstruction = false;
                 }
-                if(list is List<UnityCard> listica)
-                listica.Add((UnityCard)card.GetCopy());
+                if (allfine)
+                    list.Add(item);
             }
             else
-                throw new Exception(Id+ " list, is not available to Add elements, due to its Ambiguity");
+            {
+                GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+                GM.SendPrincipal(Id + " list, is not available to Add elements, due to its Ambiguity");
+                throw new Exception(Id + " list, is not available to Add elements, due to its Ambiguity");
+            }
         }
 
         public static void RemoveCard<T>(this List<T> list, T item)

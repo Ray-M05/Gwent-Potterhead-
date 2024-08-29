@@ -224,9 +224,11 @@ namespace Compiler
             Collection!.Result = Collection.Evaluate(scope, null);
 
             List<UnityCard> list = (List<UnityCard>)Collection.Result;
-
+            int count = 0;
             for (int i = 0; i < list.Count; i++)
             {
+                if (count++ == int.MaxValue)
+                    throw new Exception("Stack Overflow in for loop");
                 Variable!.Result = list[i];
                 Evaluator.AddVar(Variable);
                 Instructions!.Evaluate(Evaluator, null);
@@ -267,9 +269,11 @@ namespace Compiler
         public override object Evaluate(Scope scope, object set, object instance = null)
         {
             Scope Evaluator = new Scope(scope);
-
+            int count= 0;
             while (true)
             {
+                if (count++ == int.MaxValue)
+                    throw new Exception("Stack Overflow in while loop");
                 if (!(bool)Condition.Evaluate(scope, null))
                 {
                     break;

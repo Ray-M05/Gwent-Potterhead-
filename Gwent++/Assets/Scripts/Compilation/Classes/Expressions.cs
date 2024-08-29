@@ -3,6 +3,8 @@ using ListExtensions;
 using System.Collections.Generic;
 using System;
 using LogicalSide;
+using Unity.VisualScripting;
+using System.Reflection.Emit;
 
 namespace Compiler
 {
@@ -140,6 +142,19 @@ namespace Compiler
 
             else if (Operator == TokenType.Colon || Operator == TokenType.Assign)
             {
+                if (Left is UnaryExpression un && (un.Operator == TokenType.RIncrement || un.Operator == TokenType.LIncrement
+            || un.Operator == TokenType.RDecrement || un.Operator == TokenType.LDecrement))
+                {
+                    Errors.List.Add( new CompilingError($"Semantic Error at assignment, the left side can't be an increment or decrement", new Position()));
+                }
+                if (Left is BinaryExpression bin && bin.Right is UnaryExpression RightUn && (RightUn.Operator == TokenType.RIncrement || RightUn.Operator == TokenType.LIncrement
+                    || RightUn.Operator == TokenType.RDecrement || RightUn.Operator == TokenType.LDecrement))
+                {
+                    Errors.List.Add(new CompilingError($"Semantic Error at assignment, the left side can't be an increment or decrement", new Position()));
+                }
+
+
+
                 Right.CheckType = Right.CheckSemantic(scope);
                 ValueType? tempforOut;
                 object v;
@@ -169,11 +184,23 @@ namespace Compiler
             else if (Operator == TokenType.Point)
             {
                 Left.CheckType = Left.CheckSemantic(scope);
-                if (Left.CheckType != ValueType.Null && Right is Atom right && Tools.GetPossibleMethods(Left.CheckType).Contains(right.Value.Type))
+                if (Right is UnaryExpression unary && (unary.Operator == TokenType.RIncrement || unary.Operator == TokenType.LIncrement
+                    || unary.Operator == TokenType.RDecrement || unary.Operator == TokenType.LDecrement))
+                {
+                    if (unary.Parameter is Atom T && Tools.GetPossibleMethods(Left.CheckType).Contains(T.Value.Type))
+                    {
+                        Right.CheckType = Right.CheckSemantic(scope);
+                        return Tools.GetKeywordType(T.Value.Type);
+                    }
+                    else
+                        Errors.List.Add(new CompilingError("Semantic Error, the operand of an increment is necesary to be a terminal", new Position()));
+                }
+                else if (Left.CheckType != ValueType.Null && Right is Atom right && Tools.GetPossibleMethods(Left.CheckType).Contains(right.Value.Type))
                 {
                     Right.CheckType = right.CheckSemantic(scope);
                     return Tools.GetKeywordType(right.Value.Type);
                 }
+                
                 else if (Left.CheckType != ValueType.Null && Right is BinaryExpression binary && binary.Operator == TokenType.Index)
                 {
                     if (binary.Left is Atom left && Tools.GetPossibleMethods(Left.CheckType).Contains(left.Value.Type))
@@ -446,26 +473,26 @@ namespace Compiler
                     }
 
                 case TokenType.RDecrement:
-                    Parameter.Result = (int)Parameter.Evaluate(scope, null) - 1;
-                    Result = (int)Parameter.Result + 1;
+                    object Valor = (int)Parameter.Evaluate(scope, (int)Parameter.Evaluate(scope, null, instance) - 1, instance);
+                    Result = (int)Valor + 1;
                     Processor.UpdateScope(Parameter, scope);
                     return (int)Result;
 
                 case TokenType.LDecrement:
-                    Parameter.Result = (int)Parameter.Evaluate(scope, null) - 1;
-                    Result = (int)Parameter.Result;
+                    object Val = (int)Parameter.Evaluate(scope, (int)Parameter.Evaluate(scope, null, instance) - 1, instance);
+                    Result = (int)Val;
                     Processor.UpdateScope(Parameter, scope);
                     return (int)Result;
 
                 case TokenType.RIncrement:
-                    Parameter.Result = (int)Parameter.Evaluate(scope, null) + 1;
-                    Result = (int)Parameter.Result - 1;
+                    object Valo = (int)Parameter.Evaluate(scope, (int)Parameter.Evaluate(scope, null, instance) + 1, instance);
+                    Result = (int)Valo - 1;
                     Processor.UpdateScope(Parameter, scope);
                     return (int)Result;
 
                 case TokenType.LIncrement:
-                    Parameter.Result = (int)Parameter.Evaluate(scope, null) + 1;
-                    Result = (int)Parameter.Result;
+                    object V = (int)Parameter.Evaluate(scope, (int)Parameter.Evaluate(scope, null, instance) + 1, instance);
+                    Result = (int)V;
                     Processor.UpdateScope(Parameter, scope);
                     return (int)Result;
 
@@ -490,6 +517,14 @@ namespace Compiler
 
         public override ValueType? CheckSemantic(Scope scope)
         {
+            if (Operator == TokenType.RDecrement || Operator == TokenType.LDecrement || Operator == TokenType.RIncrement || Operator == TokenType.LIncrement)
+            {
+                if (!(Parameter is IdentifierExpression))
+                {
+                    throw new Exception("Semantic Error, you can only use Decrement/Increment on Identifiers");
+                }
+            }
+
             if (Parameter != null && ValueTypers.ContainsKey(Operator))
             {
                 ValueType type = ValueTypers[Operator];
@@ -585,6 +620,7 @@ namespace Compiler
                     string propertyName = Value.Meaning;
                     PropertyInfo property = card.GetType().GetProperty(propertyName);
                     property.SetValue(card, set);
+                    return set;
                 }
                 else
                 {
@@ -609,7 +645,6 @@ namespace Compiler
                 }
                 return value;
             }
-            return null;
         }
     }
     public class StringExpression : Atom

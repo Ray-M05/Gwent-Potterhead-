@@ -15,6 +15,12 @@ public class Compilation : MonoBehaviour
 
     public string FilePath= "C:/Pro/Gwent-Potterhead-/Gwent++/Assets/Scripts/Compilation/Tools/Example.txt";
 
+    private void Start()
+    {
+        SavedData Data= GameObject.Find("SoundManager").GetComponent<SavedData>();
+        Data.Compi = this;
+    }
+
 
     public void PathUpdate(GameObject s)
     {
@@ -85,6 +91,8 @@ public class Compilation : MonoBehaviour
             Console.text = e.Message;
         }
 
+
+        Errors.List.Clear();
         Processor.ParamsRequiered.Clear();
         Processor.Effects.Clear();
     }

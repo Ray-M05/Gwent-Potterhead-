@@ -37,22 +37,20 @@ namespace LogicalSide
         }
         public List<UnityCard> DeckOfPlayer(Compiler.Player player)
         {
-            List<UnityCard> l= new();
             PlayerDeck deck;
             if ((player.Turn && !DecksInverted)||(!player.Turn && DecksInverted))
             {
-                l.UpdateOwner(true, true);
                 deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
-                l.UpdateId("Deck");
+                deck.deck.UpdateOwner(true, true);
+                deck.deck.UpdateId("Deck");
             }
             else
             {
-                l.UpdateOwner(false, true);
                 deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
-                l.UpdateId("OtherDeck");
+                deck.deck.UpdateOwner(false, true);
+                deck.deck.UpdateId("OtherDeck");
             }
-            l = deck.deck;
-            return l;
+            return deck.deck;
         }
 
 
@@ -77,25 +75,21 @@ namespace LogicalSide
 
         public List<UnityCard> GraveYardOfPlayer(Compiler.Player player)
         {
-            List<UnityCard> l = new();
             PlayerDeck deck;
             if ((player.Turn && !DecksInverted) || (!player.Turn && DecksInverted))
             {
-                l.UpdateOwner(true,true);
+                
                 deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
-                l.UpdateId("GraveYard");
+                deck.cement.UpdateOwner(true, true);
+                deck.cement.UpdateId("GraveYard");
             }
             else
             {
-                l.UpdateOwner(false, true);
                 deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
-                l.UpdateId("OtherGraveYard");
+                deck.cement.UpdateOwner(false, true);
+                deck.cement.UpdateId("OtherGraveYard");
             }
-            foreach (UnityCard card in deck.cement)
-            {
-                l.Add(card);
-            }
-            return l;
+            return deck.cement;
         }
 
         public List<UnityCard> Field 
@@ -123,12 +117,14 @@ namespace LogicalSide
             if((player.Turn && !DecksInverted)|| (!player.Turn && DecksInverted))
             {
                 count= 0;
-                l.UpdateOwner(true, false);
+                l.UpdateOwner(true, true);
+                l.UpdateId("Field");
             }
             else
             {
                 count= 6;
-                l.UpdateOwner(false, false);
+                l.UpdateOwner(false, true);
+                l.UpdateId("OtherField");
             }
             for(int i = count; i<6+count ; i++)
             {
@@ -148,8 +144,6 @@ namespace LogicalSide
             get
             {
                 DecksInverted = false;
-                List<UnityCard> l= new();
-                l.UpdateOwner(null, true);
                 return HandOfPlayer(TriggerPlayer);
             }
         }
@@ -195,7 +189,8 @@ namespace LogicalSide
             get
             {
                 List<UnityCard> l = new();
-                l.UpdateOwner(null, false);
+                l.UpdateOwner(null, true);
+                l.UpdateId("Board");
                 foreach(GameObject zone in BoardOfGameObject)
                 {
                     GameObject obj;
@@ -217,8 +212,88 @@ namespace LogicalSide
                 return GM.WhichPlayer(GM.Turn);
             }
         }
-        
 
+        public bool AddInField(UnityCard card, bool side)
+        {//Este método se encarga de setear la instancia de la carta, de forma que se pueda reutilizar el metodo EndDrag asociado al prefab de la carta.
+            PlayerDeck Deck = Decking(side);
+            GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+            List<GameObject> Targets = new List<GameObject>();
+            GameObject Target= null;
+            System.Random random = new System.Random();
+            //Añadiendo un clima
+            if (card.TypeOfCard == "C")
+            {
+                if (C.transform.childCount <= 2 || card.SuperPower == Effect.Cleaner)
+                {
+                    GameObject Card = Deck.Instanciate(card, null, Deck.prefabCarta);
+                    CardDrag drag = Card.GetComponent<CardDrag>();
+                    drag.Start2( side, C, card);
+                    return true;
+                }
+                else
+                {
+                    GM.SendPrincipal("En ejecución has tratado de agregar un clima al campo, pero ya existían 3");
+                }
+            }
+
+            //Añadiendo un aumento
+            if (card.TypeOfCard.IndexOf("A") != -1)
+            {
+                if (RangeMap.ContainsKey((side, card.TypeOfCard)))
+                {
+                    GameObject zone = RangeMap[(side, card.TypeOfCard)];
+                    if (zone.transform.childCount == 0)
+                        Target=zone;
+                }
+                else
+                    throw new Exception("Problemas añadiendo un aumento no justificados");
+                
+
+                if (Target!= null)
+                {
+                    GameObject Card = Deck.Instanciate(card, null, Deck.prefabCarta);
+                    CardDrag drag = Card.GetComponent<CardDrag>();
+                    drag.Start2(side, Target, card);
+                    return true;
+                }
+                else
+                    GM.SendPrincipal($"No hay un lugar disponible para la carta: {card.Name} en el campo de {GM.WhichPlayer(side).name}");
+
+            }
+
+            if (card.TypeOfCard == "U")
+            {
+                for (int i = 0; i < card.Range.Length; i++)
+                {
+                    string s = card.Range[i].ToString();
+                    if (RangeMap.ContainsKey((side, s)))
+                    {
+                        GameObject zone = RangeMap[(side, s)];
+                        if (zone.transform.childCount <= 6)
+                            Targets.Add(zone);
+                    }
+                    else
+                        throw new Exception("Problemas añadiendo una carta de unidad no justificados");
+                }
+                if (Targets.Count > 0)
+                {
+                    Target = Targets[random.Next(0, Targets.Count)];
+                    GameObject Card = Deck.Instanciate(card, null, Deck.prefabCarta);
+                    if (Card == null)
+                    {
+                        Debug.Log("Instancia nula inesperada");
+                    }
+                    CardDrag drag = Card.GetComponent<CardDrag>();
+                    
+                    drag.Start2(side, Target, card);
+                    return true;
+                }
+                else
+                    GM.SendPrincipal($"No hay un lugar disponible para la carta: {card.Name} en el campo de {GM.WhichPlayer(side).name}");
+
+            }
+            return false;
+        }
 
         public GameObject P1S;
         public GameObject P1R;

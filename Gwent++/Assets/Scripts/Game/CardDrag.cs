@@ -9,7 +9,7 @@ using Compiler;
 
 public class CardDrag : MonoBehaviour
 {
-    
+    public bool InARow=false;
     public bool Played= false;
     private Vector2 startPos;
     public GameObject dropzone;
@@ -28,6 +28,21 @@ public class CardDrag : MonoBehaviour
         Description = GameObject.Find("Description").GetComponent<TextMeshProUGUI>();
         ZoneDescription = GameObject.Find("ZoneDescription").GetComponent<TextMeshProUGUI>();
         pointer = GameObject.Find("GameManager").GetComponent<PointerData>();
+    }
+    public void Start2(bool side,GameObject zone, UnityCard card)
+    // Start is called before the first frame update
+    {
+        Start();
+        InARow = true;
+        AssociatedCard.OnConstruction = true;
+        dropzone = zone;
+        Played = false;
+        AssociatedCard = card;
+        card.LocationBoard = side;
+        card.Owner = GM.WhichPlayer(card.LocationBoard);
+        card.OnConstruction = false;
+        EndClicked();
+        InARow = false;
     }
     private void Update()
     {
@@ -114,7 +129,7 @@ public class CardDrag : MonoBehaviour
                     //    GM.SendPrincipal(ex.Message);
                     //}
                 }
-
+                if(!InARow)
                 GM.Turn = !GM.Turn;
                 if (AssociatedCard.SuperPower == Effect.Cleaner)
                 {

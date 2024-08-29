@@ -20,6 +20,9 @@ namespace LogicalSide
         public bool debug = false;
 
 
+
+        public Compilation Compi;
+
         void Awake()
         {
             if (Instance == null)

@@ -53,14 +53,17 @@ namespace Compiler
     { TokenType.Single, @"\bSingle\b" },
     { TokenType.Predicate, @"\bPredicate\b" },
     { TokenType.In, @"\bin\b" },
+    { TokenType.HandOfPlayer, @"\bHandOfPlayer\b" },
     { TokenType.Hand, @"\bHand\b" },
+    { TokenType.DeckOfPlayer, @"\bDeckOfPlayer\b" },
     { TokenType.Deck, @"\bDeck\b" },
     { TokenType.Board, @"\bBoard\b" },
-    { TokenType.DeckOfPlayer, @"\bDeckOfPlayer\b" },
+
     { TokenType.TriggerPlayer, @"\bTriggerPlayer\b" },
-    { TokenType.GraveYard, @"\bGraveYard\b" },
     { TokenType.GraveYardOfPlayer, @"\bGraveYardOfPlayer\b"},
-    { TokenType.HandOfPlayer, @"\bHandOfPlayer\b" },
+    { TokenType.GraveYard, @"\bGraveYard\b" },
+    
+    
     { TokenType.FieldOfPlayer, @"\bFieldOfPlayer\b" },
     { TokenType.Find, @"\bFind\b" },
     { TokenType.Push, @"\bPush\b" },

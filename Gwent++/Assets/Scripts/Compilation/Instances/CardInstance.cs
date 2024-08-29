@@ -40,8 +40,8 @@ namespace Compiler
                 Errors.List.Add(new CompilingError("Card must have a faction", new Position()));
             }
             //this property can be optional
-            if (Power != null)
-                Power.CheckSemantic(scope);
+            if (Power != null && Power.CheckSemantic(scope)!= ValueType.Int)
+                Errors.List.Add(new CompilingError("Card Power need to be evaluated as an integer", new Position()));
 
             //this property can be optional
             if (Range != null && Range.Count != 0)
@@ -59,7 +59,7 @@ namespace Compiler
     {
         {"Melee","M"},
         {"Range","R"},
-        {"Seige","S"}
+        {"Siege","S"}
     };
 
         public override object Evaluate(Scope scope, object set, object instance = null)

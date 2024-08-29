@@ -30,23 +30,20 @@ public class PlayerDeck : MonoBehaviour
         gameObject.GetComponent<Image>().sprite=  sprite;
     }
     // Metodo para instanciar la ultima carta del mazo
-    public void Instanciate(UnityCard card, Transform zone, GameObject prefab)
+    public GameObject Instanciate(UnityCard card, Transform zone, GameObject prefab)
     {
-        
-            if ((playerZone.childCount <= 9))
+            GameObject instanciaCarta = Instantiate(prefab, zone);
+            CardDisplay disp = instanciaCarta.GetComponent<CardDisplay>();
+            disp.cardTemplate = card;
+            disp.ArtworkImg = instanciaCarta.transform.GetChild(0).GetComponent<Image>();
+            disp.Back = instanciaCarta.transform.GetChild(3).GetComponent<Image>();
+            disp.DescriptionText = instanciaCarta.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            disp.PwrTxt = instanciaCarta.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            if (prefab == prefabCarta && PlayerHand.tag.IndexOf("DE") != -1)
             {
-                GameObject instanciaCarta = Instantiate(prefab, zone);
-                CardDisplay disp = instanciaCarta.GetComponent<CardDisplay>();
-                disp.cardTemplate = card;
-                disp.ArtworkImg = instanciaCarta.transform.GetChild(0).GetComponent<Image>();
-                disp.Back = instanciaCarta.transform.GetChild(3).GetComponent<Image>();
-                disp.DescriptionText = instanciaCarta.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                disp.PwrTxt = instanciaCarta.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+                instanciaCarta.transform.Rotate(0, 0, 180);
             }
-        if (prefab== prefabCarta &&PlayerHand.tag.IndexOf("DE") != -1)
-        {
-            playerZone.GetChild(playerZone.childCount - 1).Rotate(0, 0, 180);
-        }
+            return instanciaCarta;
     }
     public void InstanciateLastOnDeck( int n, bool exception)
     {
@@ -96,21 +93,19 @@ public class PlayerDeck : MonoBehaviour
         if(deck.Count > 0)
         InstanciateLastOnDeck(1,false);
     }
-    public void Shuffle(List<UnityCard> deck, bool debug=false)
+    public void Shuffle(List<UnityCard> deck, int compiler=0)
     {
         System.Random random = new System.Random();
         Instanciate(deck[0],Leaderzone, prefabLeader);
         deck.RemoveAt(0);
         if(Leaderzone.name == "LeaderplaceEnemy")
             Leaderzone.transform.GetChild(0).Rotate(0, 0, 180);
-        if(!debug) {
-            int n = deck.Count;
-            while (n > 0)
-            {
-                n--;
-                int k = random.Next(n + 1);
-                (deck[n], deck[k]) = (deck[k], deck[n]);
-            }
+        int n = deck.Count - compiler;
+        while (n > 0)
+        {
+            n--;
+            int k = random.Next(n + 1);
+            (deck[n], deck[k]) = (deck[k], deck[n]);
         }
         InstanciateLastOnDeck(10,false);
     }
