@@ -176,8 +176,18 @@ public class Compilation : MonoBehaviour
                 card.Power = 0;
         }
 
+        string s = "Sin efectos compilados";
+        if(card.Effects !=null)
+        {
+            s = "";
+            foreach(var effect in card.Effects)
+            {
+                s += effect.effect.Name.Result.ToString() + " ";
+            }
+        }
 
-        UnityCard UnityCard = new(DownBoard, card.Name, card.Type, card.Power, null, unit, Type, eff, range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada");
+        UnityCard UnityCard = new(DownBoard, card.Name, card.Type, card.Power, null, unit, Type, eff, range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada" + "\n" +
+            $@"Nombre {card.Name}"+ "\n"+ $@"Faccion {card.Faction}" + "\n"+ $@"Efectos {s}");
         UnityCard.Effects= card.Effects;
         UnityCard.OnConstruction = true;
         UnityCard.Faction= card.Faction;

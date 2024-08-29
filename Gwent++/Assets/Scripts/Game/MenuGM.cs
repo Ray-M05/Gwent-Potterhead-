@@ -96,6 +96,8 @@ public class MenuGM : MonoBehaviour
         else
             PlayError();
     }
+    public void RestartGame()=> SceneManager.LoadScene(0);
+    
     public void Faction2OnClick(int Faction)
     {
         SoundGM.faction_2 = Faction;
@@ -132,10 +134,7 @@ public class MenuGM : MonoBehaviour
     {
         FXsource.PlayOneShot(ErrorSound);
     }
-    public void GoToMain()
-    {
-        SceneManager.LoadScene(0);
-    }
+    
 
     public void Exit()
     {
