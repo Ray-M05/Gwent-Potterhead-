@@ -29,7 +29,7 @@ namespace LogicalSide
                     }
                 else
                     PwrTxt.text = "";
-                DescriptionText.text = "";//cardTemplate.description;
+                DescriptionText.text = "";
                 ArtworkImg.sprite = cardTemplate.Artwork;
                 if(Back!=null)
                 if(cardTemplate.Faction == "Gryffindor")
@@ -61,8 +61,8 @@ namespace LogicalSide
                     }
                     catch (System.Exception ex)
                     {
-                        GM.SendPrincipal("Error en la ejecucion del efecto:");
-                        GM.SendPrincipal(ex.Message);
+                        GM.SendMessage("Error en la ejecucion del efecto:");
+                        GM.SendMessage(ex.Message);
                     }
                 }
             }

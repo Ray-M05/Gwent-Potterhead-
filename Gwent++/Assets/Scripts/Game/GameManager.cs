@@ -52,12 +52,12 @@ public class GameManager : MonoBehaviour
             if (Turn)
             {
                 P1.SetedUp = P1.SetedUp;
-                SendPrincipal("Turno de " + P1.name);
+                SendMessage("Turno de " + P1.name);
             }
             else
             {
                 P2.SetedUp = P2.SetedUp;
-                SendPrincipal("Turno de " + P2.name);
+                SendMessage("Turno de " + P2.name);
             }
             VisibilityGM();
         }
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
             P1 = new Player(1, "Gryffindor",true,null);
             P2 = new Player(2, "Slytherin",false, null);
         }
-        SetupPLayers();
+        SetPLayers();
         Sounds = GameObject.Find("Menus").GetComponent<MenuGM>();
         Turn = true;
     }
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
             }
             if (Input.anyKey && SMS.Count != 0)
             {
-                GetPrincipal();
+                GetMessage();
                 Delay(1);
             }
         }
@@ -112,14 +112,14 @@ public class GameManager : MonoBehaviour
         }
         return Resources.Load<Sprite>("slythreverse");
     }
-    public void SetupPLayers()
+    public void SetPLayers()
     {
         GameObject deck = GameObject.Find("Deck");
         if (deck != null )
         {
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P1);
-            setup.Shuffle(setup.deck, P1.Cards.Count);
+            setup.ShuffleCompilationOnTop(setup.deck, P1.Cards.Count);
             setup.SetSprite(GiveMeBack(P1));
         }
         deck = GameObject.Find("DeckEnemy");
@@ -127,11 +127,11 @@ public class GameManager : MonoBehaviour
         {
             PlayerDeck setup = deck.GetComponent<PlayerDeck>();
             setup.deck = CardDataBase.GetDeck(P2);
-            setup.Shuffle(setup.deck, P2.Cards.Count);
+            setup.ShuffleCompilationOnTop(setup.deck, P2.Cards.Count);
             setup.SetSprite(GiveMeBack(P2));
         }
     }
-    public void AddScore(bool Downboard, int value)
+    public void ActualScore(bool Downboard, int value)
     {
         if(Downboard)
         {
@@ -182,14 +182,14 @@ public class GameManager : MonoBehaviour
             //Gana el P1
             Rounds.transform.GetChild(indexE).gameObject.SetActive(true);
             indexE++;
-            SendPrincipal((P1.name + " Gano la ronda"));
+            SendMessage((P1.name + " Gano la ronda"));
             Turn = true;
         }
         else if(diff<0)
         {
             RoundsEnemy.transform.GetChild(indexP).gameObject.SetActive(true);
             indexP++;
-            SendPrincipal(P2.name + " Gano la ronda");
+            SendMessage(P2.name + " Gano la ronda");
             Turn =false;
         }
         else
@@ -229,21 +229,21 @@ public class GameManager : MonoBehaviour
                     indexE++;
                     turno = true;
                 }
-                SendPrincipal(("Ronda Empatada"));
+                SendMessage(("Ronda Empatada"));
             }
             else
             { 
-                SendPrincipal(result); 
+                SendMessage(result); 
             }
             Turn = turno;
         }
 
         if (indexE == indexP && indexP == 2)
-            EndGame("Ambos", null);
+            FinishGame("Ambos", null);
         else if (indexP == 2)
-            EndGame(P2.name, P2);
+            FinishGame(P2.name, P2);
         else if (indexE == 2)
-            EndGame(P1.name, P1);
+            FinishGame(P1.name, P1);
         Eff.GetComponent<Efectos>().ToCementery();
 
 
@@ -251,33 +251,33 @@ public class GameManager : MonoBehaviour
         PlayerDeck deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
         if (P1.Stealer)
         {
-            deck.InstanciateLastOnDeck(3, false);
+            deck.GetLastInstance(3, false);
             r = P1.name + " ha robado una carta de más gracias al efecto de su lider";
         }
         else
         {
-            deck.InstanciateLastOnDeck(2, false);
+            deck.GetLastInstance(2, false);
         }
         deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
         if (P2.Stealer)
         { 
-            deck.InstanciateLastOnDeck(3, false);
+            deck.GetLastInstance(3, false);
             r = P2.name + " ha robado una carta de más gracias al efecto de su lider";
         }
         else
-            deck.InstanciateLastOnDeck(2, false);
+            deck.GetLastInstance(2, false);
         if (P1.Stealer && P2.Stealer)
             r = "Ambos jugadores han robado una carta de más gracias al efecto de su lider";
         if(r!= "")
         {
-            SendPrincipal(r);
+            SendMessage(r);
         }
 
         VisibilityGM();
         P1.Surrender = false;
         P2.Surrender = false;
     }
-    public void PassedTurn()
+    public void SkipTurn()
     {
         if (Turn)
             P1.Surrender = true;
@@ -291,7 +291,7 @@ public class GameManager : MonoBehaviour
         }
         
     }
-    public void EndGame(string winner,Player Winner)
+    public void FinishGame(string winner,Player Winner)
     {
         Sprite Win = Resources.Load<Sprite>("_bd85d92f-3322-4ebc-add3-3bebd08a0e69");
         if (winner == "Ambos")
@@ -319,7 +319,7 @@ public class GameManager : MonoBehaviour
         Mess.gameObject.SetActive(false);
         Mess.text = "";
     }
-    public void SendPrincipal(string s)
+    public void SendMessage(string s)
     {
         string sQ;
         SMS.TryPeek(out sQ);
@@ -328,7 +328,7 @@ public class GameManager : MonoBehaviour
         Message.gameObject.SetActive(true);
         MessagePanel.SetActive(true);
     }
-    public string GetPrincipal()
+    public string GetMessage()
     {
         if (SMS.Count == 1)
         {
@@ -338,10 +338,10 @@ public class GameManager : MonoBehaviour
     }
     public void OK()
     {
-        WhichPlayer(Turn).SetedUp = true;
+        GetPlayer(Turn).SetedUp = true;
     }
 
-    public Player WhichPlayer(bool b)
+    public Player GetPlayer(bool b)
     {
         if (b == P1.P)
             return P1;

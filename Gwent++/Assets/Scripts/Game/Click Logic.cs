@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Unity.VisualScripting;
 using Compiler;
 
-public class CardDrag : MonoBehaviour
+public class ClickLogic : MonoBehaviour
 {
     public bool InARow=false;
     public bool Played= false;
@@ -39,7 +39,7 @@ public class CardDrag : MonoBehaviour
         Played = false;
         AssociatedCard = card;
         card.LocationBoard = side;
-        card.Owner = GM.WhichPlayer(card.LocationBoard);
+        card.Owner = GM.GetPlayer(card.LocationBoard);
         card.OnConstruction = false;
         EndClicked();
         InARow = false;
@@ -51,20 +51,20 @@ public class CardDrag : MonoBehaviour
             PlayerDeck Current = efectos.Decking(AssociatedCard.LocationBoard);
             efectos.Decoy(AssociatedCard);
             efectos.Restart(AssociatedCard);
-            Current.AddToCement(AssociatedCard);
+            Current.AddToGraveYard(AssociatedCard);
             Destroy(gameObject);
         }
     }
     public void Selected()
     {
             startPos = transform.position;
-            if (GM.WhichPlayer(AssociatedCard.LocationBoard).SetedUp)
+            if (GM.GetPlayer(AssociatedCard.LocationBoard).SetedUp)
             {
                 if (AssociatedCard.LocationBoard == GM.Turn &&  AssociatedCard.TypeOfCard!= "L")
                 {
                     if (pointer.CardSelected != null)
                     {
-                        UnityCard card = pointer.CardSelected.GetComponent<CardDrag>().AssociatedCard;
+                        UnityCard card = pointer.CardSelected.GetComponent<ClickLogic>().AssociatedCard;
                         if (card.TypeOfCard.IndexOf("D")!= -1)
                         {
                             pointer.PlayCard(this.gameObject);                                
@@ -72,8 +72,13 @@ public class CardDrag : MonoBehaviour
                     }
                     if(!Played){
                         GM.Sounds.PlaySoundButton();
+                    if (pointer.IsOnDecoy)
+                    {
+                        pointer.IsOnDecoy = false;
+                    }
+                    else
                         pointer.CardSelected=this.gameObject;
-                        }
+                }
                     
                 }
             }
@@ -99,12 +104,14 @@ public class CardDrag : MonoBehaviour
                 else
                 {
                     //Es un Decoy, regreso la carta a la mano
+                    pointer.IsOnDecoy=true;
                     CardDisplay exchange = dropzone.GetComponent<CardDisplay>();
                     AssociatedCard.CurrentPlace = exchange.cardTemplate.CurrentPlace;
                     Transform drop = dropzone.transform.parent;
                     transform.SetParent(drop.transform, false);
                     efectos.Decoy(exchange.cardTemplate);
                     efectos.RestartCard(dropzone, null, true);
+                    
                 }
                 Played = true;
                 if (GM.Turn)
@@ -134,10 +141,9 @@ public class CardDrag : MonoBehaviour
                 if (AssociatedCard.SuperPower == Effect.Cleaner)
                 {
                     PlayerDeck deck = efectos.Decking(AssociatedCard.LocationBoard);
-                    deck.AddToCement(AssociatedCard);
+                    deck.AddToGraveYard(AssociatedCard);
                     Destroy(gameObject);
                 }
-                
             }
         }
         if (!Played)
@@ -146,6 +152,7 @@ public class CardDrag : MonoBehaviour
             dropzone = null;
             GM.Sounds.PlayError();
         }
+        pointer.CardSelected = null;
     }
     private GameObject IsPossible()
     {
@@ -217,7 +224,7 @@ public class CardDrag : MonoBehaviour
     }
     public void CardExchange()
     {
-        Player P = GM.WhichPlayer(AssociatedCard.LocationBoard);
+        Player P = GM.GetPlayer(AssociatedCard.LocationBoard);
         if (GM.Turn == AssociatedCard.LocationBoard && AssociatedCard.TypeOfCard != "L") 
         {
             if (!P.SetedUp)
@@ -225,7 +232,7 @@ public class CardDrag : MonoBehaviour
                 BigCardDestroy();
                 PlayerDeck Deck = efectos.Decking(AssociatedCard.LocationBoard);
                 Deck.deck.Insert(0,AssociatedCard);
-                Deck.InstanciateLastOnDeck(1, true);
+                Deck.GetLastInstance(1, true);
                 P.cardsExchanged++;
                 Destroy(gameObject);
                 

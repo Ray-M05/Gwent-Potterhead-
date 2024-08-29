@@ -209,34 +209,34 @@ namespace LogicalSide
             get
             {
                 GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-                return GM.WhichPlayer(GM.Turn);
+                return GM.GetPlayer(GM.Turn);
             }
         }
 
         public bool AddInField(UnityCard card, bool side)
-        {//Este método se encarga de setear la instancia de la carta, de forma que se pueda reutilizar el metodo EndDrag asociado al prefab de la carta.
+        {//Este mï¿½todo se encarga de setear la instancia de la carta, de forma que se pueda reutilizar el metodo EndDrag asociado al prefab de la carta.
             PlayerDeck Deck = Decking(side);
             GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
             List<GameObject> Targets = new List<GameObject>();
             GameObject Target= null;
             System.Random random = new System.Random();
-            //Añadiendo un clima
+            //Aï¿½adiendo un clima
             if (card.TypeOfCard == "C")
             {
                 if (C.transform.childCount <= 2 || card.SuperPower == Effect.Cleaner)
                 {
-                    GameObject Card = Deck.Instanciate(card, null, Deck.prefabCarta);
-                    CardDrag drag = Card.GetComponent<CardDrag>();
+                    GameObject Card = Deck.GetInstance(card, null, Deck.prefabCarta);
+                    ClickLogic drag = Card.GetComponent<ClickLogic>();
                     drag.Start2( side, C, card);
                     return true;
                 }
                 else
                 {
-                    GM.SendPrincipal("En ejecución has tratado de agregar un clima al campo, pero ya existían 3");
+                    GM.SendMessage("En ejecuciï¿½n has tratado de agregar un clima al campo, pero ya existï¿½an 3");
                 }
             }
 
-            //Añadiendo un aumento
+            //Aï¿½adiendo un aumento
             if (card.TypeOfCard.IndexOf("A") != -1)
             {
                 if (RangeMap.ContainsKey((side, card.TypeOfCard)))
@@ -246,18 +246,18 @@ namespace LogicalSide
                         Target=zone;
                 }
                 else
-                    throw new Exception("Problemas añadiendo un aumento no justificados");
+                    throw new Exception("Problemas aï¿½adiendo un aumento no justificados");
                 
 
                 if (Target!= null)
                 {
-                    GameObject Card = Deck.Instanciate(card, null, Deck.prefabCarta);
-                    CardDrag drag = Card.GetComponent<CardDrag>();
+                    GameObject Card = Deck.GetInstance(card, null, Deck.prefabCarta);
+                    ClickLogic drag = Card.GetComponent<ClickLogic>();
                     drag.Start2(side, Target, card);
                     return true;
                 }
                 else
-                    GM.SendPrincipal($"No hay un lugar disponible para la carta: {card.Name} en el campo de {GM.WhichPlayer(side).name}");
+                    GM.SendMessage($"No hay un lugar disponible para la carta: {card.Name} en el campo de {GM.GetPlayer(side).name}");
 
             }
 
@@ -273,23 +273,23 @@ namespace LogicalSide
                             Targets.Add(zone);
                     }
                     else
-                        throw new Exception("Problemas añadiendo una carta de unidad no justificados");
+                        throw new Exception("Problemas aï¿½adiendo una carta de unidad no justificados");
                 }
                 if (Targets.Count > 0)
                 {
                     Target = Targets[random.Next(0, Targets.Count)];
-                    GameObject Card = Deck.Instanciate(card, null, Deck.prefabCarta);
+                    GameObject Card = Deck.GetInstance(card, null, Deck.prefabCarta);
                     if (Card == null)
                     {
                         Debug.Log("Instancia nula inesperada");
                     }
-                    CardDrag drag = Card.GetComponent<CardDrag>();
+                    ClickLogic drag = Card.GetComponent<ClickLogic>();
                     
                     drag.Start2(side, Target, card);
                     return true;
                 }
                 else
-                    GM.SendPrincipal($"No hay un lugar disponible para la carta: {card.Name} en el campo de {GM.WhichPlayer(side).name}");
+                    GM.SendMessage($"No hay un lugar disponible para la carta: {card.Name} en el campo de {GM.GetPlayer(side).name}");
 
             }
             return false;
@@ -394,7 +394,7 @@ namespace LogicalSide
             string rg = card.CurrentPlace;
             int increase = 0;
             GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-            GM.AddScore(card.LocationBoard, card.Power);
+            GM.ActualScore(card.LocationBoard, card.Power);
             GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
             increase = C.GetComponent<DropProp>().weather + C.GetComponent<DropProp>().raised;
             if(card.unit!= KindofCard.Golden)
@@ -470,7 +470,7 @@ namespace LogicalSide
                 PlayerDeck Current = Decking(disp.LocationBoard);
                 Decoy(disp);
                 Restart(disp);
-                Current.AddToCement(disp);
+                Current.AddToGraveYard(disp);
                 Destroy(Bigger);
             }
         } 
@@ -525,7 +525,7 @@ namespace LogicalSide
                 PlayerDeck Current = Decking(disp.LocationBoard);
                 Decoy(disp);
                 Restart(disp);
-                Current.AddToCement(disp);
+                Current.AddToGraveYard(disp);
                 Destroy(Bigger);
             }
         }
@@ -563,7 +563,7 @@ namespace LogicalSide
         }
         public void Stealer(UnityCard card)
         {
-            Decking(card.Owner.Turn).InstanciateLastOnDeck(1,false);
+            Decking(card.Owner.Turn).GetLastInstance(1,false);
         }
         public void Multpwr(UnityCard card)
         {
@@ -610,7 +610,7 @@ namespace LogicalSide
                         PlayerDeck Current = Decking(dispvar.LocationBoard);
                         Decoy(dispvar);
                         Restart(dispvar);
-                        Current.AddToCement(dispvar);
+                        Current.AddToGraveYard(dispvar);
                         Destroy(Me);
                     }
                 }
@@ -644,7 +644,7 @@ namespace LogicalSide
                         PlayerDeck Current = Decking(dispvar.LocationBoard);
                         Decoy(dispvar);
                         Restart(dispvar);
-                        Current.AddToCement(dispvar);
+                        Current.AddToGraveYard(dispvar);
                         Destroy(Me);
                     }
                 }
@@ -672,7 +672,7 @@ namespace LogicalSide
                 GameObject weather = C.transform.GetChild(i).gameObject;
                 UnityCard disp = C.transform.GetChild(i).GetComponent<CardDisplay>().cardTemplate;
                 PlayerDeck Current = Decking(weather);
-                Current.AddToCement(disp);
+                Current.AddToGraveYard(disp);
                 Destroy(weather);
             }
         }
@@ -683,7 +683,7 @@ namespace LogicalSide
             Restart(card);
             if (home)
             {
-                Card.GetComponent<CardDrag>().Played = false;
+                Card.GetComponent<ClickLogic>().Played = false;
                 GameObject Hand;
                 if (card.LocationBoard)
                     Hand = GameObject.FindWithTag("P");
@@ -737,7 +737,7 @@ namespace LogicalSide
                         if (disp.cardTemplate.TypeOfCard == "U")
                             Restart(disp.cardTemplate);
                         
-                            Current.AddToCement(disp.cardTemplate);
+                            Current.AddToGraveYard(disp.cardTemplate);
                             Destroy(card);
                         
                     }
@@ -752,7 +752,7 @@ namespace LogicalSide
                 if (disp != null)
                 {
                     Restart(disp.cardTemplate);
-                    Current.AddToCement(disp.cardTemplate);
+                    Current.AddToGraveYard(disp.cardTemplate);
                     Destroy(card);
                 }
             }

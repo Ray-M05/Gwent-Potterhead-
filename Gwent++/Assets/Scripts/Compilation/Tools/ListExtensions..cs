@@ -76,12 +76,12 @@ namespace ListExtensions
                 if (Id == "Hand")
                 {
                     Deck = GameObject.Find("Deck").GetComponent<PlayerDeck>();
-                    Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
+                    Deck.GetInstance(card, Deck.playerZone, Deck.prefabCarta);
                 }
                 else if (Id == "OtherHand")
                 {
                     Deck = GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
-                    Deck.Instanciate(card, Deck.playerZone, Deck.prefabCarta);
+                    Deck.GetInstance(card, Deck.playerZone, Deck.prefabCarta);
                 }
                 else if (Id == "Field")
                 {
@@ -95,7 +95,7 @@ namespace ListExtensions
                 }
                 else if (Id == "Board")
                 {//En este caso hay probabilidad de que se juegue a ambos lados, luego hay q sortear, y si el lado 
-                 //elegido al azar no se encuentra disponible, se añade al otro lado de ser posible(2 de cada 3 veces se elegirá el lado del propietario)
+                 //elegido al azar no se encuentra disponible, se aï¿½ade al otro lado de ser posible(2 de cada 3 veces se elegirï¿½ el lado del propietario)
 
                     bool[] luck = new bool[3] { card.LocationBoard, card.LocationBoard, !(card.LocationBoard) };
                     System.Random random = new System.Random();
@@ -106,7 +106,7 @@ namespace ListExtensions
                     {
                         if (card.TypeOfCard != "C" && !efectos.AddInField(card, !result))
                         {
-                            GM.SendPrincipal($"Imposible añadir la carta {card.Name}");
+                            GM.SendMessage($"Imposible aï¿½adir la carta {card.Name}");
                             allfine = false;
                         }
                     }
@@ -115,7 +115,7 @@ namespace ListExtensions
                 {
                     card.LocationBoard = (bool)PlayerOwner;
                     card.OnConstruction = true;
-                    card.Owner = GM.WhichPlayer((bool)PlayerOwner);
+                    card.Owner = GM.GetPlayer((bool)PlayerOwner);
                     card.OnConstruction = false;
                 }
                 if (allfine)
@@ -124,7 +124,7 @@ namespace ListExtensions
             else
             {
                 GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-                GM.SendPrincipal(Id + " list, is not available to Add elements, due to its Ambiguity");
+                GM.SendMessage(Id + " list, is not available to Add elements, due to its Ambiguity");
                 throw new Exception(Id + " list, is not available to Add elements, due to its Ambiguity");
             }
         }

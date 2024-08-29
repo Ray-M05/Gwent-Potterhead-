@@ -521,6 +521,7 @@ namespace Compiler
             {
                 if (!(Parameter is IdentifierExpression))
                 {
+                    if(!(Parameter is BinaryExpression param && param.Right is IdentifierExpression))
                     throw new Exception("Semantic Error, you can only use Decrement/Increment on Identifiers");
                 }
             }

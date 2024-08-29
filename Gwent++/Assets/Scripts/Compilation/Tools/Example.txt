@@ -4,7 +4,7 @@ effect
     Action: (targets, context) => {
         for target in targets 
         {
-            context.Board.Add(target);
+            target.Power= ++(target.Power) +5;
         };
     }
 }
@@ -15,6 +15,28 @@ card
     Name: "Testing Incrememnts",
     Faction: "Gryffindor",
     Range: ["Range"],
+    OnActivation: 
+    [
+        {
+            Effect:
+            {
+               	Name: "Go to Field",
+            },
+            Selector:
+            {
+                Source: "board",
+                Single: false,
+                Predicate: (unit) => true
+            },
+        }
+    ]
+}
+
+card 
+{
+    Type: "Lider",
+    Name: "Rowena",
+    Faction: "Ravenclaw",
     OnActivation: 
     [
         {

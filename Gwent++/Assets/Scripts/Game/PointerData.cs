@@ -5,11 +5,12 @@ using UnityEngine;
 public class PointerData : MonoBehaviour
 {
     public GameObject CardSelected= null;
+    public bool IsOnDecoy = false;
     public void PlayCard(GameObject dropzone)
     {
         if(CardSelected != null)
         {
-            CardDrag drag= CardSelected.GetComponent<CardDrag>();
+            ClickLogic drag= CardSelected.GetComponent<ClickLogic>();
             drag.dropzone = dropzone;
             drag.EndClicked();
             CardSelected=null;

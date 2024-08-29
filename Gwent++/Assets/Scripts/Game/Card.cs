@@ -24,7 +24,7 @@ namespace LogicalSide
                 GameObject Object = GameObject.Find("GameManager");
                 if (Object != null)
                     GM = Object.GetComponent<GameManager>();
-                GM.SendPrincipal($"No se puede cambiar el owner de las cartas (ReadOnly)");
+                GM.SendMessage($"No se puede cambiar el owner de las cartas (ReadOnly)");
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal($"No se puede cambiar el nombre de las cartas (ReadOnly)");
+                    GM.SendMessage($"No se puede cambiar el nombre de las cartas (ReadOnly)");
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal($"No se puede cambiar la faccion de las cartas (ReadOnly)");
+                    GM.SendMessage($"No se puede cambiar la faccion de las cartas (ReadOnly)");
                 }
             }
         }
@@ -80,10 +80,10 @@ namespace LogicalSide
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
                     if (GM != null && TypeOfCard != null && (TypeOfCard == "C" || TypeOfCard.IndexOf("A") != -1))
-                        GM.SendPrincipal("Has tratado de modificar el poder de un clima o un aumento, lo cual no es permitido pues no tienen");
+                        GM.SendMessage("Has tratado de modificar el poder de un clima o un aumento, lo cual no es permitido pues no tienen");
                     if (GM != null && CurrentPlace != "" && CurrentPlace != null)
                     {
-                        GM.AddScore(LocationBoard, _points - temp);
+                        GM.ActualScore(LocationBoard, _points - temp);
                     }
                     if (PwrText != null)
                         PwrText.text = _points.ToString();
@@ -112,7 +112,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal($"No se puede cambiar el rango de las cartas (ReadOnly)");
+                    GM.SendMessage($"No se puede cambiar el rango de las cartas (ReadOnly)");
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace LogicalSide
                     GameObject Object = GameObject.Find("GameManager");
                     if (Object != null)
                         GM = Object.GetComponent<GameManager>();
-                    GM.SendPrincipal($"No se puede cambiar el tipo de las cartas (ReadOnly)");
+                    GM.SendMessage($"No se puede cambiar el tipo de las cartas (ReadOnly)");
                 }
             }
         }

@@ -12,12 +12,12 @@ using UnityEngine.XR;
 
 public class PlayerDeck : MonoBehaviour
 {
-    public GameObject prefabCarta; // El prefab gen�rico de la carta
+    public GameObject prefabCarta; 
     public GameObject prefabLeader;
-    public Transform playerZone; // El lugar donde se colocar� la carta del jugador
+    public Transform playerZone; 
     public GameObject PlayerHand;
     public Transform Leaderzone;
-    [SerializeField]public List<UnityCard> deck; // Tu lista de cartas
+    [SerializeField]public List<UnityCard> deck; 
     [SerializeField]public List<UnityCard> cement;
     public Image Back;
 
@@ -29,8 +29,8 @@ public class PlayerDeck : MonoBehaviour
     {
         gameObject.GetComponent<Image>().sprite=  sprite;
     }
-    // Metodo para instanciar la ultima carta del mazo
-    public GameObject Instanciate(UnityCard card, Transform zone, GameObject prefab)
+
+    public GameObject GetInstance(UnityCard card, Transform zone, GameObject prefab)
     {
             GameObject instanciaCarta = Instantiate(prefab, zone);
             CardDisplay disp = instanciaCarta.GetComponent<CardDisplay>();
@@ -45,7 +45,7 @@ public class PlayerDeck : MonoBehaviour
             }
             return instanciaCarta;
     }
-    public void InstanciateLastOnDeck( int n, bool exception)
+    public void GetLastInstance( int n, bool exception)
     {
         if (deck.Count > 0 && n>0)
         {
@@ -70,20 +70,20 @@ public class PlayerDeck : MonoBehaviour
                 deck.Remove(card);
                 cement.Add(card);
             }
-            InstanciateLastOnDeck(n - 1, exception);
+            GetLastInstance(n - 1, exception);
         }
     }
-    public void AddToCement(UnityCard card)
+    public void AddToGraveYard(UnityCard card)
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
         gameObject.transform.GetChild(0).GetComponent<Image>().sprite= gameObject.GetComponent<Image>().sprite;
         cement.Add(card);
     }
-    public void GetFromCement()
+    public void GetFromGraveYard()
     {
         if (cement.Count > 0)
         {
-            Instanciate(cement[cement.Count-1],PlayerHand.transform,prefabCarta);
+            GetInstance(cement[cement.Count-1],PlayerHand.transform,prefabCarta);
         }
         if(cement.Count==0)
             gameObject.transform.GetChild(0).gameObject.SetActive(false);
@@ -91,12 +91,12 @@ public class PlayerDeck : MonoBehaviour
     public void OnClick()
     {
         if(deck.Count > 0)
-        InstanciateLastOnDeck(1,false);
+        GetLastInstance(1,false);
     }
-    public void Shuffle(List<UnityCard> deck, int compiler=0)
+    public void ShuffleCompilationOnTop(List<UnityCard> deck, int compiler=0)
     {
         System.Random random = new System.Random();
-        Instanciate(deck[0],Leaderzone, prefabLeader);
+        GetInstance(deck[0],Leaderzone, prefabLeader);
         deck.RemoveAt(0);
         if(Leaderzone.name == "LeaderplaceEnemy")
             Leaderzone.transform.GetChild(0).Rotate(0, 0, 180);
@@ -107,7 +107,7 @@ public class PlayerDeck : MonoBehaviour
             int k = random.Next(n + 1);
             (deck[n], deck[k]) = (deck[k], deck[n]);
         }
-        InstanciateLastOnDeck(10,false);
+        GetLastInstance(10,false);
     }
 
 }
