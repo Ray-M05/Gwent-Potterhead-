@@ -3161,7 +3161,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Nombre
+  m_text: Direccion del archivo .txt a compilar
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 85da48b7ad5dc4041b3f0558dea6f6fb, type: 2}
   m_sharedMaterial: {fileID: -1060510560955281060, guid: 85da48b7ad5dc4041b3f0558dea6f6fb, type: 2}

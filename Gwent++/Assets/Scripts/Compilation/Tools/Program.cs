@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System;
+using UnityEngine;
 using System.IO;
 
 namespace Compiler
@@ -12,7 +13,10 @@ namespace Compiler
             string text = File.ReadAllText(filePath);
             Lexer l = new Lexer(text);
             List<Token> tokens = l.Tokenize();
-            
+            foreach(CompilingError err in Errors.List)
+            {
+                UnityEngine.Debug.Log("err");
+            }
             Parser parser = new(tokens);
             Expression root = parser.Parse();
             root.CheckSemantic(null);

@@ -74,7 +74,7 @@ namespace Compiler
     { TokenType.Remove, @"\bRemove\b" },
     { TokenType.Shuffle, @"\bShuffle\b" },
     { TokenType.Owner, @"\bOwner\b" },
-    {TokenType.Index, @"\bIndex\b"},
+    
 
     { TokenType.NumberType, @"\bNumber\b" },
     { TokenType.StringType, @"\bString\b" },
@@ -124,6 +124,7 @@ namespace Compiler
     {TokenType.LParen, @"\("},
     {TokenType.RParen, @"\)"},
     {TokenType.LBracket, @"\["},
+    {TokenType.Index, @"\["},
     {TokenType.RBracket, @"\]"},
     {TokenType.LCurly, @"\{"},
     {TokenType.RCurly, @"\}"},

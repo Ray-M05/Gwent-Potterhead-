@@ -310,7 +310,7 @@ namespace Compiler
             {
                 Right.Result = Right.Evaluate(scope, set, instance);
                 Left.Result = Left.Evaluate(scope, set, instance);
-                if (Right.Result is List<Card> list)
+                if (Left.Result is List<UnityCard> list)
                 {
                     if ((int)Right.Result < 0 || (int)Right.Result >= list.Count)
                         Errors.List.Add(new CompilingError("Index out of range", new Position()));

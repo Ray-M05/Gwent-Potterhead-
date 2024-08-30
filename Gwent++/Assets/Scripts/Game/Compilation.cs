@@ -47,20 +47,11 @@ public class Compilation : MonoBehaviour
         try
         {
             cardscomp = Compilator.GetCards(FilePath);
-            if (Errors.List.Count > 0)
-            {
-                foreach (var item in Errors.List)
-                {
-                    Console.text += item.ToString() + "\n";
-                }
-                LittleErrors.SetActive(true);
-            }
             if (Errors.List.Count == 0)
             {
                 Console.text = "Compilacion exitosa" + "\n" + "Las cartas compiladas se mostraran de color azul dentro del juego";
                 LittleErrors.SetActive(true);
             }
-            Errors.List.Clear();
             bool b;
             if (Player == 1)
             {
@@ -87,10 +78,16 @@ public class Compilation : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            LittleErrors.SetActive(true);
-            Console.text = e.Message;
+            Debug.Log(e.Message);
         }
-
+        if (Errors.List.Count > 0)
+        {
+            foreach (var item in Errors.List)
+            {
+                Console.text += item.ToString() + "\n";
+            }
+            LittleErrors.SetActive(true);
+        }
 
         Errors.List.Clear();
         Processor.ParamsRequiered.Clear();

@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Xml.Linq;
 using Compiler;
 using LogicalSide;
-using UnityEditor.Build;
 using UnityEngine;
 
 namespace ListExtensions
@@ -67,7 +66,7 @@ namespace ListExtensions
 
         public static void AddCard<T>(this List<T> list, T item)
         {
-            if (AddPosibility != null && (bool)AddPosibility && item is Card Card)
+            if (item is UnityCard Card)
             {
                 GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
                 bool allfine = true;

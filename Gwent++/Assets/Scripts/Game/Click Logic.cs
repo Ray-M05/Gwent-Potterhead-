@@ -126,15 +126,20 @@ public class ClickLogic : MonoBehaviour
 
                 if (!(AssociatedCard.Effects == null || AssociatedCard.Effects.Count == 0))
                 {
-                    //try
-                    //{
+                    try
+                    {
                         AssociatedCard.Execute(efectos);
-                    //}
-                    //catch (System.Exception ex)
-                    //{
-                    //    GM.SendPrincipal("Error en la ejecucion del efecto:");
-                    //    GM.SendPrincipal(ex.Message);
-                    //}
+                    }
+                    catch (System.Exception ex)
+                    {
+                        GM.SendMessage("Error en la ejecucion del efecto:");
+                        GM.SendMessage(ex.Message);
+                    }
+
+                    foreach(CompilingError  error in Errors.List)
+                    {
+                        GM.SendMessage(error.ToString());
+                    }
                 }
                 if(!InARow)
                 GM.Turn = !GM.Turn;

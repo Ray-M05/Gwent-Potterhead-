@@ -40,7 +40,7 @@ namespace Compiler
 
                 // Players
                 TokenType.Owner => ValueType.Player,
-                TokenType.TriggerPlayer => ValueType.CardCollection,
+                TokenType.TriggerPlayer => ValueType.Player,
 
                 // Numbers
                 TokenType.Power => ValueType.Int,

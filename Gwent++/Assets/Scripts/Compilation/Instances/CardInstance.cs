@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System;
 using UnityEngine;
-using UnityEditor.Experimental.Rendering;
 using LogicalSide;
 
 namespace Compiler
@@ -156,7 +155,7 @@ namespace Compiler
 
             if (PostAction != null)
             {
-                if (!(PostAction.CheckSemantic(SemScope) == ValueType.Checked))
+                if (!(PostAction.CheckSemantic(scope) == ValueType.Checked))
                 {
                     Errors.List.Add(new CompilingError("Effect must have a valid post action", new Position()));
                 }
@@ -189,10 +188,12 @@ namespace Compiler
                 Selector.Evaluate(scope, set, instance);
             if (PostAction != null)
             {
-                if (Selector != null)
-                    PostAction.Evaluate(scope, Selector.Source.Result, instance);
-                else
-                    PostAction.Evaluate(scope, null, instance);
+                if (PostAction.Selector != null)
+                    PostAction.Evaluate(scope, Selector, instance);
+                else{
+                    PostAction.Selector = Selector;
+                    PostAction.Evaluate(scope, set, instance);
+                }
             }
             return null;
         }
@@ -207,6 +208,8 @@ namespace Compiler
         public Expression? Source;
         public Expression? Single;
         public Expression? Predicate;
+
+        public Selector Parent;
 
         public override ValueType? CheckSemantic(Scope scope)
         {
@@ -234,18 +237,18 @@ namespace Compiler
         }
 
         readonly Dictionary<string, string> Mapping = new()
-    {
-        {"hand", "Hand"},
-        {"otherhand", "OtherHand"},
-        {"deck", "Deck"},
-        {"otherdeck", "OtherDeck"},
-        {"field", "Field"},
-        {"graveyard", "GraveYard"},
-        {"board", "Board"},
-        {"otherfield", "Otherfield"},
-        {"othergraveyard", "OtherGraveYard"},
-        {"parent","parent"}
-    };
+        {
+            {"hand", "Hand"},
+            {"otherhand", "OtherHand"},
+            {"deck", "Deck"},
+            {"otherdeck", "OtherDeck"},
+            {"field", "Field"},
+            {"graveyard", "GraveYard"},
+            {"board", "Board"},
+            {"otherfield", "Otherfield"},
+            {"othergraveyard", "OtherGraveYard"},
+            {"parent","parent"}
+        };
 
         public override object? Evaluate(Scope scope, object set, object instance = null)
         {
@@ -254,7 +257,10 @@ namespace Compiler
             {
                 if (s == "parent")
                 {
-                    Source.Result = set;
+                    if(set!= null)
+                        Parent = (Selector)set;
+                    else
+                        Errors.List.Add(new CompilingError("Evaluate Error, use of parent source after an Empty Selector, or in a non PostAction Statement", new Position()));
                 }
                 Single!.Result = Single.Evaluate(scope, null!, null!);
             }
@@ -268,9 +274,12 @@ namespace Compiler
         {
             Predicate predicate = (Predicate as Predicate)!;
 
+            List<UnityCard> SourceCards;
             var cont = context.GetType();
-            List<UnityCard> SourceCards = (List<UnityCard>)cont.GetProperty(Mapping[(string)Source.Result!]).GetValue(context);
-
+            if(Parent == null)
+                SourceCards = (List<UnityCard>)cont.GetProperty(Mapping[(string)Source.Result!]).GetValue(context);
+            else
+                SourceCards= Parent.Execute(context);
             List<UnityCard> Targets = new();
 
             foreach (UnityCard card in SourceCards)

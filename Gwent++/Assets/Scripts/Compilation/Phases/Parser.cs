@@ -260,7 +260,7 @@ namespace Compiler
                     Errors.List.Add(new CompilingError("Missing closing parenthesis", tokens[position].PositionError));
                 }
                 position++;
-                return expr;
+                return IncrementsorIndexer(true, true, expr);
             }
             else if (tokens[position].Type == TokenType.Increment || tokens[position].Type == TokenType.Decrement)
             {
@@ -271,7 +271,7 @@ namespace Compiler
                 Token token = tokens[position];
                 position++;
                 Expression expr = ParsePrimaryExpression();
-                return new UnaryExpression(expr, token);
+                return IncrementsorIndexer( true, true, new UnaryExpression(expr, token));
             }
             else if (LookAhead(tokens[position].Type, TokenType.False) || LookAhead(tokens[position].Type, TokenType.True))
             {
@@ -284,7 +284,7 @@ namespace Compiler
                      LookAhead(tokens[position].Type, TokenType.Single) || LookAhead(tokens[position].Type, TokenType.Owner) ||
                      LookAhead(tokens[position].Type, TokenType.Deck) || LookAhead(tokens[position].Type, TokenType.GraveYard) ||
                      LookAhead(tokens[position].Type, TokenType.Field) || LookAhead(tokens[position].Type, TokenType.Board) ||
-                     LookAhead(tokens[position].Type, TokenType.Hand) ||
+                     LookAhead(tokens[position].Type, TokenType.Hand) || LookAhead(tokens[position].Type, TokenType.TriggerPlayer)||
                      //FIXME: id here, there's nothing to fix just remember it
                      LookAhead(tokens[position].Type, TokenType.Id))
             {
@@ -306,7 +306,7 @@ namespace Compiler
                 Token unary = tokens[position];
                 position++;
                 Expression operand = ParsePrimaryExpression();
-                return new UnaryExpression(operand, unary);
+                return IncrementsorIndexer( true, true, new UnaryExpression(operand, unary));
             }
             else if (LookAhead(tokens[position].Type, TokenType.Shuffle) || LookAhead(tokens[position].Type, TokenType.Pop))
             {
@@ -314,7 +314,7 @@ namespace Compiler
                 if (LookAhead(tokens[++position].Type, TokenType.LParen) && LookAhead(tokens[++position].Type, TokenType.RParen))
                 {
                     position++;
-                    return new UnaryExpression(null, token);
+                    return IncrementsorIndexer(true, true, new UnaryExpression(null, token));
                 }
                 else
                     Errors.List.Add(new CompilingError("Invalid Token, Expected a none parameters method sintax", token.PositionError));
@@ -336,7 +336,7 @@ namespace Compiler
                         argument = ParsePredicate(true);
                     if (LookAhead(tokens[position++].Type, TokenType.RParen))
                     {
-                        return new UnaryExpression(argument, token);
+                        return IncrementsorIndexer(true, true, new UnaryExpression(argument, token));
                     }
                 }
             }
