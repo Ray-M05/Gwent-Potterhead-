@@ -9,6 +9,13 @@ using System.Reflection.Emit;
 namespace Compiler
 {
 
+    /// <summary>
+    /// Represents an abstract base class for all expressions in the language.
+    /// Provides a foundation for semantic checks and evaluation of expressions
+    /// within a specific scope. This class must be inherited by concrete 
+    /// expression types that define specific behaviors for semantic analysis 
+    /// and evaluation.
+    /// </summary>
     public abstract class Expression
     {
         public string? printed;
@@ -25,6 +32,11 @@ namespace Compiler
         public abstract ValueType? CheckSemantic(Scope scope);
         public abstract object Evaluate(Scope scope, object set, object instance = null);
     }
+
+    /// <summary>
+    /// Represents a program consisting of a list of instances that can only be cards or effects.
+    /// This class is responsible for evaluating each instance and ensuring semantic correctness.
+    /// </summary>
     public class ProgramExpression : Expression
     {
         public List<Expression> Instances;
@@ -62,6 +74,11 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a binary expression that consists of a left and right operand, and an operator.
+    /// The class provides functionality for semantic checking and evaluation of various binary operations,
+    /// including arithmetic, logical, comparison, and assignment operations.
+    /// </summary>
     public class BinaryExpression : Expression
     {
         public Expression Left { get; set; }
@@ -124,7 +141,7 @@ namespace Compiler
             {
                 if (Left.CheckType != ValueType.CardCollection)
                 {
-                    if (Left.CheckSemantic(scope) == ValueType.CardCollection) //TODO: no se puede preguntar junto r y l?
+                    if (Left.CheckSemantic(scope) == ValueType.CardCollection) 
                     {
                         Left.CheckType = ValueType.CardCollection;
                     }
@@ -340,6 +357,11 @@ namespace Compiler
         }
 
     }
+
+    /// <summary>
+    /// Represents the simplest unit in an abstract syntax tree (AST),
+    /// encapsulating a token that contains a literal value or identifier.
+    /// </summary>
     public class Atom : Expression
     {
         public string? ValueForPrint;
@@ -374,6 +396,12 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a unary expression in the abstract syntax tree (AST).
+    /// A unary expression is an expression that consists of a single operand and an operator.
+    /// This class handles various unary operations such as increment, decrement, logical negation,
+    /// and card-specific operations like Add, Remove, Push, and others.
+    /// </summary>
     public class UnaryExpression : Atom
     {
         public Expression Parameter { get; set; }
@@ -571,6 +599,10 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents an identifier expression in the abstract syntax tree (AST).
+    /// An identifier expression refers to a variable, property, or method by its name.
+    /// </summary>
     public class IdentifierExpression : Atom
     {
         public IdentifierExpression(Token token) : base(token)
@@ -652,7 +684,7 @@ namespace Compiler
     {
         public StringExpression(Token token) : base(token)
         {
-            this.printed = "STRING"; // O alguna otra forma de representar el identificador visualmente
+            this.printed = "STRING"; 
         }
         public override object Evaluate(Scope scope, object set, object instance = null)
         {

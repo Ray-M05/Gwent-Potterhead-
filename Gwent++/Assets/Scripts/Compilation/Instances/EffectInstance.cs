@@ -85,6 +85,10 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a block of instructions, containing a list of expressions.
+    /// The class handles semantic checks and evaluates ensuring all instructions are valid and executed in sequence.
+    /// </summary>
     public class InstructionBlock : Expression
     {
         public List<Expression>? Instructions = new();
@@ -113,6 +117,11 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents an action that consists of targets, context, and a set of instructions.
+    /// This class ensures that the action is semantically correct, properly defines its targets 
+    /// and context, and executes the provided instructions in the given scope.
+    /// </summary>
     public class Action : Expression
     {
         public IdentifierExpression? Targets;
@@ -174,6 +183,11 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a 'for' loop expression, iterating over a collection with a specified variable.
+    /// This class ensures semantic correctness by validating the variable, collection, and instructions.
+    /// It evaluates the loop iterating through each item in the collection.
+    /// </summary>
     public class ForExpression : Expression
     {
         public InstructionBlock? Instructions = new();
@@ -242,6 +256,12 @@ namespace Compiler
             Console.WriteLine(new string(' ', indentLevel * 4) + printed);
         }
     }
+
+    /// <summary>
+    /// Represents a 'while' loop expression, continuously executing a set of instructions 
+    /// as long as a specified condition is met. The class ensures semantic correctness by
+    /// validating the condition and instructions, and then evaluates the loop.
+    /// </summary>
     public class WhileExpression : Expression
     {
         public InstructionBlock? Instructions = new();
@@ -291,6 +311,11 @@ namespace Compiler
         }
     }
 
+
+    /// <summary>
+    /// Interface that defines the structure for an effect in the game. It includes the effect instance,
+    /// parameters, and a selector for determining the targets. The interface provides an `Execute` method.
+    /// </summary>
     public interface IEffect
     {
         EffectInstance effect { get; set; }
@@ -307,6 +332,11 @@ namespace Compiler
             effect.Execute(context, targets, Params);
         }
     }
+
+    /// <summary>
+    /// Represents a specific implementation of the IEffect interface. This class defines an effect
+    /// with a given instance, parameters, and a selector to determine the targets
+    /// </summary
     public class MyEffect : IEffect
     {
         public MyEffect(EffectInstance eff, Selector Sel, List<IdentifierExpression> Par)

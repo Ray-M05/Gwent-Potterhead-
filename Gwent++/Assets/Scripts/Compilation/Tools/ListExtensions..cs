@@ -8,8 +8,14 @@ using UnityEngine;
 
 namespace ListExtensions
 {
+    /// <summary>
+    /// Provides a set of extension methods for the <see cref="List{T}"/> class to support various operations used in the game.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Finds and returns a list of items that satisfy the given predicate within the list.
+        /// </summary>
         public static List<T> Find<T>(this List<T> list, Compiler.Expression pred, Scope Scope)
         {
             if (pred is Predicate predicate)
@@ -27,6 +33,10 @@ namespace ListExtensions
             return null;
         }
 
+
+        /// <summary>
+        /// Shuffles the items in the list using the Fisher-Yates shuffle algorithm, if the list is of a shufflable type.
+        /// </summary>
         public static void Shuffle<T>(this List<T> list)
         {
             if (Id == "Deck" || Id == "OtherDeck" || Id == "GraveYard" || Id == "OtherGraveYard")
@@ -44,6 +54,10 @@ namespace ListExtensions
                 throw new Exception("You are trying to Shuffle a not shuffable list, please read the instructions and check the shuffable lists");
         }
 
+
+        /// <summary>
+        /// Removes and returns the last item from the list.
+        /// </summary>
         public static T Pop<T>(this List<T> list)
         {
             if (list.Count > 0)
@@ -57,6 +71,10 @@ namespace ListExtensions
             return default;
         }
 
+
+        /// <summary>
+        /// Moves the specified item to the bottom of the list.
+        /// </summary>
         public static void SendBottom<T>(this List<T> list, T item)
         {
             list.Add(item);
@@ -64,6 +82,10 @@ namespace ListExtensions
             list.Insert(0, item);
         }
 
+
+        /// <summary>
+        /// Adds a card to the list and handles its placement depending on the list's ID and context.
+        /// </summary>
         public static void AddCard<T>(this List<T> list, T item)
         {
             if (item is UnityCard Card)
@@ -93,9 +115,7 @@ namespace ListExtensions
                     allfine = efectos.AddInField(card, false);
                 }
                 else if (Id == "Board")
-                {//En este caso hay probabilidad de que se juegue a ambos lados, luego hay q sortear, y si el lado 
-                 //elegido al azar no se encuentra disponible, se a�ade al otro lado de ser posible(2 de cada 3 veces se elegir� el lado del propietario)
-
+                {
                     bool[] luck = new bool[3] { card.LocationBoard, card.LocationBoard, !(card.LocationBoard) };
                     System.Random random = new System.Random();
                     bool result = luck[random.Next(luck.Length)];
@@ -128,6 +148,10 @@ namespace ListExtensions
             }
         }
 
+         
+        /// <summary>
+        /// Removes the specified card from the list and marks it for destruction if it is a UnityCard.
+        /// </summary>
         public static void RemoveCard<T>(this List<T> list, T item)
         {
             if(item is UnityCard card)
@@ -145,6 +169,10 @@ namespace ListExtensions
         }
 
         public static bool? PlayerOwner = null;
+
+        /// <summary>
+        /// Updates the owner of the list and the possibility of adding new items.
+        /// </summary>
         public static void UpdateOwner<T>(this List<T> list, bool? newOwner, bool? IstherePosibility)
         {
             PlayerOwner = newOwner; 
@@ -152,6 +180,10 @@ namespace ListExtensions
         }
         public static bool? AddPosibility = null;
         public static string Id = "";
+
+        /// <summary>
+        /// Updates the ID of the list.
+        /// </summary>
         public static void UpdateId<T>(this List<T> list, string newId)
         {
             Id = newId; 

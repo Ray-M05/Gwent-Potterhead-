@@ -6,6 +6,10 @@ namespace Compiler
 {
     public static class Tools
     {
+        /// <summary>
+        /// Provides a dictionary that defines the precedence of different token types.
+        /// This is useful for determining the order of operations in expressions for the AST.
+        /// </summary>
         public static Dictionary <TokenType, int> GetPrecedence = new()
         {
             { TokenType.And, 1 },
@@ -26,6 +30,11 @@ namespace Compiler
             { TokenType.Point, 6 }
         };
 
+        /// <summary>
+        /// Determines the value type associated with a given token type.
+        /// This method is useful for identifying the expected type of a token in expressions.
+        /// </summary>
+        /// <returns>The corresponding value type if recognized; otherwise, null.</returns>
         public static ValueType? GetKeywordType(TokenType token)
         {
             return token switch
@@ -57,7 +66,7 @@ namespace Compiler
 
                 // Booleans
                 TokenType.Not => ValueType.Bool,
-                TokenType.Bool => ValueType.Bool, //arreglar lexer de bool como token
+                TokenType.Bool => ValueType.Bool, 
                 TokenType.Single => ValueType.Bool,
 
                 // List Cards
@@ -86,6 +95,11 @@ namespace Compiler
             };
         }
 
+        /// <summary>
+        /// Determines the value type associated with a given operator token.
+        /// This method is useful for identifying the return type of the left and right of an operation based on its token.
+        /// </summary>
+        /// <returns>The corresponding value type if recognized; otherwise, null.</returns>
         public static ValueType? GetOperatorType(TokenType token)
         {
             return token switch
@@ -109,6 +123,12 @@ namespace Compiler
             };
         }
 
+
+        /// <summary>
+        /// Returns a list of token types that represent possible methods or properties
+        /// available for a given value type. This is useful for method resolution in expressions.
+        /// </summary>
+        /// <returns>A list of token types representing methods or properties for the given value type.</returns>
         public static List<TokenType> GetPossibleMethods(ValueType? value)
         {
             return value switch
@@ -120,6 +140,10 @@ namespace Compiler
             };
         }
 
+        /// <summary>
+        /// Provides a list of variable types that are recognized in the current context.
+        /// This list is used to validate and enforce type consistency during code analysis.
+        /// </summary>
         public static List<ValueType?> VariableTypes = new List<ValueType?>
         {
             ValueType.Int,

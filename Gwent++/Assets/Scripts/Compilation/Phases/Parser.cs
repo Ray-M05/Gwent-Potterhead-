@@ -9,6 +9,9 @@ namespace Compiler
 
     public class Parser
     {
+        /// <summary>
+        /// Determines whether the current token matches the expected token type.
+        /// </summary>
         private bool LookAhead(TokenType token, TokenType token1)
         {
             return token == token1;
@@ -23,7 +26,9 @@ namespace Compiler
         private Dictionary<string, Action<CardInstance, PropertyInfo>> CardParsing;
         private Dictionary<string, Action<EffectInstance, PropertyInfo>> EffectParsing;
 
-
+        /// <summary>
+        /// Initializes the tools and mappings used for parsing cards and effects.
+        /// </summary
         private void InitializeTools()
         {
             Options = new Dictionary<TokenType, Action<object>>
@@ -50,6 +55,9 @@ namespace Compiler
         };
         }
 
+        /// <summary>
+        /// Handles the parsing of card-related tokens and assigns parsed values to a <see cref="CardInstance"/>.
+        /// </summary>
         private void CardTreatment(object program)
         {
             if (program is ProgramExpression p)
@@ -58,6 +66,9 @@ namespace Compiler
             }
         }
 
+        /// <summary>
+        /// Handles the parsing of effect-related tokens and assigns parsed values to an <see cref="EffectInstance"/>.
+        /// </summary>
         private void EffectTreatment(object program)
         {
             if (program is ProgramExpression p)
@@ -66,7 +77,9 @@ namespace Compiler
             }
         }
 
-
+        /// <summary>
+        /// Parses the tokens to create an <see cref="Expression"/> based on the current state of the parser.
+        /// </summary>
         public Parser(List<Token> tokens)
         {
             position = 0;
@@ -81,6 +94,9 @@ namespace Compiler
             return expression;
         }
 
+        /// <summary>
+        /// Parses a general program expression from the list of tokens, processing cards and effects.
+        /// </summary>
         private Expression ParseGeneral()
         {
             ProgramExpression general = new();
@@ -106,7 +122,13 @@ namespace Compiler
             return general;
         }
 
-
+        /// <summary>
+        /// Parses a card definition from the token list and creates a <see cref="CardInstance"/>.
+        /// Uses reflection to set properties of the <see cref="CardInstance"/> based on tokens.
+        /// Each token is matched to a property of the card, and the corresponding parsing method
+        /// is invoked to assign the property's value.
+        /// </summary>
+        /// <returns>A <see cref="CardInstance"/> object with properties set according to the parsed tokens.</returns>
         private CardInstance ParseCard()
         {
             CardInstance card = new();
@@ -135,6 +157,14 @@ namespace Compiler
             return card;
         }
 
+
+        /// <summary>
+        /// Parses an effect definition from the token list and creates a <see cref="EffectInstance"/>.
+        /// Uses reflection to set properties of the <see cref="EffectInstance"/> based on tokens.
+        /// Each token is matched to a property of the effect, and the corresponding parsing method
+        /// is invoked to assign the property's value.
+        /// </summary>
+        /// <returns>A <see cref="EffectInstance"/> object with properties set according to the parsed tokens.</returns>
         private EffectInstance ParseEffect()
         {
             EffectInstance effect = new();
@@ -195,6 +225,17 @@ namespace Compiler
             p.SetValue(effect, ParseAction());
         }
 
+
+        /// <summary>
+        /// Parses an expression from the token list using a precedence-based parsing strategy.
+        /// This method recursively parses primary expressions and constructs a binary expression tree based on operator precedence.
+        /// It starts by parsing the primary expression. Then, it checks for operators with precedence higher than the current parent precedence.
+        /// If an operator is found, it recursively parses the right-hand side of the expression, creating a binary expression node.
+        /// The method continues parsing and constructing the expression tree until it encounters an operator with lower or equal precedence or reaches the end of the tokens.
+        /// The method uses the <see cref="Tools.GetPrecedence"/> dictionary to retrieve operator precedence and ensures correct handling of nested expressions.
+        /// </summary>
+        /// <param name="parentprecedence">The precedence level of the parent expression to ensure correct operator associativity.</param>
+        /// <returns>A binary expression tree representing the parsed expression, or a primary expression if no higher precedence operators are found.</returns>
         public Expression ParseExpression(int parentprecedence = 0)
         {
             var left = ParsePrimaryExpression();
@@ -216,6 +257,12 @@ namespace Compiler
             return left;
         }
 
+        /// <summary>
+        /// Handles increment and index operations on expressions based on the current token.
+        /// If an increment or decrement operator is found, it modifies the token type to represent the operation correctly.
+        /// If an index operation is detected (square brackets), it parses the expression inside the brackets and constructs a binary expression with the index operation.
+        /// If neither operation is found, it returns the original expression without modification.
+        /// </summary>
         private Expression IncrementsorIndexer(bool increment, bool index, Expression returned)
         {
             if (increment && (tokens[position].Type == TokenType.Increment || tokens[position].Type == TokenType.Decrement))
@@ -246,6 +293,12 @@ namespace Compiler
             }
             return returned;
         }
+
+
+        /// <summary>
+        /// Parses a primary expression from the token list, handling various token types and constructs corresponding expression nodes.
+        /// This method identifies and processes different types of tokens, such as literals, identifiers, unary operators, and method calls.
+        /// </summary>
         public Expression ParsePrimaryExpression()
         {
             Expression returned = null;
@@ -344,6 +397,9 @@ namespace Compiler
             return null;
         }
 
+        /// <summary>
+        /// Parses property assignments in the code, handling various assignment operators and ensuring proper syntax.
+        /// </summary>
         private Expression ParsePropertyAssignment()
         {
             Expression left;
@@ -380,6 +436,9 @@ namespace Compiler
             return null;
         }
 
+        /// <summary>
+        /// Parses parameter assignments from effects, handling specific data types and assignment operators.
+        /// </summary>
         private Expression ParseParamAssigment()
         {
             Expression left;
@@ -411,6 +470,9 @@ namespace Compiler
             return null;
         }
 
+        /// <summary>
+        /// Parses instruction assignments, handling assignment operators and ensuring proper syntax.
+        /// </summary>
         private Expression ParseInstructionAssigment()
         {
             Expression left;
@@ -449,6 +511,9 @@ namespace Compiler
             }
         }
 
+        /// <summary>
+        /// Parses a list of range expressions enclosed in brackets. It expects strings within the brackets and handles delimiters like commas and closing brackets.
+        /// </summary>
         public List<Expression> ParseRanges()
         {
             if (LookAhead(tokens[++position].Type, TokenType.Colon) &&
@@ -497,7 +562,9 @@ namespace Compiler
             }
         }
 
-
+        /// <summary>
+        /// Parses an OnActivation block, It collects effects enclosed in curly braces until a closing bracket is encountered.
+        /// </summary>
         private OnActivation ParseOnActivation()
         {
             OnActivation activation = new();
@@ -524,7 +591,9 @@ namespace Compiler
             return activation;
         }
 
-
+        /// <summary>
+        /// Parses a list of parameter assignments, It collects assignments identified by Id tokens and handles delimiters.
+        /// </summary>
         private List<Expression> ParseParams()
         {
             List<Expression> parameters = new();
@@ -557,6 +626,9 @@ namespace Compiler
             return parameters;
         }
 
+        /// <summary>
+        /// Parses a list of effect parameters.
+        /// </summary>
         private List<Expression> ParseEffParams()
         {
             List<Expression> parameters = new();
@@ -595,6 +667,9 @@ namespace Compiler
             return parameters;
         }
 
+        /// <summary>
+        /// Parses an Action declaration, which includes targets, context, and a block of instructions. It expects specific tokens to define the action's structure.
+        /// </summary>
         private Action ParseAction()
         {
             Action Action = new();
@@ -624,6 +699,9 @@ namespace Compiler
             return Action;
         }
 
+        /// <summary>
+        /// Parses an EffectParam object enclosed in curly braces. It handles various types of parameters such as effects, selectors, and post-actions, and checks for proper syntax.
+        /// </summary>
         private EffectParam ParseEffectParam()
         {
             EffectParam effect = new();
@@ -646,7 +724,7 @@ namespace Compiler
                         case TokenType.PostAction:
                             position++;
                             if (LookAhead(tokens[position++].Type, TokenType.Colon))
-                                effect.PostAction = ParseEffectParam();// Manejo para TokenType.RANGE
+                                effect.PostAction = ParseEffectParam();
                             else
                                 Errors.List.Add(new CompilingError("Expected Colon in effect parameter definition", tokens[position].PositionError));
                             break;
@@ -670,7 +748,10 @@ namespace Compiler
             return effect;
         }
 
-
+        /// <summary>
+        /// Parses a block of instructions enclosed in curly braces. It handles various types of instructions and continues until a closing curly brace is found. It can parse multiple instructions or just a single instruction based on the parameter.
+        /// </summary>
+        /// <param name="single">Whether to parse a single instruction block or multiple instructions.</param>
         private InstructionBlock ParseInstructionBlock(bool single = false)
         {
             InstructionBlock block = new();
@@ -701,6 +782,9 @@ namespace Compiler
             return block;
         }
 
+        /// <summary>
+        /// Parses a Selector object enclosed in curly braces. It processes tokens for source, single, and predicate properties, handling errors for invalid tokens.
+        /// </summary>
         private Selector ParseSelector()
         {
             Selector selector = new();
@@ -749,6 +833,9 @@ namespace Compiler
             return selector;
         }
 
+        /// <summary>
+        /// Parses a Predicate object, which includes a unit identifier and a condition expression. It optionally checks for additional tokens based on the context.
+        /// </summary>
         public Predicate ParsePredicate(bool frommethod = false)
         {
             
@@ -774,7 +861,9 @@ namespace Compiler
             return null;
         }
 
-
+        /// <summary>
+        /// Parses a ForExpression object that includes a variable identifier, a collection expression, and a block of instructions. It handles syntax for For expressions and errors for invalid tokens.
+        /// </summary>
         private ForExpression ParseFor()
         {
             ForExpression ForExp = new();
@@ -808,6 +897,10 @@ namespace Compiler
                 Errors.List.Add(new CompilingError("Invalid for declaration statement", tokens[position].PositionError));
             return ForExp;
         }
+
+        /// <summary>
+        /// Parses a WhileExpression object, which includes a condition expression and a block of instructions. It handles syntax for While expressions and errors for invalid tokens.
+        /// </summary
         private WhileExpression ParseWhile()
         {
             WhileExpression WhileExp = new();

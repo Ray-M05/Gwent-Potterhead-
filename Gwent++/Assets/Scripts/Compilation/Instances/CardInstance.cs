@@ -6,6 +6,9 @@ using LogicalSide;
 
 namespace Compiler
 {
+    /// <summary>
+    /// Represents an instance of a card in the compilation iteration.
+    /// </summary>
     public class CardInstance : Expression
     {
 
@@ -97,6 +100,9 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Defines the effects that are triggered when a card is activated
+    /// </summary>
     public class OnActivation : Expression
     {
         public List<EffectParam>? Effects = new();
@@ -128,6 +134,12 @@ namespace Compiler
             Console.WriteLine(new string(' ', indentLevel * 4) + printed);
         }
     }
+
+    /// <summary>
+    /// Represents a parameterized effect in the game, which can be applied during 
+    /// card activation. This class includes effect expressions, selectors, and 
+    /// post-action effects
+    /// </summary
     public class EffectParam : Expression
     {
         public List<Expression>? Effect = new();
@@ -203,6 +215,12 @@ namespace Compiler
             Console.WriteLine(new string(' ', indentLevel * 4) + printed);
         }
     }
+
+    /// <summary>
+    /// Handles the selection of cards or elements based on specific criteria, such as 
+    /// source, single selection, and predicates. It supports nested selections and can 
+    /// execute in a deck context to return selected cards.
+    /// </summary>
     public class Selector : Expression
     {
         public Expression? Source;
@@ -300,6 +318,10 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a predicate used in the selection or filtering of elements, evaluating 
+    /// conditions against a unit to determine if they meet the specified criteria.
+    /// </summary>
     public class Predicate : Expression
     {
         public IdentifierExpression? Unit;
@@ -341,6 +363,9 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Serves as the base class for a card in the game.
+    /// </summary>
     public abstract class Card: ScriptableObject
     {
         public abstract string Name { get; set; }
@@ -361,6 +386,9 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a specific type of card in the game, inheriting from the base `Card` class. .
+    /// </summary>
     public class CompilerCard : Card
     {
         public override string Name { get; set; }
@@ -404,11 +432,20 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Represents a player in the game, tracking whether it is currently their turn.
+    /// </summary>
     public class Player
     {
         public bool Turn { get; set; }
     }
 
+    /// <summary>
+    /// Defines a context for managing card decks, fields, hands, and graveyards in the game.
+    /// Provides methods to access the current state of decks, fields, hands, and graveyards
+    /// for both the active player and the opponent. It also tracks the player who triggered
+    /// the current game action.
+    /// </summary>
     public interface IDeckContext
     {
         bool Turn { get; }
