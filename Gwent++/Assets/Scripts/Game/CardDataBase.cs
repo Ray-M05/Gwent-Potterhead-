@@ -86,7 +86,6 @@ namespace LogicalSide
                 P.Stealer = true;
             }
 
-            //Barajear la lista sin mover el cero
             int conta = 24;
             if(P.Cards!=null)
             foreach (var card in P.Cards)

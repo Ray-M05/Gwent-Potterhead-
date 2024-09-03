@@ -6,6 +6,11 @@ using Compiler;
 using UnityEngine;
 using Unity.VisualScripting;
 
+
+/// <summary>
+/// The Compilation class manages the process of compiling cards from a file, updating paths,
+/// and handling user interactions related to compilation in a Unity environment.
+/// </summary>
 public class Compilation : MonoBehaviour
 {
     public GameObject LittleErrors;
@@ -21,7 +26,9 @@ public class Compilation : MonoBehaviour
         Data.Compi = this;
     }
 
-
+    /// <summary>
+    /// Updates the FilePath based on the user input from a TMP_InputField UI element.
+    /// </summary>
     public void PathUpdate(GameObject s)
     {
         FilePath = s.GetComponent<TMPro.TMP_InputField>().text;
@@ -34,11 +41,16 @@ public class Compilation : MonoBehaviour
     }
 
     public int Player;
-
+    
     public void SetPlayer(int player)
     {
         Player = player;
     }
+
+    /// <summary>
+    /// Initiates the card compilation process, reading from the specified file path, and generates UnityCard objects.
+    /// Displays compilation results and error messages in the console.
+    /// </summary>
     public void CompilerPortal()
     {
         List<UnityCard> cards = new List<UnityCard>();
@@ -94,6 +106,15 @@ public class Compilation : MonoBehaviour
         Processor.Effects.Clear();
     }
 
+
+    /// <summary>
+    /// Generates a `UnityCard` object based on the provided `Card` data.
+    /// This method determines the card's type, effects, image, range, and power,
+    /// and assigns the corresponding properties to the `UnityCard` instance.
+    /// </summary>
+    /// <param name="card">The `Card` object containing the data to be converted into a `UnityCard`.</param>
+    /// <param name="DownBoard">A boolean indicating whether the card belongs to Player 1 (true) or Player 2 (false).</param>
+    /// <returns>A `UnityCard` object representing the card in the Unity environment.</returns>
     private UnityCard GenerateCard(Card card, bool DownBoard)
     {
         KindofCard unit = KindofCard.None;
@@ -183,8 +204,11 @@ public class Compilation : MonoBehaviour
             }
         }
 
+        // Create a new UnityCard instance with the compiled data.
         UnityCard UnityCard = new(DownBoard, card.Name, card.Type, card.Power, null, unit, Type, eff, range, Resources.Load<Sprite>(image), $"Carta de tipo {card.Type} Compilada" + "\n" +
             $@"Nombre {card.Name}"+ "\n"+ $@"Faccion {card.Faction}" + "\n"+ $@"Efectos {s}");
+
+        // Assign additional properties and finalize the UnityCard.
         UnityCard.Effects= card.Effects;
         UnityCard.OnConstruction = true;
         UnityCard.Faction= card.Faction;
