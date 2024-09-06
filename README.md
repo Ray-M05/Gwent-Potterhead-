@@ -64,14 +64,14 @@ En esta actualización del proyecto, se han añadido nuevas funcionalidades que 
 
 El proyecto de compilación se centra en el desarrollo de un compilador robusto que procesa código fuente en varias fases, desde el análisis léxico hasta la evaluación final del código. A lo largo del proceso, el compilador convierte secuencias de tokens en una representación ejecutable, manejando estructuras complejas mediante un Árbol de Sintaxis Abstracta (AST).
 
-## Fases del Proceso de Compilación
+### Fases del Proceso de Compilación
 
-### 1. Análisis Léxico
+#### 1. Análisis Léxico
 - **Objetivo**: Convertir el código fuente en una secuencia de tokens.
 - **Proceso**: El lexer escanea el texto de entrada y lo divide en tokens, que son las unidades básicas de significado como palabras clave, operadores y literales.
 - **Clases Involucradas**: La clase `Token` es fundamental, encapsulando el tipo y valor de cada token.
 
-### 2. Análisis Sintáctico
+#### 2. Análisis Sintáctico
 - **Objetivo**: Convertir la secuencia de tokens en una estructura de árbol (AST).
 - **Proceso**: El parser analiza la gramática del código, organizando los tokens en una jerarquía que representa la estructura lógica del programa.
 - **Algunas Estructuras Involucradas**: 
@@ -79,49 +79,49 @@ El proyecto de compilación se centra en el desarrollo de un compilador robusto 
   - **Expression**: Base para distintas expresiones dentro del AST.
   - **InstructionBlock**: Agrupa y organiza las instrucciones que se ejecutarán secuencialmente.
 
-### 3. Análisis Semántico
+#### 3. Análisis Semántico
 - **Objetivo**: Validar la lógica y coherencia del código.
 - **Proceso**: Durante esta fase, el compilador verifica que las variables y funciones estén correctamente definidas y que las operaciones sean válidas. 
 - **Errores**: Se manejan mediante la clase `CompilingError`, que recopila y reporta los errores semánticos.
 
-### 4. Evaluación y Ejecución
+#### 4. Evaluación y Ejecución
 - **Objetivo**: Evaluar y ejecutar el código representado por el AST.
 - **Proceso**: En esta fase, las expresiones y estructuras del AST son evaluadas y ejecutadas en el orden correcto. La fase de evaluación asegura que los efectos y acciones se lleven a cabo según lo definido en el código.
 - **Algunas Clases Involucradas**: 
   - **ForExpression**, **WhileExpression**: Encapsulan los bucles y sus evaluaciones.
   - **Selector**, **Predicate**: Manejan la lógica condicional y la selección de objetos en base a criterios definidos.
 
-## Estructura de Datos y Métodos Clave
+### Estructura de Datos y Métodos Clave
 
-### Árbol de Sintaxis Abstracta (AST)
+#### Árbol de Sintaxis Abstracta (AST)
 - **Función**: El AST organiza el código en una estructura jerárquica que refleja la lógica del programa.
 - **Componentes**: 
   - **Nodos Hoja**: Representan los tokens básicos (e.g., literales, identificadores).
   - **Nodos Internos**: Representan estructuras más complejas (e.g., cartas, efectos, bloques de instrucciones, bucles).
 
-### Clases que Heredan de `Expression`
+#### Clases que Heredan de `Expression`
 Las clases que heredan de `Expression` representan diferentes tipos de nodos en el AST, cada uno encapsulando una parte específica del lenguaje:
 - **`BinaryExpression`**: Representa operaciones binarias como suma, resta, asignaciones, etc.
 - **`UnaryExpression`**: Representa operaciones unarias, como la negación lógica o aritmética.
 - **`LiteralExpression`**: Encapsula valores literales como números, cadenas, o booleanos.
 
-### Clase `Carta`
+#### Clase `Carta`
 La clase `Carta` es fundamental en la representación de entidades del juego. Cada instancia de `Carta` debe tener propiedades y comportamientos específicos que son evaluados y ejecutados por el compilador. 
 
-### Clase `Efecto`
+#### Clase `Efecto`
 `Efecto` representa las acciones que una carta puede desencadenar. Esta clase permite definir y ejecutar efectos que pueden afectar el estado del juego o modificar otras cartas. `Efecto` se asocia con `OnActivation` y otras fases del ciclo de vida de una carta, ejecutando las instrucciones definidas.
 
-### Integración de Cartas en Unity
-1.**Identificación del Tipo de Carta**:
-   - El tipo de la carta (`Type`) se utiliza para determinar las características de la carta, como su imagen, efectos y unidad asociada.
-   - Por ejemplo, una carta del tipo "Clima" tendrá un efecto de `Weather` y utilizará una imagen específica asignada a cartas climáticas.
+#### Integración de Cartas en Unity
+**Identificación del Tipo de Carta**:
+- El tipo de la carta (`Type`) se utiliza para determinar las características de la carta, como su imagen, efectos y unidad asociada.
+- Por ejemplo, una carta del tipo "Clima" tendrá un efecto de `Weather` y utilizará una imagen específica asignada a cartas climáticas.
 
-2. **Verificación de Rango y Poder**:
-   - Se realizan validaciones para asegurarse de que las cartas tienen rangos y poderes adecuados según su tipo.
-   - Cartas especiales como "Lider" o "Clima" no deben tener poder asignado, mientras que las unidades deben tener un rango válido.
+**Verificación de Rango y Poder**:
+- Se realizan validaciones para asegurarse de que las cartas tienen rangos y poderes adecuados según su tipo.
+- Cartas especiales como "Lider" o "Clima" no deben tener poder asignado, mientras que las unidades deben tener un rango válido.
 
-3. **Asignación de Efectos**:
-   - Si la carta tiene efectos asociados, estos se agregan al objeto `UnityCard`. Los efectos se describen en un resumen que se almacena como parte de la descripción de la carta.
+**Asignación de Efectos**:
+- Si la carta tiene efectos asociados, estos se agregan al objeto `UnityCard`. Los efectos se describen en un resumen que se almacena como parte de la descripción de la carta.
 
-4. **Creación del Objeto `UnityCard`**:
-   - Finalmente, se crea un nuevo objeto `UnityCard` utilizando los datos procesados. Este objeto incluye todas las propiedades de la carta, como nombre, tipo, facción, efectos y otros atributos visuales y funcionales.
+**Creación del Objeto `UnityCard`**:
+- Finalmente, se crea un nuevo objeto `UnityCard` utilizando los datos procesados. Este objeto incluye todas las propiedades de la carta, como nombre, tipo, facción, efectos y otros atributos visuales y funcionales.
