@@ -8,6 +8,10 @@ using UnityEngine.UI;
 
 namespace LogicalSide
 {
+    /// <summary>
+    /// This class is responsible for displaying a UnityCard's information in the UI, including its power, artwork, and description.
+    /// It also handles leader card interactions, allowing the player to activate leader abilities when clicked.
+    /// </summary>
     public class CardDisplay : MonoBehaviour
     {
         public UnityCard cardTemplate;
@@ -43,7 +47,10 @@ namespace LogicalSide
         }
 
 
-
+        /// <summary>
+        /// Method to handle when the leader card is clicked by the player.
+        /// It checks if the card is a leader, if it belongs to the current turn, and if the leader's ability hasn't already been used.
+        /// </summary>
         public void LeaderClicked()
         {
             GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();

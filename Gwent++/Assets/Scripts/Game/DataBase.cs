@@ -4,14 +4,20 @@ using UnityEngine;
 
 namespace LogicalSide 
 { 
+    /// <summary>
+    /// It creates a deck based on the player's faction, with predefined cards for Gryffindor and Slytherin.
+    /// The class also replaces some of the default cards with those that the player compiled in case he did it.
+    /// </summary>
     public class CardDataBase: MonoBehaviour
     {
         public static List<UnityCard> GetDeck(Player P)
         {
             List<UnityCard> Deck = new();
+            // Check if the player's faction is Gryffindor (represented by faction value 1)
             if (P.faction == 1)
             {
                 #region Gryffindor
+                // Add predefined cards for the Gryffindor faction to the deck
                 Deck.Add(new UnityCard(P.P, "Harry Potter", "Lider", 0, P, KindofCard.None, "L", Effect.None, "", Resources.Load<Sprite>("harrypotter"), "Ganar en caso de empate"));
                 Deck.Add(new UnityCard(P.P, "Minerva", "Oro", 9, P, KindofCard.Golden, "U", Effect.None, "MRS", Resources.Load<Sprite>("minerva"), "No es afectada por ninguna habilidad especial"));
                 Deck.Add(new UnityCard(P.P, "Dumbledore","Oro", 8, P, KindofCard.Golden, "U", Effect.None, "MRS", Resources.Load<Sprite>("dumbledore"), "No es afectada por ninguna habilidad especial"));
@@ -39,14 +45,17 @@ namespace LogicalSide
                 Deck.Add(new UnityCard(P.P, "Sr Nicholas", "Señuelo", 0, P, KindofCard.None, "D", Effect.Decoy, "MRS", Resources.Load<Sprite>("srnicolas"), "Coloca una carta con poder 0 en el lugar de la cseleccionada y regresa a la mano"));
 
                 #endregion
+                // Set Faction for all cards in the deck and mark as constructed because is a ReadOnly property
                 foreach (var card in Deck)
                 {
                     card.OnConstruction = true;
                     card.Faction = "Gryffindor";
                     card.OnConstruction = false;
                 }
+                //Effect of the leader
                 P.AlwaysAWinner = true;
             }
+            // Check if the player's faction is Slytherin (represented by faction value 2)
             else if(P.faction==2)
             {
                 #region Slytherin
@@ -77,15 +86,18 @@ namespace LogicalSide
                 Deck.Add(new UnityCard(P.P, "Sr Nicholas", "Señuelo",0, P, KindofCard.None, "D", Effect.Decoy, "MRS", Resources.Load<Sprite>("srnicolas"), "Coloca una carta con poder 0 en el lugar de la seleccionada y regresa a la mano"));
 
                 #endregion
+                // Set Faction for all cards in the deck and mark as constructed because is a ReadOnly property
                 foreach (var card in Deck)
                 {
                     card.OnConstruction = true;
                     card.Faction = "Slytherin";
                     card.OnConstruction = false;
                 }
+                //Effect of the leader
                 P.Stealer = true;
             }
 
+            //replaces some cards with custom ones from the player's list (P.Cards), ensuring leader cards are placed in the first position.
             int conta = 24;
             if(P.Cards!=null)
             foreach (var card in P.Cards)

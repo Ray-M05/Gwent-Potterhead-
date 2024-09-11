@@ -17,6 +17,9 @@ namespace LogicalSide
         public bool Turn{ get; set; }
         public bool DecksInverted = false;
 
+        /// <summary>
+        /// Gets the deck of the triggering player. Resets the `DecksInverted` flag to ensure the deck is retrieved in the correct order.
+        /// </summary>
         public List<UnityCard> Deck 
         {
             get
@@ -25,6 +28,9 @@ namespace LogicalSide
                 return DeckOfPlayer(TriggerPlayer);
             }
         }
+        /// <summary>
+        /// Gets the deck of the opponent
+        /// </summary>
         public List<UnityCard> OtherDeck 
         {
             get
@@ -35,6 +41,11 @@ namespace LogicalSide
                 return l;
             }
         }
+
+        /// <summary>
+        /// Retrieves the deck of a specified player, determining which deck (player's or opponent's) to fetch based on the `Turn` and `DecksInverted` flags. 
+        /// Updates the deck owner and ID based on whether it is the player's or opponent's turn.
+        /// </summary>
         public List<UnityCard> DeckOfPlayer(Compiler.Player player)
         {
             PlayerDeck deck;
@@ -53,7 +64,9 @@ namespace LogicalSide
             return deck.deck;
         }
 
-
+        /// <summary>
+        /// Retrieves the graveyard by temporarily inverting the `DecksInverted` flag.
+        /// </summary>
         public List<UnityCard> GraveYard 
         {
             get
@@ -62,6 +75,10 @@ namespace LogicalSide
                 return GraveYardOfPlayer(TriggerPlayer);
             }
         }
+
+        /// <summary>
+        /// Retrieves the opponent's graveyard by temporarily inverting the `DecksInverted` flag.
+        /// </summary>
         public List<UnityCard> OtherGraveYard 
         {
             get
@@ -73,6 +90,10 @@ namespace LogicalSide
             }
         }
 
+        /// <summary>
+        /// Retrieves the graveyard of the specified player. Uses the player's turn and `DecksInverted` status to determine which graveyard (player's or opponent's) to access.
+        /// Updates the graveyard's owner and ID accordingly.
+        /// </summary>
         public List<UnityCard> GraveYardOfPlayer(Compiler.Player player)
         {
             PlayerDeck deck;
@@ -92,6 +113,10 @@ namespace LogicalSide
             return deck.cement;
         }
 
+
+        /// <summary>
+        /// Retrieves the field of the triggering player. Ensures `DecksInverted` is reset before fetching the correct field data.
+        /// </summary
         public List<UnityCard> Field 
         {
             get
@@ -100,6 +125,10 @@ namespace LogicalSide
                 return FieldOfPlayer(TriggerPlayer);
             }
         }
+
+        /// <summary>
+        /// Temporarily inverts the `DecksInverted` flag to access the opponent's field, ensuring the proper field is retrieved.
+        /// </summary>
         public List<UnityCard> OtherField 
         {
             get
@@ -110,6 +139,11 @@ namespace LogicalSide
                 return l;
             }
         }
+
+        /// <summary>
+        /// Retrieves the field for the specified player, dynamically fetching cards from the correct part of the game board based on whether it's the player's or opponent's turn.
+        /// The field's owner and ID are also updated accordingly.
+        /// </summary>
         public List<UnityCard> FieldOfPlayer(Compiler.Player player)
         {
             List<UnityCard> l= new();
@@ -138,7 +172,9 @@ namespace LogicalSide
             return l;
         }
 
-
+        /// <summary>
+        /// Gets the hand of the triggering player by resetting the `DecksInverted` flag and returning the correct hand.
+        /// </summary>
         public List<UnityCard> Hand 
         {
             get
@@ -147,6 +183,10 @@ namespace LogicalSide
                 return HandOfPlayer(TriggerPlayer);
             }
         }
+
+        /// <summary>
+        /// Gets the hand of the opponent by temporarily inverting the `DecksInverted` flag and returning the correct hand.
+        ///  </summary>
         public List<UnityCard> OtherHand 
         {
             get
@@ -158,7 +198,9 @@ namespace LogicalSide
             }
         }
 
-
+        /// <summary>
+        /// Retrieves the hand for the specified player, determining whether it's the player's or opponent's hand based on the player's turn and `DecksInverted` flag.
+        /// </summary>
         public List<UnityCard> HandOfPlayer(Compiler.Player player)
         {
             GameObject Hand;
@@ -184,6 +226,10 @@ namespace LogicalSide
             }
             return l;
         }
+
+        /// <summary>
+        /// Retrieves all the cards currently on the board. Does not differentiate between players; retrieves all cards from all zones on the board.
+        /// </summary>
         public List<UnityCard> Board 
         {
             get
@@ -204,6 +250,10 @@ namespace LogicalSide
                 return l;
             }
         }
+
+        /// <summary>
+        /// Determines the player whose turn it is, retrieving the appropriate player from the `GameManager`.
+        /// </summary>
         public Compiler.Player TriggerPlayer 
         {
             get
@@ -213,14 +263,17 @@ namespace LogicalSide
             }
         }
 
+        /// <summary>
+        /// Adds a specified card to the field for the given side (player or opponent). Handles special cases for different card types. Ensures the card is placed in a valid location based on game rules.
+        /// </summary>
         public bool AddInField(UnityCard card, bool side)
-        {//Este m�todo se encarga de setear la instancia de la carta, de forma que se pueda reutilizar el metodo EndDrag asociado al prefab de la carta.
+        {
             PlayerDeck Deck = Decking(side);
             GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
             List<GameObject> Targets = new List<GameObject>();
             GameObject Target= null;
             System.Random random = new System.Random();
-            //A�adiendo un clima
+            //weather
             if (card.TypeOfCard == "C")
             {
                 if (C.transform.childCount <= 2 || card.SuperPower == Effect.Cleaner)
@@ -232,11 +285,11 @@ namespace LogicalSide
                 }
                 else
                 {
-                    GM.SendMessage("En ejecuci�n has tratado de agregar un clima al campo, pero ya exist�an 3");
+                    GM.SendMessage("En ejecucion has tratado de agregar un clima al campo, pero ya exist�an 3");
                 }
             }
 
-            //A�adiendo un aumento
+            //Raise
             if (card.TypeOfCard.IndexOf("A") != -1)
             {
                 if (RangeMap.ContainsKey((side, card.TypeOfCard)))
@@ -273,7 +326,7 @@ namespace LogicalSide
                             Targets.Add(zone);
                     }
                     else
-                        throw new Exception("Problemas a�adiendo una carta de unidad no justificados");
+                        throw new Exception("Problemas anadiendo una carta de unidad no justificados");
                 }
                 if (Targets.Count > 0)
                 {
@@ -315,6 +368,7 @@ namespace LogicalSide
         public List<GameObject> BoardOfGameObject;
         private void Start()
         {
+            // GameObject references for player zones and central zone
             BoardOfGameObject = new List<GameObject>()
             {
                 P1M,
@@ -332,6 +386,7 @@ namespace LogicalSide
                 C,
             };
 
+            // Mapping zones by player and zone type
             RaiseMap = new Dictionary<(bool, string), GameObject>
             {
                 [(true, "S")] = P1AS,
@@ -356,7 +411,9 @@ namespace LogicalSide
                 [(false, "AR")] = P2AR,
                 [(false, "AM")] = P2AM,
             };
-            ListEffects = new Dictionary<Effect, Action<UnityCard>>()
+
+        // Dictionary to map effects enums to the corresponding actions
+        ListEffects = new Dictionary<Effect, Action<UnityCard>>()
         {
             {Effect.Weather, Weather },
             {Effect.Raise, Raise },
@@ -402,7 +459,7 @@ namespace LogicalSide
             
         }
         public void Decoy(UnityCard card)
-        {//Este efecto realmente establece las dropzones
+        {
             if(card.SuperPower == Effect.Weather)
             {
                 GameObject C = RangeMap[(card.LocationBoard, card.CurrentPlace)];
@@ -583,7 +640,7 @@ namespace LogicalSide
             card.Power += increase;
         }
         public void ZoneCleanerMax(UnityCard card)
-        {//Este efecto es la misma idea del expuesto en el pdf, solo me parecio mejor eliminar la zona mas poblada, en caso de que quieran probar su funcionamiento para el otro caso basta cambiar el signo > por <
+        {
             GameObject Me;
             int childs = 0;
             GameObject Target = null;
@@ -677,6 +734,9 @@ namespace LogicalSide
             }
         }
 
+        /// <summary>
+        /// Restarts the card's attributes to their original values and moves it to the appropriate hand if necessary.
+        /// </summary>
         public void RestartCard(GameObject Card, GameObject Place, bool home)
         {
             UnityCard card = Card.GetComponent<CardDisplay>().cardTemplate;
@@ -692,6 +752,10 @@ namespace LogicalSide
                 Card.transform.SetParent(Hand.transform, false);
             }
         }
+
+        /// <summary>
+        /// Returns the appropriate deck based on the player.
+        /// </summary>
         public PlayerDeck Decking(bool Location)
         {
             if (Location)
@@ -699,12 +763,20 @@ namespace LogicalSide
             else
                 return GameObject.Find("DeckEnemy").GetComponent<PlayerDeck>();
         }
+
+        /// <summary>
+        /// Resets a card's power and current place to its original state.
+        /// </summary>
         public void Restart(UnityCard card)
         {
             card.Power = 0;
             card.CurrentPlace = "";
             card.Power = card.OriginalPoints;
         }
+
+        /// <summary>
+        /// Moves all cards from the board to the players' graveyards and resets game zones.
+        /// </summary>
         public void ToCementery()
         {
             PlayerDeck DeckP = GameObject.Find("Deck").GetComponent<PlayerDeck>();
@@ -758,7 +830,6 @@ namespace LogicalSide
             }
             foreach (UnityCard disp in Permanents)
             {
-                //Primero verifico que en el otro terreno no haya quedado en juego un clima casualmente
                 int increase = 0;
                 disp.Power= disp.OriginalPoints;
                 GameObject C = RangeMap[(disp.LocationBoard, disp.CurrentPlace)];
@@ -770,44 +841,5 @@ namespace LogicalSide
             }
         }
         
-        public bool RandomizedRem(Player Player)
-        {
-            int cant = 0;
-            UnityCard dispvar;
-            System.Random r= new();
-            foreach (GameObject Gamezone in RangeMap.Values)
-            {
-                for (int i = 0; i < Gamezone.transform.childCount; i++)
-                {
-                    dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                    if (dispvar != null && (dispvar.TypeOfCard == "U"|| dispvar.TypeOfCard== "D" )&& dispvar.Owner== Player)
-                    {
-                        cant++;
-                    }
-                }
-            }
-            if (cant > 0)
-            {
-                int cant2 = r.Next(1, cant);
-                cant = 1;
-                foreach (GameObject Gamezone in RangeMap.Values)
-                {
-                    for (int i = 0; i < Gamezone.transform.childCount; i++)
-                    {
-                        dispvar = Gamezone.transform.GetChild(i).gameObject.GetComponent<CardDisplay>().cardTemplate;
-                        if (dispvar != null && (dispvar.TypeOfCard == "U" || dispvar.TypeOfCard == "D") && dispvar.Owner == Player)
-                        {
-                            if (cant2 == cant)
-                            {
-                                return true;
-                            }
-                            else
-                                cant++;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
     }
 }

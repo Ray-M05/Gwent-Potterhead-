@@ -25,11 +25,23 @@ public class PlayerDeck : MonoBehaviour
     {
         cement= new();
     }
+
+    /// <summary>
+    /// Sets the sprite of the card back image.
+    /// </summary>
     public void SetSprite(Sprite sprite)
     {
         gameObject.GetComponent<Image>().sprite=  sprite;
     }
 
+
+        /// <summary>
+    /// Instantiates a card object from a prefab, associates it with a UnityCard object, and places it in a specified zone.
+    /// </summary>
+    /// <param name="card">The UnityCard object to represent.</param>
+    /// <param name="zone">The transform of the zone where the card will be placed.</param>
+    /// <param name="prefab">The prefab to instantiate the card from.</param>
+    /// <returns>The instantiated card GameObject.</returns>
     public GameObject GetInstance(UnityCard card, Transform zone, GameObject prefab)
     {
             GameObject instanciaCarta = Instantiate(prefab, zone);
@@ -45,6 +57,11 @@ public class PlayerDeck : MonoBehaviour
             }
             return instanciaCarta;
     }
+
+    /// <summary>
+    /// Draws and places the last card from the deck into the player's hand. 
+    /// </summary>
+    /// <param name="n">The number of cards to draw.</param>
     public void GetLastInstance( int n, bool exception)
     {
         if (deck.Count > 0 && n>0)
@@ -70,15 +87,24 @@ public class PlayerDeck : MonoBehaviour
                 deck.Remove(card);
                 cement.Add(card);
             }
+            // Recursively call to draw multiple cards
             GetLastInstance(n - 1, exception);
         }
     }
+
+    /// <summary>
+    /// Adds a card to the player's graveyard (cement).
+    /// </summary>
     public void AddToGraveYard(UnityCard card)
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
         gameObject.transform.GetChild(0).GetComponent<Image>().sprite= gameObject.GetComponent<Image>().sprite;
         cement.Add(card);
     }
+
+    /// <summary>
+    /// Retrieves a card from the graveyard.
+    /// </summary>
     public void GetFromGraveYard()
     {
         if (cement.Count > 0)
@@ -88,11 +114,22 @@ public class PlayerDeck : MonoBehaviour
         if(cement.Count==0)
             gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
+
+    /// <summary>
+    /// Handles the event of clicking the deck to draw a card.
+    /// </summary>
     public void OnClick()
     {
         if(deck.Count > 0)
         GetLastInstance(1,false);
     }
+
+    /// <summary>
+    /// Shuffles the deck and places a specified number of cards from the compilation on top.
+    /// Also instantiates a leader card.
+    /// </summary>
+    /// <param name="deck">The deck to shuffle.</param>
+    /// <param name="compiler">The number of cards from the compilation to remain on top.</param>
     public void ShuffleCompilationOnTop(List<UnityCard> deck, int compiler=0)
     {
         System.Random random = new System.Random();

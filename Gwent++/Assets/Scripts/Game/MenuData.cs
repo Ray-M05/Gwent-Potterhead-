@@ -8,6 +8,9 @@ using LogicalSide;
 using TMPro;
 using Unity.VisualScripting;
 
+/// <summary>
+/// The MenuGM class handles the game menu operations, including volume adjustments, panel transitions, and user interactions.
+/// </summary>
 public class MenuGM : MonoBehaviour
 {
     [Header("Options")]

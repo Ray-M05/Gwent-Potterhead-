@@ -1,4 +1,5 @@
 # Gwent: Potterhead Edition
+Autora: Rachel Mojena González
 
 En **Gwent: Potterhead Edition**, los jugadores se adentran en una intensa confrontación por el dominio de Hogwarts, la prestigiosa escuela de magia y hechicería. Este juego coloca a los participantes en el rol de líderes emblemáticos de dos de las casas más influyentes de Hogwarts: **Gryffindor** y **Slytherin**.
 
@@ -54,7 +55,7 @@ En esta actualización del proyecto, se han añadido nuevas funcionalidades que 
 
 - **Interactividad Mejorada**: Se ha implementado un botón dentro del juego (donde se eligen los mazos) que abre una ventana donde puede colocar la ruta de un archivo txt en un Lenguaje de Propósito Específico (DSL). Este DSL es procesado por un compilador personalizado. Esta nueva función permite a los jugadores añadir cartas y efectos directamente a los mazos, ampliando la experiencia de juego de manera dinámica.
 
-- **Proceso de Compilación**: El compilador que se ha implementado lleva a cabo un proceso completo que incluye las fases de **lexer**, **parser**, **semantic check**, **evaluate** y **execute**. Este proceso garantiza que las cartas y efectos se manejen de manera eficiente y se integren correctamente en el sistema del juego.
+- **Proceso de Compilación**: El compilador que se ha implementado lleva a cabo un proceso completo que incluye las fases de **lexer**, **parser**, **semantic check**, **evaluate** y **execute**. Este proceso garantiza que las cartas y efectos se manejen de manera eficiente y se integren correctamente en el sistema del juego(El proceso de compilacion se llevo en otro repositorio en consola que posee mas commits).
 
 - **Integración con Unity**: Se ha logrado vincular este sistema con Unity de manera exitosa, permitiendo que el juego utilice los mazos personalizados y que las cartas y efectos se integren perfectamente en el entorno de desarrollo de Unity.
 

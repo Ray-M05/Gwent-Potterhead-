@@ -29,8 +29,14 @@ public class ClickLogic : MonoBehaviour
         ZoneDescription = GameObject.Find("ZoneDescription").GetComponent<TextMeshProUGUI>();
         pointer = GameObject.Find("GameManager").GetComponent<PointerData>();
     }
+
+    /// <summary>
+    /// This method initializes the card with gameplay information, such as which side (player) it belongs to and its initial zone.
+    /// </summary>
+    /// <param name="side">Boolean representing which player's side the card belongs to.</param>
+    /// <param name="zone">The zone (game board area) where the card will be placed.</param>
+    /// <param name="card">The card to be played.</param>
     public void Start2(bool side,GameObject zone, UnityCard card)
-    // Start is called before the first frame update
     {
         Start();
         InARow = true;
@@ -44,6 +50,10 @@ public class ClickLogic : MonoBehaviour
         EndClicked();
         InARow = false;
     }
+
+    /// <summary>
+    /// This method checks if the card is marked for destruction (i.e., it should be removed from play).
+    /// </summary>
     private void Update()
     {
         if (AssociatedCard.Destroy)
@@ -55,6 +65,10 @@ public class ClickLogic : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    /// <summary>
+    /// Called when a card is selected by the player, it checks if the player can interact with the card (based on game rules) and selects it for dragging or playing.
+    /// </summary
     public void Selected()
     {
             startPos = transform.position;
@@ -83,6 +97,11 @@ public class ClickLogic : MonoBehaviour
                 }
             }
     }
+
+    /// <summary>
+    /// Called when the card is placed (dropped) on the game board. This method verifies the drop location, 
+    /// applies relevant effects, and switches the turn if necessary.
+    /// </summary>
     public void EndClicked()
     {
         if (!Played)
@@ -103,7 +122,7 @@ public class ClickLogic : MonoBehaviour
                 }
                 else
                 {
-                    //Es un Decoy, regreso la carta a la mano
+                    //Its a decoy, returns to hand
                     pointer.IsOnDecoy=true;
                     CardDisplay exchange = dropzone.GetComponent<CardDisplay>();
                     AssociatedCard.CurrentPlace = exchange.cardTemplate.CurrentPlace;
@@ -159,6 +178,10 @@ public class ClickLogic : MonoBehaviour
         }
         pointer.CardSelected = null;
     }
+
+    /// <summary>
+    /// Verifies if the card's drop location is valid based on game rules.
+    /// </summary>
     private GameObject IsPossible()
     {
         if (AssociatedCard.TypeOfCard.IndexOf("C") == -1)
@@ -201,6 +224,10 @@ public class ClickLogic : MonoBehaviour
     public TextMeshProUGUI ZoneDescription;
 
     public Vector3 zoneBig= new Vector3(1800, 300);
+
+    /// <summary>
+    /// Creates a larger, detailed view of the card when hovered or clicked.
+    /// </summary>
     public void BigCardProduce() 
     {
         if(Big!=null)
@@ -221,12 +248,20 @@ public class ClickLogic : MonoBehaviour
             ZoneDescription.text = card.cardTemplate.Range;
         }
     }
+
+    /// <summary>
+    /// Destroys the larger card view.
+    /// </summary>
     public void BigCardDestroy()
     {
         Destroy(Big);
         Description.text = "";
         ZoneDescription.text = "";
     }
+
+    /// <summary>
+    /// Handles the logic of changing two cards from the deck at start.
+    /// </summary>
     public void CardExchange()
     {
         Player P = GM.GetPlayer(AssociatedCard.LocationBoard);

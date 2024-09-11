@@ -7,6 +7,9 @@ using TMPro;
 
 namespace LogicalSide
 {
+    /// <summary>
+    /// The SavedData class is responsible for storing and persisting game data such as player names and factions.
+    /// </summary>
     public class SavedData : MonoBehaviour
     {
         public string name_1 = "";
@@ -23,6 +26,9 @@ namespace LogicalSide
 
         public Compilation Compi;
 
+        /// <summary>
+        /// This method ensures that the class follows the singleton pattern by either preserving or destroying instances accordingly.
+        /// </summary>
         void Awake()
         {
             if (Instance == null)

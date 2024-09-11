@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour
 
     private Queue<string> SMS;
 
+    /// <summary>
+    /// Controls whether it's the player's or opponent's turn. 
+    /// Changing this value rotates the game board and updates the player's state.
+    /// </summary>
     public bool Turn
     {
         get { return _Turn;}
@@ -62,7 +66,10 @@ public class GameManager : MonoBehaviour
             VisibilityGM();
         }
     }
-    // Start is called before the first frame update
+    
+    /// <summary>
+    /// Initializes game state and sets up players at the start of the game.
+    /// </summary>
     void Start()
     {
         SMS = new();
@@ -87,6 +94,10 @@ public class GameManager : MonoBehaviour
         Sounds = GameObject.Find("Menus").GetComponent<MenuGM>();
         Turn = true;
     }
+
+    /// <summary>
+    /// Handles player inputs and message queue.
+    /// </summary>
     private void Update()
     {
         if (SMS != null)
@@ -103,8 +114,11 @@ public class GameManager : MonoBehaviour
         }
         else
             SMS = new();
-        
     }
+
+    /// <summary>
+    /// Retrieves the appropriate card back image based on the player's faction.
+    /// </summary>
     private Sprite GiveMeBack(Player player)
     {
         if(player.faction== 1){
@@ -112,6 +126,10 @@ public class GameManager : MonoBehaviour
         }
         return Resources.Load<Sprite>("slythreverse");
     }
+
+    /// <summary>
+    /// Sets up players' decks and sprites for both the player and opponent.
+    /// </summary>
     public void SetPLayers()
     {
         GameObject deck = GameObject.Find("Deck");
@@ -131,6 +149,12 @@ public class GameManager : MonoBehaviour
             setup.SetSprite(GiveMeBack(P2));
         }
     }
+
+    /// <summary>
+    /// Updates the score of the player or opponent, adjusting their power value.
+    /// </summary>
+    /// <param name="Downboard">If true, updates the player's score. Otherwise, updates the opponent's.</param>
+    /// <param name="value">The value to be added to the current score.</param>
     public void ActualScore(bool Downboard, int value)
     {
         if(Downboard)
@@ -140,6 +164,11 @@ public class GameManager : MonoBehaviour
         else
             Pwroponent.text = (System.Convert.ToInt32(Pwroponent.text) + value).ToString();
     }
+
+    /// <summary>
+    /// Rotates the game board to switch between players during their turns.
+    /// Modifies the transforms of relevant game objects in the Unity scene.
+    /// </summary>
     private void Rotate()
     {
         World.transform.Rotate(0,0,180);
@@ -147,7 +176,11 @@ public class GameManager : MonoBehaviour
         Pwroponent.transform.Rotate(0, 0, 180);
         Pass.transform.Rotate(0, 0, 180);
     }
-   
+    
+    /// <summary>
+    /// Adjusts the visibility of player and enemy cards based on the current turn.
+    /// Activates or deactivates game objects dynamically using Unity's GameObject API.
+    /// </summary
     public void VisibilityGM()
     {
         if (Turn)
@@ -174,12 +207,16 @@ public class GameManager : MonoBehaviour
         }
     }
     int indexP =0; int indexE=0;
+
+    /// <summary>
+    /// Ends the current round, determines the winner, and checks for game-end conditions.
+    /// </summary>
     public void EndRound()
     {
         int diff = Convert.ToInt32(Pwrplayer.text) - Convert.ToInt32(Pwroponent.text);
         if (diff > 0)
         {
-            //Gana el P1
+            //wins player 1
             Rounds.transform.GetChild(indexE).gameObject.SetActive(true);
             indexE++;
             SendMessage((P1.name + " Gano la ronda"));
@@ -277,6 +314,11 @@ public class GameManager : MonoBehaviour
         P1.Surrender = false;
         P2.Surrender = false;
     }
+
+    /// <summary>
+    /// Skips the current player's turn, surrendering their actions for the round.
+    /// If both players surrender, the round ends.
+    /// </summary>
     public void SkipTurn()
     {
         if (Turn)
@@ -291,6 +333,12 @@ public class GameManager : MonoBehaviour
         }
         
     }
+
+    /// <summary>
+    /// Ends the game and displays the result on the winner panel.
+    /// </summary>
+    /// <param name="winner">The name of the winning player or "Ambos" for a tie.</param>
+    /// <param name="Winner">The Player object representing the winner, if any.</param>
     public void FinishGame(string winner,Player Winner)
     {
         Sprite Win = Resources.Load<Sprite>("_bd85d92f-3322-4ebc-add3-3bebd08a0e69");
@@ -308,17 +356,29 @@ public class GameManager : MonoBehaviour
         PanelWinner.GetComponent<UnityEngine.UI.Image>().sprite = Win;
         PanelWinner.SetActive(true);   
     }
+
+    /// <summary>
+    /// Sends a game message to the player, displaying it on the screen.
+    /// </summary>
     public void Send(string message, TextMeshProUGUI Mess)
     {
         Mess.gameObject.SetActive(true);
         Mess.text = message;
         
     }
+
+    /// <summary>
+    /// Hides a previously displayed message and clears the text from the UI element.
+    /// </summary>
     public void EndMessage(TextMeshProUGUI Mess) 
     {
         Mess.gameObject.SetActive(false);
         Mess.text = "";
     }
+
+    /// <summary>
+    /// Enqueues a new message and displays it if it's different from the last message.
+    /// </summary
     public void SendMessage(string s)
     {
         string sQ;
@@ -328,6 +388,10 @@ public class GameManager : MonoBehaviour
         Message.gameObject.SetActive(true);
         MessagePanel.SetActive(true);
     }
+
+    /// <summary>
+    /// Retrieves the next message from the queue and hides the message panel if it was the last one.
+    /// </summary>
     public string GetMessage()
     {
         if (SMS.Count == 1)
@@ -336,11 +400,18 @@ public class GameManager : MonoBehaviour
         }
         return SMS.Dequeue();
     }
+
+    /// <summary>
+    /// Confirms that the current player has completed their setup.
+    /// </summary>
     public void OK()
     {
         GetPlayer(Turn).SetedUp = true;
     }
 
+    /// <summary>
+    /// Retrieves the player object based on the current turn status.
+    /// </summary
     public Player GetPlayer(bool b)
     {
         if (b == P1.P)
@@ -352,6 +423,12 @@ public class GameManager : MonoBehaviour
         Thread.Sleep(Convert.ToInt32(seconds*1000));
     }
 }
+
+/// <summary>
+/// Represents a player in the game. 
+/// Each player has a name, faction, a deck of cards, and a score.
+/// The Player class also manages the state of the player's hand and their readiness status.
+/// </summary>
 public class Player: Compiler.Player
 {
     public int faction;
